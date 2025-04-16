@@ -1,0 +1,75 @@
+ScreenManager:
+    TelaLogin:
+
+<TelaLogin@Screen>:
+    name: "login"
+
+    FloatLayout:
+        canvas.before:
+            Color:
+                #rgba: 0.95, 0.95, 0.95, 1  # cor de fundo
+                rgba: 0, 0, 0, 1  # preto
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: dp(20)
+            padding: dp(30)
+            size_hint: 0.85, None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            
+
+            Image:
+                source: "./assets/logo3.png"
+                size_hint_y: None
+                height: dp(100)
+
+            # Título com duas cores
+            MDLabel:
+                text: "[color=ffffff]Motorista[/color][color=A8BA44]Legal[/color]"
+                halign: "center"
+                markup: True
+                font_style: "H5"
+
+            # Espaçamento
+            MDLabel:
+                text: " "
+                halign: "center"
+                theme_text_color: "Secondary"
+                font_style: "Body2"
+
+            MDLabel:
+                text: "[color=ffffff]Monitore sua direção, conquiste metas e receba prêmios pela sua condução segura.[/color]"
+                halign: "center"
+                markup: True
+                font_style: "Body1"
+
+            # Espaçamento
+            MDLabel:
+                text: " "
+                halign: "center"
+                theme_text_color: "Secondary"
+                font_style: "Body2"
+
+            MDTextField:
+                id: placa_input
+                hint_text: "Acesse com a placa do seu caminhão (Ex: ABC1234)"
+                icon_right: "truck"
+                size_hint_x: 1
+                mode: "rectangle"
+                text_color: 0.66, 0.73, 0.27, 1              # texto em verde-limão
+                line_color_normal: 0.66, 0.73, 0.27, 1       # borda normal
+                line_color_focus: 0.66, 0.73, 0.27, 1        # borda quando focado
+                hint_text_color_normal: 0.66, 0.73, 0.27, 1  # dica (placeholder)
+                icon_right_color: 0.66, 0.73, 0.27, 1        # ícone
+
+            MDRaisedButton:
+                text: "ENTRAR"
+                md_bg_color: 0.66, 0.73, 0.27, 1             # botão com fundo na mesma cor
+                text_color: 0, 0, 0, 1                       # texto preto para contraste
+                pos_hint: {"center_x": 0.5}
+                on_release: app.pegar_placa
