@@ -36,4 +36,90 @@ ScreenManager:
                 height: self.texture_size[1]
 
 
-        
+        MDCard:
+            orientation: "vertical"
+            padding: dp(20)
+            spacing: dp(10)
+            md_bg_color: 0.1, 0.15, 0.25, 1  # Card azul escuro
+            radius: [15, 15, 15, 15]
+
+            MDLabel:
+                text: "[b]Resumo do Desempenho[/b]"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                font_style: "H6"
+                markup: True
+
+            GridLayout:
+                cols: 3
+                spacing: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+
+                # Cartões de métricas
+                MDCard:
+                    md_bg_color: 0.15, 0.2, 0.3, 1
+                    radius: [12]
+                    padding: dp(10)
+                    orientation: "vertical"
+                    MDIcon:
+                        icon: "speedometer"
+                        halign: "center"
+                    MDLabel:
+                        text: "Velocidade Média"
+                        halign: "center"
+                        theme_text_color: "Secondary"
+                    MDLabel:
+                        text: "73 km/h"
+                        halign: "center"
+                        bold: True
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+
+                MDCard:
+                    md_bg_color: 0.15, 0.2, 0.3, 1
+                    radius: [12]
+                    padding: dp(10)
+                    orientation: "vertical"
+                    MDIcon:
+                        icon: "rotate-right"
+                        halign: "center"
+                    MDLabel:
+                        text: "Rotação Máxima"
+                        halign: "center"
+                        theme_text_color: "Secondary"
+                    MDLabel:
+                        text: "3200 RPM"
+                        halign: "center"
+                        bold: True
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+
+                MDCard:
+                    md_bg_color: 0.15, 0.2, 0.3, 1
+                    radius: [12]
+                    padding: dp(10)
+                    orientation: "vertical"
+                    MDIcon:
+                        icon: "gas-station"
+                        halign: "center"
+                    MDLabel:
+                        text: "Consumo Diesel"
+                        halign: "center"
+                        theme_text_color: "Secondary"
+                    MDLabel:
+                        text: "25 L / 100km"
+                        halign: "center"
+                        bold: True
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+
+                # Adicione os outros 3 blocos seguindo o mesmo padrão:
+                # Consumo Arla, Marcha Lenta, Km Rodado
+
+        MDRaisedButton:
+            text: "SAIR"
+            pos_hint: {"center_x": 0.5}
+            md_bg_color: 1, 0.3, 0.3, 1
+            on_release:
+                app.sm.current = "login"
