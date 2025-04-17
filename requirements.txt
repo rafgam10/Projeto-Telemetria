@@ -1,0 +1,17 @@
+certifi==2025.1.31
+charset-normalizer==3.4.1
+Cython==3.0.12
+docutils==0.21.2
+ffpyplayer==4.5.2
+filetype==1.2.0
+idna==3.10
+Kivy==2.3.1
+Kivy-examples==2.3.1
+Kivy-Garden==0.1.5
+kivymd==1.2.0
+pillow==10.4.0
+Pygments==2.19.1
+requests==2.32.3
+setuptools==78.1.0
+urllib3==2.4.0
+wheel==0.45.1

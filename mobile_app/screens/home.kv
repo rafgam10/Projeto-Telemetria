@@ -1,0 +1,32 @@
+<HomeScreen>:
+    name: "home"
+
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(20)
+        padding: dp(20)
+        canvas.before:
+            Color:
+                rgba: 0.95, 0.95, 0.95, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        MDLabel:
+            text: "MotoristaLegal"
+            halign: "center"
+            font_style: "H5"
+            theme_text_color: "Primary"
+
+        MDLabel:
+            text: "Bem-vindo ao painel do motorista!"
+            halign: "center"
+            font_style: "H5"
+            theme_text_color: "Primary"
+
+        MDRaisedButton:
+            text: "SAIR"
+            pos_hint: {"center_x": 0.5}
+            md_bg_color: 1, 0.3, 0.3, 1
+            on_release:
+                app.sm.current = "login"
