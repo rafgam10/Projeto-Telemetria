@@ -1,4 +1,5 @@
 from kivymd.app import MDApp
+from kivy.core.window import Window
 from kaki.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -13,6 +14,8 @@ class HomeScreen(Screen):
     pass
 
 class LoginApp(MDApp, App):
+    Window.size = (360, 640)  # largura x altura em pixels
+
     def build(self):
         Builder.load_file(os.path.join("mobile_app", "screens", "login.kv"))
         Builder.load_file(os.path.join("mobile_app", "screens", "home.kv"))
@@ -22,6 +25,7 @@ class LoginApp(MDApp, App):
         self.sm.add_widget(HomeScreen(name="home"))
 
         return self.sm
+        # return Builder.load_file(os.path.join("mobile_app", "screens", "home.kv"))
 
     def pegar_placa(self):
         placa = self.sm.get_screen("login").ids.placa_input.text
