@@ -4,6 +4,7 @@ ScreenManager:
 <HomeScreen>:
     name: "home"
 
+
     MDBoxLayout:
         orientation: "vertical"
         padding: dp(20)
@@ -14,26 +15,66 @@ ScreenManager:
             orientation: "horizontal"
             spacing: dp(8)
             size_hint_y: None
-            height: dp(40)
+            height: dp(50)
             padding: dp(10), 0
 
             MDIcon:
                 icon: "steering"
-                font_size: "35sp"  # aumenta o tamanho do ícone
+                font_size: "40sp"
                 theme_text_color: "Custom"
-                text_color: (0.66, 0.73, 0.27, 1)  # cor #A8BA44
+                text_color: (0.66, 0.73, 0.27, 1)
                 pos_hint: {"center_y": 0.5}
-                height: self.texture_size[1]
 
             MDLabel:
-                text: "[b][color=FFFFFF]Motorista[/color][color=A8BA44]Legal[/color][/b]"
+                text: "[b][color=FFFFFF]Motorista[/color][color=A8BA44] Legal[/color][/b]"
                 markup: True
                 font_style: "H5"
-                padding: "5sp"
                 halign: "left"
                 valign: "middle"
                 size_hint_y: None
                 height: self.texture_size[1]
+                pos_hint: {"center_y": 0.5}
+
+            Widget:  # empurra os botões pro lado direito
+                size_hint_x: None
+                width: dp(20)
+
+            MDIconButton:
+                icon: "home-variant-outline"
+                theme_text_color: "Custom"
+                text_color: (0.66, 0.73, 0.27, 1)
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "28sp"
+
+            MDIconButton:
+                icon: "account"
+                theme_text_color: "Custom"
+                text_color: (0.66, 0.73, 0.27, 1)
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "28sp"
+
+            MDIconButton:
+                icon: "history"
+                theme_text_color: "Custom"
+                text_color: (0.66, 0.73, 0.27, 1)
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "28sp"
+
+            MDIconButton:
+                icon: "cog-outline"
+                theme_text_color: "Custom"
+                text_color: (0.66, 0.73, 0.27, 1)
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "28sp"
+
+            MDIconButton:
+                icon: "help-circle-outline"
+                theme_text_color: "Custom"
+                text_color: (0.66, 0.73, 0.27, 1)
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "28sp"
+
+            
 
 
         MDCard:
@@ -121,5 +162,4 @@ ScreenManager:
             text: "SAIR"
             pos_hint: {"center_x": 0.5}
             md_bg_color: 1, 0.3, 0.3, 1
-            on_release:
-                app.sm.current = "login"
+            on_release: app.sm.current = "login"
