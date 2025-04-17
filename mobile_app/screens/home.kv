@@ -1,32 +1,39 @@
+ScreenManager:
+    HomeScreen
+
 <HomeScreen>:
     name: "home"
 
-    BoxLayout:
+    MDBoxLayout:
         orientation: "vertical"
-        spacing: dp(20)
         padding: dp(20)
-        canvas.before:
-            Color:
-                rgba: 0.95, 0.95, 0.95, 1
-            Rectangle:
-                pos: self.pos
-                size: self.size
+        spacing: dp(10)
+        md_bg_color: 0.05, 0.05, 0.1, 1  # Fundo escuro
 
-        MDLabel:
-            text: "MotoristaLegal"
-            halign: "center"
-            font_style: "H5"
-            theme_text_color: "Primary"
+        MDBoxLayout:
+            orientation: "horizontal"
+            spacing: dp(8)
+            size_hint_y: None
+            height: dp(40)
+            padding: dp(10), 0
 
-        MDLabel:
-            text: "Bem-vindo ao painel do motorista!"
-            halign: "center"
-            font_style: "H5"
-            theme_text_color: "Primary"
+            MDIcon:
+                icon: "steering"
+                font_size: "35sp"  # aumenta o tamanho do ícone
+                theme_text_color: "Custom"
+                text_color: (0.66, 0.73, 0.27, 1)  # cor #A8BA44
+                pos_hint: {"center_y": 0.5}
+                height: self.texture_size[1]
 
-        MDRaisedButton:
-            text: "SAIR"
-            pos_hint: {"center_x": 0.5}
-            md_bg_color: 1, 0.3, 0.3, 1
-            on_release:
-                app.sm.current = "login"
+            MDLabel:
+                text: "[b][color=FFFFFF]Motorista[/color][color=A8BA44]Legal[/color][/b]"
+                markup: True
+                font_style: "H5"
+                padding: "5sp"
+                halign: "left"
+                valign: "middle"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+
+        
