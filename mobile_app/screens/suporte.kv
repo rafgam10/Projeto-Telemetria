@@ -1,0 +1,180 @@
+ScreenManager:
+    SuporteScreen
+
+<SuporteScreen>:
+    name: "suporte"
+
+
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+        md_bg_color: 0.05, 0.07, 0.12, 1  # Fundo principal escuro (quase preto)
+
+        MDTopAppBar:
+            title: "[color=FFFFFF]Motorista[/color][color=A8BA44]Legal[/color]"
+            icon: "steering"
+            font_size: "12sp"
+            elevation: 4.5
+            padding: "3sp"
+            spacing: "2sp"
+            # icon_size: "10sp"
+            # mode: "end"
+            # type: "bottom"
+            markup: True
+            # left_action_items: [["menu", lambda x: app.abrir_menu()]]
+            right_action_items:[["home", lambda x: app.ir_para_home()], ["account-outline", lambda x: app.ir_perfil()], ["history", lambda x: app.abrir_historico()], ["cog", lambda x: app.abrir_config()]]
+            use_overflow: True
+            md_bg_color: 0.05, 0.07, 0.12, 1
+            icon_color: 0.66, 0.73, 0.27, 1
+            title_color: 1, 1, 1, 1
+
+        # MDBottomNavigation:
+
+        #     MDBottomNavigationItem:
+        #         name: "home"
+        #         text: "Início"
+        #         icon: "home"
+
+        #         MDLabel:
+        #             text: "Você está na tela inicial"
+        #             halign: "center"
+
+        #     MDBottomNavigationItem:
+        #         name: "settings"
+        #         text: "Configurações"
+        #         icon: "cog"
+
+        #         MDLabel:
+        #             text: "Tela de configurações"
+        #             halign: "center"
+
+        #     MDBottomNavigationItem:
+        #         name: "support"
+        #         text: "Suporte"
+        #         icon: "forum"
+
+        #         MDLabel:
+        #             text: "Página de suporte"
+        #             halign: "center"
+
+
+        # Cabeçalho
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(40)
+            spacing: dp(4)
+            padding: dp(10), 0
+            pos_hint: {'center_x': 0.5}
+
+            # MDIcon:
+            #     icon: "steering"
+            #     font_size: "36sp"
+            #     theme_text_color: "Custom"
+            #     text_color: (0.66, 0.73, 0.27, 1)  # #A8BA44
+            #     size_hint: None, None
+            #     size: self.texture_size
+            #     pos_hint: {"center_y": 0.5}
+
+            # MDLabel:
+            #     text: "[b][color=FFFFFF]Motorista[/color][color=A8BA44]Legal[/color][/b]"
+            #     markup: True
+            #     font_style: "H6"
+            #     halign: "left"
+            #     valign: "middle"
+            #     theme_text_color: "Custom"
+            #     text_color: 1, 1, 1, 1
+            #     size_hint_y: None
+            #     height: self.texture_size[1]
+            #     pos_hint: {"center_y": 0.5}
+
+        # Card
+        MDCard:
+            orientation: "vertical"
+            padding: dp(20)
+            spacing: dp(10)
+            md_bg_color: 0.09, 0.1, 0.15, 1  # Card azul escuro
+            radius: [15, 15, 15, 15]
+
+            MDBoxLayout:
+                orientation: "vertical"
+                spacing: dp(4)
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    spacing: dp(8)
+
+                    MDIcon:
+                        icon: "forum"
+                        font_size: "25sp"
+                        theme_text_color: "Custom"
+                        text_color: (0.66, 0.73, 0.27, 1)
+                        size_hint: None, None
+                        size: self.texture_size
+                        pos_hint: {"center_y": 0.5, "center_x":0.5}
+
+                    MDLabel:
+                        text: "[b]Suporte ao Usuário[/b]"
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_style: "H6"
+                        markup: True
+
+                MDLabel:
+                    text: "[b][color=FFFFFF]Se você tiver dúvidas ou problemas, entre em contato conosco:[/color][/b]"
+                    markup: True
+                    font_style: "Body2"
+                    font_size: "12sp"
+                    halign: "left"
+                    valign: "middle"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    size_hint_y: None
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: dp(8)
+
+                MDIcon:
+                    icon: "email"
+                    font_size: "25sp"
+                    theme_text_color: "Custom"
+                    text_color: (0.66, 0.73, 0.27, 1)
+                    size_hint: None, None
+                    size: self.texture_size
+                    pos_hint: {"center_x":0.5,"center_y": 0.5}
+
+                MDLabel:
+                    text: "[b]suporte@motoristalegal.com.br[/b]"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    font_style: "Body2"
+                    markup: True
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: dp(8)
+
+                MDIcon:
+                    icon: "phone-outline"
+                    font_size: "25sp"
+                    theme_text_color: "Custom"
+                    text_color: (0.66, 0.73, 0.27, 1)
+                    size_hint: None, None
+                    size: self.texture_size
+                    pos_hint: {"center_x":0.5,"center_y": 0.5}
+
+                MDLabel:
+                    text: "  99999-0000[/b]"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    font_style: "Body2"
+                    markup: True
+
+            MDRaisedButton:
+                icon: "arrow-left"
+                text: "Voltar para o Início"
+                md_bg_color: (0.66, 0.73, 0.27, 1)
+                text_color: 1, 1, 1, 1
+                pos_hint: {"center_x": 0.5}
