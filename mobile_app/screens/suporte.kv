@@ -12,22 +12,66 @@ ScreenManager:
         md_bg_color: 0.05, 0.07, 0.12, 1  # Fundo principal escuro (quase preto)
 
         MDTopAppBar:
-            title: "[color=FFFFFF]Motorista[/color][color=A8BA44]Legal[/color]"
-            icon: "steering"
-            font_size: "12sp"
+        
+            orientation: "horizontal"
+            spacing: dp(8)
+            size_hint_y: None
+            height: dp(56)
+            padding: dp(10)
             elevation: 4.5
-            padding: "3sp"
-            spacing: "2sp"
-            # icon_size: "10sp"
-            # mode: "end"
-            # type: "bottom"
-            markup: True
-            # left_action_items: [["menu", lambda x: app.abrir_menu()]]
-            right_action_items:[["home", lambda x: app.ir_para_home()], ["account-outline", lambda x: app.ir_perfil()], ["history", lambda x: app.abrir_historico()], ["cog", lambda x: app.abrir_config()]]
-            use_overflow: True
             md_bg_color: 0.05, 0.07, 0.12, 1
-            icon_color: 0.66, 0.73, 0.27, 1
-            title_color: 1, 1, 1, 1
+            radius: [15, 15, 15, 15]
+
+            # MDIcon:
+            #     icon: "steering"
+            #     font_size: "40sp"
+            #     theme_text_color: "Custom"
+            #     text_color: (0.66, 0.73, 0.27, 1)
+            #     pos_hint: {"center_y": 0.5}
+
+            MDLabel:
+                text: "[b][color=FFFFFF]Motorista[/color][color=A8BA44]Legal[/color][/b]"
+                markup: True
+                font_style: "H6"
+                halign: "left"
+                valign: "middle"
+                height: self.texture_size[0]
+                size_hint_x: 60
+                pos_hint: {"center_y": 0.5}
+
+            # Widget:  # empurra os botões pro lado direito
+            #     size_hint_x: None
+            #     width: dp(20)
+
+            MDIconButton:
+                icon: "home-variant-outline"
+                theme_text_color: "Custom"
+                text_color: (0.66, 0.73, 0.27, 1)
+                md_bg_color:  0.09, 0.1, 0.15, 1
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "20sp"
+
+            MDIconButton:
+                icon: "account"
+                theme_text_color: "Custom"
+                text_color: 1,1,1,1
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "20sp"
+
+            MDIconButton:
+                icon: "history"
+                theme_text_color: "Custom"
+                text_color: 1,1,1,1
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "20sp"
+
+            MDIconButton:
+                icon: "cog"
+                theme_text_color: "Custom"
+                text_color: 1,1,1,1
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "20sp"
+
 
         # MDBottomNavigation:
 
@@ -59,11 +103,11 @@ ScreenManager:
         #             halign: "center"
 
 
-        # Cabeçalho
+        # Cabeçalho de
         MDBoxLayout:
             orientation: "horizontal"
             size_hint_y: None
-            height: dp(40)
+            height: dp(10)
             spacing: dp(4)
             padding: dp(10), 0
             pos_hint: {'center_x': 0.5}
@@ -122,9 +166,9 @@ ScreenManager:
                         markup: True
 
                 MDLabel:
-                    text: "[b][color=FFFFFF]Se você tiver dúvidas ou problemas, entre em contato conosco:[/color][/b]"
+                    text: "[b]Se você tiver dúvidas ou problemas, entre em contato conosco:[/b]"
                     markup: True
-                    font_style: "Body2"
+                    font_style: "H6"
                     font_size: "12sp"
                     halign: "left"
                     valign: "middle"
@@ -146,10 +190,10 @@ ScreenManager:
                     pos_hint: {"center_x":0.5,"center_y": 0.5}
 
                 MDLabel:
-                    text: "[b]suporte@motoristalegal.com.br[/b]"
+                    text: "[b]Suporte@motoristalegal.com.br[/b]"
                     theme_text_color: "Custom"
                     text_color: 1, 1, 1, 1
-                    font_style: "Body2"
+                    font_style: "H6"
                     markup: True
 
             MDBoxLayout:
@@ -166,10 +210,10 @@ ScreenManager:
                     pos_hint: {"center_x":0.5,"center_y": 0.5}
 
                 MDLabel:
-                    text: "  99999-0000[/b]"
+                    text: "[b]99999-0000[/b]"
                     theme_text_color: "Custom"
                     text_color: 1, 1, 1, 1
-                    font_style: "Body2"
+                    font_style: "H6"
                     markup: True
 
             MDRaisedButton:

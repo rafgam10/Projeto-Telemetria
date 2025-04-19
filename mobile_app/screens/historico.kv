@@ -1,0 +1,256 @@
+ScreenManager:
+    HistoryScreen
+
+<HistoryScreen>:
+    name: "historico"
+
+
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(10)
+        md_bg_color: 0.05, 0.07, 0.12, 1  # Fundo principal escuro (quase preto)
+
+        MDTopAppBar:
+        
+            orientation: "horizontal"
+            spacing: dp(8)
+            size_hint_y: None
+            height: dp(56)
+            padding: dp(10)
+            elevation: 4.5
+            md_bg_color: 0.05, 0.07, 0.12, 1
+            radius: [15, 15, 15, 15]
+
+            # MDIcon:
+            #     icon: "steering"
+            #     font_size: "40sp"
+            #     theme_text_color: "Custom"
+            #     text_color: (0.66, 0.73, 0.27, 1)
+            #     pos_hint: {"center_y": 0.5}
+
+            MDLabel:
+                text: "[b][color=FFFFFF]Motorista[/color][color=A8BA44]Legal[/color][/b]"
+                markup: True
+                font_style: "H6"
+                halign: "left"
+                valign: "middle"
+                height: self.texture_size[0]
+                size_hint_x: 60
+                pos_hint: {"center_y": 0.5}
+
+            # Widget:  # empurra os botões pro lado direito
+            #     size_hint_x: None
+            #     width: dp(20)
+
+            MDIconButton:
+                icon: "home-variant-outline"
+                theme_text_color: "Custom"
+                text_color: 1,1,1,1
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "20sp"
+
+            MDIconButton:
+                icon: "account"
+                theme_text_color: "Custom"
+                text_color: 1,1,1,1
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "20sp"
+
+            MDIconButton:
+                icon: "history"
+                theme_text_color: "Custom"
+                text_color: (0.66, 0.73, 0.27, 1)
+                md_bg_color:  0.09, 0.1, 0.15, 1
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "20sp"
+
+            MDIconButton:
+                icon: "cog"
+                theme_text_color: "Custom"
+                text_color: 1,1,1,1
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "20sp"
+
+        # Cabeçalho de
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(10)
+            spacing: dp(4)
+            padding: dp(10), 0
+            pos_hint: {'center_x': 0.5}
+
+        # MDCard Main
+        MDCard:
+            orientation: "vertical"
+            padding: dp(20)
+            spacing: dp(10)
+            md_bg_color: 0.09, 0.1, 0.15, 1  # Card azul escuro
+            radius: [15, 15, 15, 15]
+
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: dp(10)
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                MDIcon:
+                    icon: "clipboard-text-clock"
+                    font_size: "25sp"
+                    theme_text_color: "Custom"
+                    text_color: (0.66, 0.73, 0.27, 1)
+                    size_hint: None, None
+                    size: self.texture_size
+                    pos_hint: {"center_x":0.5,"center_y": 0.5}
+
+                MDLabel:
+                    text: "[b]Histórico de Viagens[/b]"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    font_style: "H6"
+                    markup: True
+            
+            MDCard:
+                orientation: "vertical"
+                padding: dp(20)
+                spacing: dp(2)
+                md_bg_color: 0.10, 0.15, 0.22, 1  # Azul escuro mais visível
+                radius: [15, 15, 15, 15]
+
+                # MDBoxLayout:
+                #     orientation: "horizontal"
+
+                #     MDLabel:
+                #         text: "[b]Nome:[/b]"
+                #         theme_text_color: "Custom"
+                #         text_color: (0.66, 0.73, 0.27, 1)
+                #         font_style: "H6"
+                #         markup: True
+
+
+                #     MDLabel:
+                #         text: "[b]Rafael Teste[/b]"
+                #         theme_text_color: "Custom"
+                #         text_color: 1, 1, 1, 1
+                #         font_style: "Body1"
+                #         markup: True
+
+                # # Espaço "\n"
+                # MDBoxLayout:
+                #     orientation: "horizontal"
+
+                #     MDLabel:
+                #         text: " "
+                #         theme_text_color: "Custom"
+                #         text_color: (0.66, 0.73, 0.27, 1)
+                #         font_style: "H6"
+                #         markup: True
+
+
+                #     MDLabel:
+                #         text: " "
+                #         theme_text_color: "Custom"
+                #         text_color: 1, 1, 1, 1
+                #         font_style: "Body1"
+                #         markup: True
+
+                # MDBoxLayout:
+                #     orientation: "horizontal"
+
+                #     MDLabel:
+                #         text: "[b]Placa:[/b]"
+                #         theme_text_color: "Custom"
+                #         text_color: (0.66, 0.73, 0.27, 1)
+                #         font_style: "H6"
+                #         markup: True
+
+
+                #     MDLabel:
+                #         text: "[b]ABC123[/b]"
+                #         theme_text_color: "Custom"
+                #         text_color: 1, 1, 1, 1
+                #         font_style: "Body1"
+                #         markup: True
+
+                # # Espaço "\n"
+                # MDBoxLayout:
+                #     orientation: "horizontal"
+
+                #     MDLabel:
+                #         text: " "
+                #         theme_text_color: "Custom"
+                #         text_color: (0.66, 0.73, 0.27, 1)
+                #         font_style: "H6"
+                #         markup: True
+
+
+                #     MDLabel:
+                #         text: " "
+                #         theme_text_color: "Custom"
+                #         text_color: 1, 1, 1, 1
+                #         font_style: "Body1"
+                #         markup: True
+
+
+                # MDBoxLayout:
+                #     orientation: "horizontal"
+
+                #     MDLabel:
+                #         text: "[b]Caminhão:[/b]"
+                #         theme_text_color: "Custom"
+                #         text_color: (0.66, 0.73, 0.27, 1)
+                #         font_style: "H6"
+                #         markup: True
+
+
+                #     MDLabel:
+                #         text: "[b]Volvo FH 540[/b]"
+                #         theme_text_color: "Custom"
+                #         text_color: 1, 1, 1, 1
+                #         font_style: "Body1"
+                #         markup: True
+
+                # # Espaço "\n"
+                # MDBoxLayout:
+                #     orientation: "horizontal"
+
+                #     MDLabel:
+                #         text: " "
+                #         theme_text_color: "Custom"
+                #         text_color: (0.66, 0.73, 0.27, 1)
+                #         font_style: "H6"
+                #         markup: True
+
+
+                #     MDLabel:
+                #         text: " "
+                #         theme_text_color: "Custom"
+                #         text_color: 1, 1, 1, 1
+                #         font_style: "Body1"
+                #         markup: True
+
+                # MDBoxLayout:
+                #     orientation: "horizontal"
+
+                #     MDLabel:
+                #         text: "[b]Experiência:[/b]"
+                #         theme_text_color: "Custom"
+                #         text_color: (0.66, 0.73, 0.27, 1)
+                #         font_style: "H6"
+                #         markup: True
+
+
+                #     MDLabel:
+                #         text: "[b]3 anos[/b]"
+                #         theme_text_color: "Custom"
+                #         text_color: 1, 1, 1, 1
+                #         font_style: "Body1"
+                #         markup: True
+            
+            # <<< AQUI adicionamos um expansor invisível >>>
+            Widget:
+                size_hint_y: 1
+            
+            
+
+        

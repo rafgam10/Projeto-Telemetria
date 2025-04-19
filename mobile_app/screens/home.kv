@@ -9,154 +9,207 @@ ScreenManager:
         orientation: "vertical"
         padding: dp(20)
         spacing: dp(10)
-        md_bg_color: 0.05, 0.05, 0.1, 1  # Fundo escuro
+        md_bg_color: 0.05, 0.07, 0.12, 1  # Fundo escuro
 
-        MDBoxLayout:
+        MDTopAppBar:
+        
             orientation: "horizontal"
             spacing: dp(8)
             size_hint_y: None
-            height: dp(50)
-            padding: dp(10), 0
+            height: dp(56)
+            padding: dp(10)
+            elevation: 4.5
+            md_bg_color: 0.05, 0.07, 0.12, 1
+            radius: [15, 15, 15, 15]
 
-            MDIcon:
-                icon: "steering"
-                font_size: "40sp"
-                theme_text_color: "Custom"
-                text_color: (0.66, 0.73, 0.27, 1)
-                pos_hint: {"center_y": 0.5}
+            # MDIcon:
+            #     icon: "steering"
+            #     font_size: "40sp"
+            #     theme_text_color: "Custom"
+            #     text_color: (0.66, 0.73, 0.27, 1)
+            #     pos_hint: {"center_y": 0.5}
 
             MDLabel:
-                text: "[b][color=FFFFFF]Motorista[/color][color=A8BA44] Legal[/color][/b]"
+                text: "[b][color=FFFFFF]Motorista[/color][color=A8BA44]Legal[/color][/b]"
                 markup: True
-                font_style: "H5"
+                font_style: "H6"
                 halign: "left"
                 valign: "middle"
-                size_hint_y: None
-                height: self.texture_size[1]
+                height: self.texture_size[0]
+                size_hint_x: 60
                 pos_hint: {"center_y": 0.5}
 
-            Widget:  # empurra os botões pro lado direito
-                size_hint_x: None
-                width: dp(20)
+            # Widget:  # empurra os botões pro lado direito
+            #     size_hint_x: None
+            #     width: dp(20)
 
             MDIconButton:
                 icon: "home-variant-outline"
                 theme_text_color: "Custom"
                 text_color: (0.66, 0.73, 0.27, 1)
+                md_bg_color:  0.09, 0.1, 0.15, 1
                 pos_hint: {"center_y": 0.5}
-                user_font_size: "28sp"
+                user_font_size: "20sp"
 
             MDIconButton:
                 icon: "account"
                 theme_text_color: "Custom"
-                text_color: (0.66, 0.73, 0.27, 1)
+                text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
-                user_font_size: "28sp"
+                user_font_size: "20sp"
 
             MDIconButton:
                 icon: "history"
                 theme_text_color: "Custom"
-                text_color: (0.66, 0.73, 0.27, 1)
+                text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
-                user_font_size: "28sp"
+                user_font_size: "20sp"
 
             MDIconButton:
-                icon: "cog-outline"
+                icon: "cog"
                 theme_text_color: "Custom"
-                text_color: (0.66, 0.73, 0.27, 1)
+                text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
-                user_font_size: "28sp"
+                user_font_size: "20sp"
 
-            MDIconButton:
-                icon: "help-circle-outline"
-                theme_text_color: "Custom"
-                text_color: (0.66, 0.73, 0.27, 1)
-                pos_hint: {"center_y": 0.5}
-                user_font_size: "28sp"
+            # MDIconButton:
+            #     icon: "help-circle-outline"
+            #     theme_text_color: "Custom"
+            #     text_color: (0.66, 0.73, 0.27, 1)
+            #     pos_hint: {"center_y": 0.5}
+            #     user_font_size: "28sp"
+            #     on_release: app.ir_para_login()
 
-            
+
+         # Cabeçalho de
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(10)
+            spacing: dp(4)
+            padding: dp(10), 0
+            pos_hint: {'center_x': 0.5}        
 
 
         MDCard:
-            orientation: "vertical"
-            padding: dp(20)
-            spacing: dp(10)
-            md_bg_color: 0.1, 0.15, 0.25, 1  # Card azul escuro
-            radius: [15, 15, 15, 15]
+    #         orientation: "horizontal"
+    #         padding: dp(20)
+    #         spacing: dp(10)
+    #         md_bg_color: 0.1, 0.15, 0.25, 1  # Card azul escuro
+    #         radius: [15, 15, 15, 15]
 
-            MDLabel:
-                text: "[b]Resumo do Desempenho[/b]"
-                theme_text_color: "Custom"
-                text_color: 1, 1, 1, 1
-                font_style: "H6"
-                markup: True
+    #         MDBoxLayout:
+    #             orientation: "vertical"
+    #             spacing: dp(8)
+    #             size_hint_y: None
+    #             height: dp(50)
+    #             padding: dp(10), 0
 
-            GridLayout:
-                cols: 3
-                spacing: dp(10)
-                size_hint_y: None
-                height: self.minimum_height
+    #         MDIcon:
+    #             icon: "chart-bar"
+    #             font_size: "40sp"
+    #             theme_text_color: "Custom"
+    #             text_color: 1, 1, 1, 1
+    #             pos_hint: {"center_y": 0.5}
 
-                # Cartões de métricas
-                MDCard:
-                    md_bg_color: 0.15, 0.2, 0.3, 1
-                    radius: [12]
-                    padding: dp(10)
-                    orientation: "vertical"
-                    MDIcon:
-                        icon: "speedometer"
-                        halign: "center"
-                    MDLabel:
-                        text: "Velocidade Média"
-                        halign: "center"
-                        theme_text_color: "Secondary"
-                    MDLabel:
-                        text: "73 km/h"
-                        halign: "center"
-                        bold: True
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
+    #         MDLabel:
+    #             text: "[b][color=FFFFFF][b]Resumo do Desempenho[/b][/color]"
+    #             markup: True
+    #             font_style: "H6"
+    #             padding: "20sp"
+    #             halign: "left"
+    #             valign: "middle"
+    #             size_hint_y: None
+    #             height: self.texture_size[1]
+    #             pos_hint: {"center_y": 0.5}
 
-                MDCard:
-                    md_bg_color: 0.15, 0.2, 0.3, 1
-                    radius: [12]
-                    padding: dp(10)
-                    orientation: "vertical"
-                    MDIcon:
-                        icon: "rotate-right"
-                        halign: "center"
-                    MDLabel:
-                        text: "Rotação Máxima"
-                        halign: "center"
-                        theme_text_color: "Secondary"
-                    MDLabel:
-                        text: "3200 RPM"
-                        halign: "center"
-                        bold: True
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
 
-                MDCard:
-                    md_bg_color: 0.15, 0.2, 0.3, 1
-                    radius: [12]
-                    padding: dp(10)
-                    orientation: "vertical"
-                    MDIcon:
-                        icon: "gas-station"
-                        halign: "center"
-                    MDLabel:
-                        text: "Consumo Diesel"
-                        halign: "center"
-                        theme_text_color: "Secondary"
-                    MDLabel:
-                        text: "25 L / 100km"
-                        halign: "center"
-                        bold: True
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
+    #         GridLayout:
+    #             cols: 3
+    #             rows: 2
+    #             spacing: dp(10)
+    #             padding: dp(10)
+    #             size_hint_y: None
+    #             height: self.minimum_height
+    #             adaptive_height: True
 
-                # Adicione os outros 3 blocos seguindo o mesmo padrão:
-                # Consumo Arla, Marcha Lenta, Km Rodado
+    #             MDCard:
+    #                 size_hint_y: None
+    #                 height: dp(120)
+    #                 md_bg_color: 0.15, 0.2, 0.3, 1
+    #                 radius: [12]
+    #                 padding: dp(10)
+    #                 orientation: "vertical"
+
+    #                 MDIcon:
+    #                     icon: "speedometer"
+    #                     font_size: "32sp"
+    #                     pos_hint: {"center_x": 0.5}
+
+    #                 MDLabel:
+    #                     text: "Velocidade Média"
+    #                     halign: "center"
+    #                     theme_text_color: "Secondary"
+
+    #                 MDLabel:
+    #                     text: "[b]73 km/h[/b]"
+    #                     halign: "center"
+    #                     markup: True
+    #                     theme_text_color: "Custom"
+    #                     text_color: 1, 1, 1, 1
+
+    #             MDCard:
+    #                 size_hint_y: None
+    #                 height: dp(120)
+    #                 md_bg_color: 0.15, 0.2, 0.3, 1
+    #                 radius: [12]
+    #                 padding: dp(10)
+    #                 orientation: "vertical"
+
+    #                 MDIcon:
+    #                     icon: "rotate-right"
+    #                     font_size: "32sp"
+    #                     pos_hint: {"center_x": 0.5}
+
+    #                 MDLabel:
+    #                     text: "Rotação Máxima"
+    #                     halign: "center"
+    #                     theme_text_color: "Secondary"
+
+    #                 MDLabel:
+    #                     text: "[b]3200 RPM[/b]"
+    #                     halign: "center"
+    #                     markup: True
+    #                     theme_text_color: "Custom"
+    #                     text_color: 1, 1, 1, 1
+
+    # MDCard:
+    #     size_hint_y: None
+    #     height: dp(120)
+    #     md_bg_color: 0.15, 0.2, 0.3, 1
+    #     radius: [12]
+    #     padding: dp(10)
+    #     orientation: "vertical"
+
+    #     MDIcon:
+    #         icon: "gas-station"
+    #         font_size: "32sp"
+    #         pos_hint: {"center_x": 0.5}
+
+    #     MDLabel:
+    #         text: "Consumo Diesel"
+    #         halign: "center"
+    #         theme_text_color: "Secondary"
+
+    #     MDLabel:
+    #         text: "[b]25 L / 100km[/b]"
+    #         halign: "center"
+    #         markup: True
+    #         theme_text_color: "Custom"
+    #         text_color: 1, 1, 1, 1
+
+    #             # Adicione os outros 3 blocos seguindo o mesmo padrão:
+    #             # Consumo Arla, Marcha Lenta, Km Rodado
 
         MDRaisedButton:
             text: "SAIR"
