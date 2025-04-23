@@ -49,7 +49,9 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
-                on_press: root.manager.current = 'home'
+                on_press: 
+                    root.manager.transition.direction = 'right' 
+                    root.manager.current = 'home'
 
             MDIconButton:
                 icon: "account"
@@ -57,7 +59,9 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
-                on_press: root.manager.current = 'perfil'
+                on_press: 
+                    root.manager.transition.direction = 'right' 
+                    root.manager.current = 'perfil'
 
             MDIconButton:
                 icon: "history"
@@ -65,7 +69,9 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
-                on_press: root.manager.current = 'historico'
+                on_press: 
+                    root.manager.transition.direction = 'right' 
+                    root.manager.current = 'historico'
 
             MDIconButton:
                 icon: "cog"
@@ -91,11 +97,13 @@ ScreenManager:
             spacing: dp(10)
             md_bg_color: 0.09, 0.1, 0.15, 1  # Card azul escuro
             radius: [15, 15, 15, 15]
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
             MDBoxLayout:
                 orientation: "horizontal"
                 spacing: dp(10)
-                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                pos_hint: {"center_x": 0.72}
+                
 
                 MDIcon:
                     icon: "cog"
@@ -112,106 +120,166 @@ ScreenManager:
                     text_color: 1, 1, 1, 1
                     font_style: "H6"
                     markup: True
-            
+
+
             MDCard:
                 orientation: "vertical"
                 padding: dp(20)
-                spacing: dp(2)
-                md_bg_color: 0.10, 0.15, 0.22, 1  # Azul escuro mais visível
-                radius: [15, 15, 15, 15]
+                spacing: dp(10)
+                md_bg_color: 0.10, 0.15, 0.22, 1 
+                radius: [15, 15, 15, 15] 
 
                 MDBoxLayout:
                     orientation: "horizontal"
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5}
+                    
+
+                    MDSwitch:
+                        pos_hint: {'center_x': 0.1, 'center_y': 0.25}
+                        active: False
+                        icon_inactive: "close-thick"
+                        icon_active: "check-bold"
+                        thumb_color_active: "white"
+                        icon_active_color: "black"
 
                     MDLabel:
-                        text: "[b]Nome:[/b]"
-                        theme_text_color: "Custom"
-                        text_color: (0.66, 0.73, 0.27, 1)
-                        font_style: "H6"
-                        markup: True
-
-
-                    MDLabel:
-                        text: "[b]Rafael Teste[/b]"
+                        text: "      [b]Ativar as Notificações[/b]"
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
                         font_style: "Body1"
                         markup: True
-
+            
                 # Espaço "\n"
                 MDBoxLayout:
                     orientation: "horizontal"
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5}
 
                     MDLabel:
                         text: " "
                         theme_text_color: "Custom"
                         text_color: (0.66, 0.73, 0.27, 1)
                         font_style: "H6"
-                        markup: True
-
-
-                    MDLabel:
-                        text: " "
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_style: "Body1"
                         markup: True
 
                 MDBoxLayout:
                     orientation: "horizontal"
+                    spacing: dp(10)
+                    pos_hint: {"center_x": 0.5}
+                    
+
+                    MDSwitch:
+                        pos_hint: {'center_x': 0.1, 'center_y': 0.25}
+                        active: True
+                        icon_inactive: "close-thick"
+                        icon_active: "check-bold"
+                        thumb_color_active: "white"
+                        icon_active_color: "black"
 
                     MDLabel:
-                        text: "[b]Placa:[/b]"
-                        theme_text_color: "Custom"
-                        text_color: (0.66, 0.73, 0.27, 1)
-                        font_style: "H6"
-                        markup: True
-
-
-                    MDLabel:
-                        text: "[b]ABC123[/b]"
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_style: "Body1"
-                        markup: True
-
-                # Espaço "\n"
-                MDBoxLayout:
-                    orientation: "horizontal"
-
-                    MDLabel:
-                        text: " "
-                        theme_text_color: "Custom"
-                        text_color: (0.66, 0.73, 0.27, 1)
-                        font_style: "H6"
-                        markup: True
-
-
-                    MDLabel:
-                        text: " "
+                        text: "      [b]Usar tema escuro (ativado)[/b]"
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
                         font_style: "Body1"
                         markup: True
 
+            # MDCard:
+            #     orientation: "vertical"
+            #     padding: dp(20)
+            #     spacing: dp(2)
+            #     md_bg_color: 0.10, 0.15, 0.22, 1  # Azul escuro mais visível
+            #     radius: [15, 15, 15, 15]
 
-                MDBoxLayout:
-                    orientation: "horizontal"
-
-                    MDLabel:
-                        text: "[b]Caminhão:[/b]"
-                        theme_text_color: "Custom"
-                        text_color: (0.66, 0.73, 0.27, 1)
-                        font_style: "H6"
-                        markup: True
+            #     MDBoxLayout:
+            #         orientation: "horizontal"
 
 
-                    MDLabel:
-                        text: "[b]Volvo FH 540[/b]"
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_style: "Body1"
-                        markup: True
+            #         MDSwitch:
+            #             widget_style: 'android'
+            #             pos_hint: { 'center_y': .5}
+
+            #         MDLabel:
+            #             text: "[b]Nome:[/b]"
+            #             theme_text_color: "Custom"
+            #             text_color: (0.66, 0.73, 0.27, 1)
+            #             font_style: "H6"
+            #             markup: True
+
+
+            #         # MDLabel:
+            #         #     text: "[b]Rafael Teste[/b]"
+            #         #     theme_text_color: "Custom"
+            #         #     text_color: 1, 1, 1, 1
+            #         #     font_style: "Body1"
+            #         #     markup: True
+
+
+            
+
+
+            #         MDLabel:
+            #             text: " "
+            #             theme_text_color: "Custom"
+            #             text_color: 1, 1, 1, 1
+            #             font_style: "Body1"
+            #             markup: True
+
+            #     MDBoxLayout:
+            #         orientation: "horizontal"
+
+            #         MDLabel:
+            #             text: "[b]Placa:[/b]"
+            #             theme_text_color: "Custom"
+            #             text_color: (0.66, 0.73, 0.27, 1)
+            #             font_style: "H6"
+            #             markup: True
+
+
+            #         MDLabel:
+            #             text: "[b]ABC123[/b]"
+            #             theme_text_color: "Custom"
+            #             text_color: 1, 1, 1, 1
+            #             font_style: "Body1"
+            #             markup: True
+
+            #     # Espaço "\n"
+            #     MDBoxLayout:
+            #         orientation: "horizontal"
+
+            #         MDLabel:
+            #             text: " "
+            #             theme_text_color: "Custom"
+            #             text_color: (0.66, 0.73, 0.27, 1)
+            #             font_style: "H6"
+            #             markup: True
+
+
+            #         MDLabel:
+            #             text: " "
+            #             theme_text_color: "Custom"
+            #             text_color: 1, 1, 1, 1
+            #             font_style: "Body1"
+            #             markup: True
+
+
+            #     MDBoxLayout:
+            #         orientation: "horizontal"
+
+            #         MDLabel:
+            #             text: "[b]Caminhão:[/b]"
+            #             theme_text_color: "Custom"
+            #             text_color: (0.66, 0.73, 0.27, 1)
+            #             font_style: "H6"
+            #             markup: True
+
+
+            #         MDLabel:
+            #             text: "[b]Volvo FH 540[/b]"
+            #             theme_text_color: "Custom"
+            #             text_color: 1, 1, 1, 1
+            #             font_style: "Body1"
+            #             markup: True
 
             
             # <<< AQUI adicionamos um expansor invisível >>>
