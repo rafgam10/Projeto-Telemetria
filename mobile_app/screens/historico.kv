@@ -49,6 +49,7 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
+                on_press: root.manager.current = 'home'
 
             MDIconButton:
                 icon: "account"
@@ -56,6 +57,7 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
+                on_press: root.manager.current = 'perfil'
 
             MDIconButton:
                 icon: "history"
@@ -71,6 +73,7 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
+                on_press: root.manager.current = 'config'
 
         # Cabeçalho de
         MDBoxLayout:

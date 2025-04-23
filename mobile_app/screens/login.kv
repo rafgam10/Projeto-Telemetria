@@ -38,16 +38,37 @@ ScreenManager:
                 font_style: "Body2"
 
             MDLabel:
-                text: "[color=ffffff]Acesse com a placa do seu caminhão:[/color]"
+                text: "[b][color=ffffff]Monitore sua direção, conquiste metas e receba prêmios pela sua condução segura.[/color][/b]"
                 halign: "center"
+                # bold: True
                 markup: True
-                font_style: "Body1"
+                font_style: "Body2"
 
             MDLabel:
                 text: " "
                 halign: "center"
                 theme_text_color: "Secondary"
                 font_style: "Body2"
+            MDLabel:
+                text: " "
+                halign: "center"
+                theme_text_color: "Secondary"
+                font_style: "Body2"
+
+            MDLabel:
+                text: "[b][color=ffffff]Acesse com a placa do seu caminhão:[/color][/b]"
+                halign: "center"
+                # bold: True
+                markup: True
+                font_style: "Body1"
+
+
+            
+            # MDLabel:
+            #     text: " "
+            #     halign: "center"
+            #     theme_text_color: "Secondary"
+            #     font_style: "Body2"
 
             MDTextField:
                 id: placa_input
@@ -61,8 +82,9 @@ ScreenManager:
                 hint_text_color_normal: 0.66, 0.73, 0.27, 1
                 icon_right_color: 0.66, 0.73, 0.27, 1
 
-            MDRaisedButton:
+            MDFillRoundFlatButton:
                 text: "ENTRAR"
+                size_hint_x: 0.6
                 md_bg_color: 0.66, 0.73, 0.27, 1
                 text_color: 0, 0, 0, 1
                 pos_hint: {"center_x": 0.5}

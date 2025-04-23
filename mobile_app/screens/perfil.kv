@@ -49,6 +49,7 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
+                on_press: root.manager.current = 'home'
 
             MDIconButton:
                 icon: "account"
@@ -64,6 +65,7 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
+                on_press: root.manager.current = 'historico'
 
             MDIconButton:
                 icon: "cog"
@@ -71,6 +73,7 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
+                on_press: root.manager.current = 'config'
 
         # Cabeçalho de
         MDBoxLayout:
@@ -210,42 +213,6 @@ ScreenManager:
                         font_style: "Body1"
                         markup: True
 
-                # Espaço "\n"
-                MDBoxLayout:
-                    orientation: "horizontal"
-
-                    MDLabel:
-                        text: " "
-                        theme_text_color: "Custom"
-                        text_color: (0.66, 0.73, 0.27, 1)
-                        font_style: "H6"
-                        markup: True
-
-
-                    MDLabel:
-                        text: " "
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_style: "Body1"
-                        markup: True
-
-                MDBoxLayout:
-                    orientation: "horizontal"
-
-                    MDLabel:
-                        text: "[b]Experiência:[/b]"
-                        theme_text_color: "Custom"
-                        text_color: (0.66, 0.73, 0.27, 1)
-                        font_style: "H6"
-                        markup: True
-
-
-                    MDLabel:
-                        text: "[b]3 anos[/b]"
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_style: "Body1"
-                        markup: True
             
             # <<< AQUI adicionamos um expansor invisível >>>
             Widget:

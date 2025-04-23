@@ -22,12 +22,6 @@ ScreenManager:
             md_bg_color: 0.05, 0.07, 0.12, 1
             radius: [15, 15, 15, 15]
 
-            # MDIcon:
-            #     icon: "steering"
-            #     font_size: "40sp"
-            #     theme_text_color: "Custom"
-            #     text_color: (0.66, 0.73, 0.27, 1)
-            #     pos_hint: {"center_y": 0.5}
 
             MDLabel:
                 text: "[b][color=FFFFFF]Motorista[/color][color=A8BA44]Legal[/color][/b]"
@@ -39,9 +33,6 @@ ScreenManager:
                 size_hint_x: 60
                 pos_hint: {"center_y": 0.5}
 
-            # Widget:  # empurra os botões pro lado direito
-            #     size_hint_x: None
-            #     width: dp(20)
 
             MDIconButton:
                 icon: "home-variant-outline"
@@ -57,6 +48,7 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
+                on_press: root.manager.current = 'perfil'
 
             MDIconButton:
                 icon: "history"
@@ -64,6 +56,7 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
+                on_press: root.manager.current = 'historico'
 
             MDIconButton:
                 icon: "cog"
@@ -71,14 +64,7 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
-
-            # MDIconButton:
-            #     icon: "help-circle-outline"
-            #     theme_text_color: "Custom"
-            #     text_color: (0.66, 0.73, 0.27, 1)
-            #     pos_hint: {"center_y": 0.5}
-            #     user_font_size: "28sp"
-            #     on_release: app.ir_para_login()
+                on_press: root.manager.current = 'config'
 
 
          # Cabeçalho de
