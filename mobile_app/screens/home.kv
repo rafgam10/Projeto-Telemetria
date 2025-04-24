@@ -11,6 +11,7 @@ ScreenManager:
         spacing: dp(10)
         md_bg_color: 0.05, 0.07, 0.12, 1  # Fundo escuro
 
+        # Topo Bar:
         MDTopAppBar:
         
             orientation: "horizontal"
@@ -48,7 +49,9 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
-                on_press: root.manager.current = 'perfil'
+                on_press:
+                    root.manager.transition.direction = 'left' 
+                    root.manager.current = 'perfil'
 
             MDIconButton:
                 icon: "history"
@@ -56,7 +59,9 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
-                on_press: root.manager.current = 'historico'
+                on_press: 
+                    root.manager.transition.direction = 'left' 
+                    root.manager.current = 'historico'
 
             MDIconButton:
                 icon: "cog"
@@ -64,7 +69,9 @@ ScreenManager:
                 text_color: 1,1,1,1
                 pos_hint: {"center_y": 0.5}
                 user_font_size: "20sp"
-                on_press: root.manager.current = 'config'
+                on_press: 
+                    root.manager.transition.direction = 'left' 
+                    root.manager.current = 'config'
 
 
          # Cabeçalho de
@@ -78,6 +85,36 @@ ScreenManager:
 
 
         MDCard:
+            md_bg_color: 0.09, 0.1, 0.15, 1  # Card azul escuro
+
+            MDSwiper:
+                size_hint_y: None
+                height: root.height - dp(200)  # ajuste conforme seu layout
+                y: root.height - self.height - dp(60)
+
+                MDSwiperItem:
+                    FitImage:
+                        source: "assets/logo4.png"
+                        radius: [20]
+                        size_hint: None, None
+                        size: dp(250), dp(350)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.53}
+
+                MDSwiperItem:
+                    FitImage:
+                        source: "assets/logo2.png"
+                        radius: [20]
+                        size_hint: None, None
+                        size: dp(250), dp(350)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.53}
+
+                MDSwiperItem:
+                    FitImage:
+                        source: "assets/logo3.png"
+                        radius: [20]
+                        size_hint: None, None
+                        size: dp(250), dp(350)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.53}
     #         orientation: "horizontal"
     #         padding: dp(20)
     #         spacing: dp(10)
