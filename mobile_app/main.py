@@ -8,8 +8,9 @@ from kivymd.uix.button import MDIconButton, MDRectangleFlatIconButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.behaviors.toggle_behavior import MDToggleButton
 from kivymd.uix.toolbar import MDTopAppBar  # tudo junto: MDToolbar
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # Lib do Gráfico
 import os
+import requests
 
 
 #Tamanho da Janela:
@@ -33,7 +34,7 @@ class HistoryScreen(MDScreen):
 class ConfigScreen(MDScreen):
     pass
 
-class LoginApp(MDApp, App):
+class MainApp(MDApp, App):
 
     def build(self, **kwargs):
         Builder.load_file(os.path.join("mobile_app", "screens", "login.kv"))
@@ -52,8 +53,8 @@ class LoginApp(MDApp, App):
         self.sm.add_widget(ConfigScreen(name="config"))
 
         return self.sm
-        # return Builder.load_file(os.path.join("mobile_app", "screens", "home.kv"))
-        #return Builder.load_file(os.path.join("mobile_app", "screens", "config.kv"))
+        #return Builder.load_file(os.path.join("mobile_app", "screens", "home.kv"))
+        #return Builder.load_file(os.path.join("mobile_app", "screens", "historico.kv"))
 
     def pegar_placa(self):
         placa = self.sm.get_screen("login").ids.placa_input.text
@@ -73,5 +74,8 @@ class LoginApp(MDApp, App):
     def mudar_tela(self, nome_tela):
         self.app.current = nome_tela
 
+    def salvar_config(self):
+        pass
+
 if __name__ == "__main__":
-    LoginApp().run()
+    MainApp().run()
