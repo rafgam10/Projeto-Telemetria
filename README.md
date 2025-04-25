@@ -13,7 +13,7 @@ projeto-telemetria/
 │   ├── database/            # Configuração do banco de dados (SQLite ou PostgreSQL)
 │   └── excel_importer/      # Scripts para leitura automática da planilha Excel
 
-├── mobile_app/              # Aplicativo Mobile feito com Kivy
+├── mobile_app/              # Aplicativo Mobile feito com KivyMD
 │   ├── main.py              # App principal
 │   ├── screens/             # Telas (login, dashboard, histórico, etc.)
 │   ├── services/            # Comunicação com a API (requisições HTTP)
@@ -43,7 +43,7 @@ projeto-telemetria/
    - Banco de dados relacional (SQLite para testes, PostgreSQL na produção).
    - Proteção com JWT para login e acesso seguro.
 
-3. **📱 App com Kivy**
+3. **📱 App com KivyMD**
    - Tela de login.
    - Dashboard com desempenho (gráficos e notas).
    - Tela de histórico com últimos dados.
