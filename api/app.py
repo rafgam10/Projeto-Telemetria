@@ -4,7 +4,7 @@ from models.motorista import MotoristaModel
 
 app = Flask(__name__)
 api = Api(app=app)
-
+ 
 
 api.add_resource(MotoristaModel, "/")
 
