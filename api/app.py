@@ -1,12 +1,41 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 from models.motorista import MotoristaModel
 
-app = Flask(__name__)
-api = Api(app=app)
- 
+from database.database_handler import obter_dados
 
-api.add_resource(MotoristaModel, "/")
+app = Flask(__name__)
+
+@app.route("/api/placas", methods=["GET"]) 
+def listar_placas():
+    dados = obter_dados()
+    placas = list({linha[1] for linha in dados})
+    return jsonify({"placas":placas})
+
+@app.route("/api/dados", methods=["GET"])
+def listar_dados_completos():
+    dados = obter_dados()
+    colunas = [
+        "motorista", "placa", "frota", "marca",
+        "data", "datasSaida", "dataChegada", "qtdDias", "totalHrs",
+        "KmSaida", "KmChegada", "KmRodado",
+        "LtArla", "LtDiesel", "LtPorDia"
+        ]
+    resultado = [dict(zip(colunas, linha)) for linha in dados]
+    return jsonify(resultado)
+
+@app.route("/api/dados/<placa>", methods=["GET"])
+def dados_por_placa(placa):
+    dados = obter_dados()
+    colunas = [
+        "motorista", "placa", "frota", "marca",
+        "data", "datasSaida", "dataChegada", "qtdDias", "totalHrs",
+        "KmSaida", "KmChegada", "KmRodado",
+        "LtArla", "LtDiesel", "LtPorDia"
+    ]
+    filtrados = [dict(zip(colunas, linha)) for linha in dados if linha[1] == placa.upper()]
+    return jsonify(filtrados)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
