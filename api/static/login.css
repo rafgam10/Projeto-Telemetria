@@ -1,0 +1,163 @@
+/* login.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    background-color: rgba(0, 0, 0, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+img {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 10px;
+}
+
+.h2Subtitulo {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#subt2 {
+    color: rgb(168, 186, 69);
+}
+
+span {
+    font-size: 16px;
+    margin-bottom: 20px;
+    max-width: 400px;
+}
+
+form {
+    background-color: rgba(13, 18, 30, 1);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 550px;
+}
+
+h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+#Box {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.inputBox {
+    display: flex;
+    align-items: center;
+    background-color: #1e1e2f;
+    border-radius: 5px;
+    padding: 10px 15px;
+}
+
+.inputBox input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 16px;
+}
+
+.inputBox img {
+    padding-top: 5px;
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+    filter: brightness(0) saturate(100%) invert(74%) sepia(47%) saturate(327%) hue-rotate(32deg) brightness(99%) contrast(92%);
+}
+
+.inputBox img:hover {
+    filter: brightness(0) saturate(100%) invert(85%) sepia(24%) saturate(521%) hue-rotate(40deg) brightness(105%) contrast(95%);
+}
+
+button {
+    margin-top: 10px;
+    padding: 12px;
+    border: none;
+    background-color: rgb(168, 186, 69);
+    color: white;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: rgb(150, 165, 60);
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    #logo {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 5px;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    .h2Subtitulo {
+        flex-direction: row;
+        gap: 5px;
+    }
+
+    .inputBox {
+        padding: 8px 10px;
+    }
+
+    .inputBox input {
+        font-size: 14px;
+    }
+
+    .inputBox img {
+        height: 24px;
+        width: 24px;
+    }
+
+    button {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    span {
+        font-size: 14px;
+        max-width: 100%;
+    }
+
+    img {
+        width: 80px;
+    }
+}
