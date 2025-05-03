@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template, redirect
 from flask_restful import Api, Resource
 from models.motorista import MotoristaModel
 
@@ -6,6 +6,7 @@ from database.database_handler import obter_dados
 
 app = Flask(__name__)
 
+#Rota da API:
 @app.route("/api/placas", methods=["GET"]) 
 def listar_placas():
     dados = obter_dados()
@@ -37,5 +38,26 @@ def dados_por_placa(placa):
     return jsonify(filtrados)
 
 
+# Rota para página Login:
+@app.route("/login", methods=['POST',])
+def IndexLogin():
+    return render_template('loginAdmin.html')
+
+# Rota para autenticação do Login:
+@app.route("/autenticar", methods=["POST",])
+def autenticar():
+    pass
+
+# Rotas para páginas Admin
+@app.route("/admin", methods=["GET"])
+def IndexAdmin():
+    return render_template('HomeAdmin.html')
+
+@app.route('/admin/inserirDados', methods=["POST"])
+def Index_Inserir_Dados():
+    return render_template('inserirExcel.html')
+
+
+# Compilador: 
 if __name__ == "__main__":
     app.run(debug=True)

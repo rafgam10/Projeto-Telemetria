@@ -8,9 +8,13 @@ from kivymd.uix.button import MDIconButton, MDRectangleFlatIconButton
 from kivymd.uix.card import MDCard
 from kivymd.uix.behaviors.toggle_behavior import MDToggleButton
 from kivymd.uix.toolbar import MDTopAppBar  # tudo junto: MDToolbar
-import matplotlib.pyplot as plt # Lib do Gráfico
+#import matplotlib.pyplot as plt # Lib do Gráfico
 import os
-import requests
+from services.func import *
+
+
+# from kivy.config import Config
+# Config.set('kivy', 'keyboard_mode', 'dock')
 
 
 #Tamanho da Janela:
@@ -52,16 +56,17 @@ class MainApp(MDApp, App):
         self.sm.add_widget(HistoryScreen(name="historico"))
         self.sm.add_widget(ConfigScreen(name="config"))
 
-        return self.sm
-        #return Builder.load_file(os.path.join("mobile_app", "screens", "home.kv"))
+        #return self.sm
+        return Builder.load_file(os.path.join("mobile_app", "screens", "login.kv"))
         #return Builder.load_file(os.path.join("mobile_app", "screens", "historico.kv"))
 
     def pegar_placa(self):
-        placa = self.sm.get_screen("login").ids.placa_input.text
-        print(f"Placa digitada: {placa}")
+        placaInput = self.sm.get_screen("login").ids.placa_input.text
+        print(f"Placa digitada: {placaInput}")
         self.sm.get_screen("login").ids.placa_input.text = ""
 
-        if placa == "123":
+        if verificar_placa_no_servidor(placaInput):
+        # if placa == "123":
             self.sm.current = "home"
 
     def ir_para_login(self):

@@ -40,6 +40,7 @@ projeto-telemetria/
      - `/login`
      - `/motorista/<id>`
      - `/motorista/<id>/desempenho`
+     - `/api/placas` - O Caminho para os dados das placas.
    - Banco de dados relacional (SQLite para testes, PostgreSQL na produção).
    - Proteção com JWT para login e acesso seguro.
 
