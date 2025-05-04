@@ -39,21 +39,29 @@ def dados_por_placa(placa):
 
 
 # Rota para página Login:
-@app.route("/login", methods=['POST',])
+@app.route("/login", methods=["GET",'POST'])
 def IndexLogin():
     return render_template('loginAdmin.html')
 
 # Rota para autenticação do Login:
 @app.route("/autenticar", methods=["POST",])
 def autenticar():
-    pass
+    senha = request.form.get("InputSenha")
+    
+    if senha == "admin":
+        return redirect("/admin")
+    else:
+        return redirect('/login') 
+      
+    return render_template("loginAdmin.html") 
+
 
 # Rotas para páginas Admin
-@app.route("/admin", methods=["GET"])
+@app.route("/admin", methods=["GET", 'POST'])
 def IndexAdmin():
     return render_template('HomeAdmin.html')
 
-@app.route('/admin/inserirDados', methods=["POST"])
+@app.route('/admin/inserirDados', methods=['GET',"POST"])
 def Index_Inserir_Dados():
     return render_template('inserirExcel.html')
 
