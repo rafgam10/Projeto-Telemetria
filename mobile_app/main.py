@@ -11,10 +11,9 @@ from kivymd.uix.toolbar import MDTopAppBar  # tudo junto: MDToolbar
 #import matplotlib.pyplot as plt # Lib do Gráfico
 import os
 from services.func import *
+import requests, json
 
 
-# from kivy.config import Config
-# Config.set('kivy', 'keyboard_mode', 'dock')
 
 
 #Tamanho da Janela:
@@ -56,9 +55,13 @@ class MainApp(MDApp, App):
         self.sm.add_widget(HistoryScreen(name="historico"))
         self.sm.add_widget(ConfigScreen(name="config"))
 
-        #return self.sm
-        return Builder.load_file(os.path.join("mobile_app", "screens", "login.kv"))
+        self.dados_motorista = {}  # Armazena os dados do motorista
+
+        return self.sm
+        #return Builder.load_file(os.path.join("mobile_app", "screens", "perfil.kv"))
         #return Builder.load_file(os.path.join("mobile_app", "screens", "historico.kv"))
+
+    
 
     def pegar_placa(self):
         placaInput = self.sm.get_screen("login").ids.placa_input.text
@@ -66,8 +69,34 @@ class MainApp(MDApp, App):
         self.sm.get_screen("login").ids.placa_input.text = ""
 
         if verificar_placa_no_servidor(placaInput):
-        # if placa == "123":
-            self.sm.current = "home"
+            data = pegar_dado(placaId=placaInput)
+            if data:
+                self.dados_motorista = data[0]
+                self.atualizar_dados_app()
+                self.sm.current = "home"
+            else:
+                print("Nenhum dado encontrado.")
+                
+
+    def atualizar_dados_app(self):
+        
+        #Páginas para atualizar com dados:
+        perfil_screen = self.sm.get_screen("perfil")
+        
+        listaNOMEeID = self.dados_motorista.get("motorista", "Desconhecido").split(' - ')
+        
+        labelId = f"[b]{listaNOMEeID[0]}[/b]"
+        labelNome = f"[b]{listaNOMEeID[1]}[/b]"
+        labelPlaca = f"[b]{self.dados_motorista.get("placa")}[/b]"
+        labelCaminhao = f"[b]{self.dados_motorista.get("marca")}[/b]"
+        labelFrota = f"[b]{self.dados_motorista.get("frota")}[/b]"
+        
+        #Colocar no Ids:
+        perfil_screen.ids.Label_ideficador.text = labelId
+        perfil_screen.ids.Label_nome.text = labelNome
+        perfil_screen.ids.Label_placa.text = labelPlaca
+        perfil_screen.ids.Label_caminhao.text = labelCaminhao
+        perfil_screen.ids.Label_frota.text = labelFrota
 
     def ir_para_login(self):
         self.sm = MDScreenManager()
