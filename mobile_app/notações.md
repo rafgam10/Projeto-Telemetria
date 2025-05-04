@@ -8,7 +8,7 @@
 [ ] - Organizar o código.
 [X] - Criar página de Login.
 [X] - Fazer autenticação simples para acessar a página Admin
-[ ] - Criar página Admin.
+[ ] - Criar Painel Admin.
 [ ] - Criar página de Inserir excel.
 [ ] - Criar a Tela de Sem Conexão no KivyMD.
 [ ] - Colocar msg para avisa de o acesso no App Mobile não for achado.

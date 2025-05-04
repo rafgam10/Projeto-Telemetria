@@ -56,6 +56,7 @@ def autenticar():
     return render_template("loginAdmin.html") 
 
 
+
 # Rotas para páginas Admin
 @app.route("/admin", methods=["GET", 'POST'])
 def IndexAdmin():

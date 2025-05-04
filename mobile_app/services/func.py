@@ -1,4 +1,4 @@
-import requests
+import requests, json
 import matplotlib.pyplot as plt
 
 
@@ -16,4 +16,11 @@ def Dados_API():
     #Código para retorna o dict dos dados gerais.
 
 
-#
+# Função para pegar Dados da placa:
+def pegar_dado(placaId):
+        url = f'http://127.0.0.1:5000/api/dados/{placaId}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.json()
+
+
