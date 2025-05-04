@@ -88,33 +88,521 @@ ScreenManager:
             md_bg_color: 0.09, 0.1, 0.15, 1  # Card azul escuro
 
             MDSwiper:
+                id: swiper_graficos
                 size_hint_y: None
-                height: root.height - dp(200)  # ajuste conforme seu layout
+                height: root.height - dp(200)
                 y: root.height - self.height - dp(60)
 
                 MDSwiperItem:
-                    FitImage:
-                        source: "assets/logo4.png"
-                        radius: [20]
-                        size_hint: None, None
-                        size: dp(250), dp(350)
-                        pos_hint: {"center_x": 0.5, "center_y": 0.53}
+                    orientation: 'vertical'
+                    md_bg_color: 0.10, 0.15, 0.22, 1  # Azul escuro mais visível
+                    size_hint: None, None
+                    size: dp(250), dp(100)
+                    radius: [20]
+                    padding: dp(30), dp(0), dp(30), dp(10)
+
+                    
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        spacing: dp(5)
+                        padding: dp(0), dp(30), dp(0), dp(10)
+                        pos_hint: {"center_x": 0.7}
+
+                        MDIcon:
+                            icon: "truck-fast"
+                            font_size: "25sp"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            size_hint: None, None
+                            size: self.texture_size
+                            pos_hint: {"center_x":0.5,"center_y": 0.5}
+
+                        MDLabel:
+                            text: "[b]Status Km[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "H6"
+                            markup: True
+
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
+
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        md_bg_color: 0.18, 0.54, 0.47, 1
+                        padding: dp(10), dp(5), dp(10), dp(5)
+                        radius: dp(15)
+
+                        MDLabel:
+                            text: "[b]KM Rodado:[/b]"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "Subtitle1"
+                            markup: True
+
+
+                        MDLabel:
+                            id: Label_KmRodado
+                            text: "[b]04191[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
+
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        md_bg_color: 0.18, 0.54, 0.47, 1
+                        padding: dp(10), dp(5), dp(10), dp(5)
+                        radius: dp(15)
+
+                        MDLabel:
+                            text: "[b]KM Saída:[/b]"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "Subtitle1"
+                            markup: True
+
+
+                        MDLabel:
+                            id: Label_KmSaida
+                            text: "[b]Rafael Teste[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
+
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        md_bg_color: 0.18, 0.54, 0.47, 1
+                        padding: dp(10), dp(5), dp(10), dp(5)
+                        radius: dp(15)
+
+                        MDLabel:
+                            text: "[b]KM Chegada:[/b]"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "Subtitle1"
+                            markup: True
+
+
+                        MDLabel:
+                            id: Label_KmChegada
+                            text: "[b]ABC123[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
 
                 MDSwiperItem:
-                    FitImage:
-                        source: "assets/logo2.png"
-                        radius: [20]
-                        size_hint: None, None
-                        size: dp(250), dp(350)
-                        pos_hint: {"center_x": 0.5, "center_y": 0.53}
+                    orientation: 'vertical'
+                    md_bg_color: 0.10, 0.15, 0.22, 1  # Azul escuro mais visível
+                    size_hint: None, None
+                    size: dp(250), dp(100)
+                    radius: [20]
+                    padding: dp(30), dp(0), dp(30), dp(10)
+
+                    
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        spacing: dp(5)
+                        padding: dp(0), dp(30), dp(0), dp(10)
+                        pos_hint: {"center_x": 0.54}
+
+                        MDIcon:
+                            icon: "fuel"
+                            font_size: "25sp"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            size_hint: None, None
+                            size: self.texture_size
+                            pos_hint: {"center_x":0.5,"center_y": 0.5}
+
+                        MDLabel:
+                            text: "[b]Status Combustivel[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "H6"
+                            markup: True
+
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
+
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        md_bg_color: 0.18, 0.54, 0.47, 1
+                        padding: dp(10), dp(5), dp(10), dp(5)
+                        radius: dp(15)
+
+                        MDLabel:
+                            text: "[b]Litros Por Dia:[/b]"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "Subtitle1"
+                            markup: True
+
+
+                        MDLabel:
+                            id: Label_LtPorDia
+                            text: "[b]04191[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
+
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        # md_bg_color: 0.25, 0.35, 0.55, 1
+                        md_bg_color: 0.18, 0.54, 0.47, 1
+                        padding: dp(10), dp(5), dp(10), dp(5)
+                        radius: dp(15)
+
+                        MDLabel:
+                            text: "[b]Litros Diesel:[/b]"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "Subtitle1"
+                            markup: True
+
+
+                        MDLabel:
+                            id: Label_LtDiesel
+                            text: "[b]Rafael Teste[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
+
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        md_bg_color: 0.18, 0.54, 0.47, 1
+                        padding: dp(10), dp(5), dp(10), dp(5)
+                        radius: dp(15)
+
+                        MDLabel:
+                            text: "[b]Litros Arla:[/b]"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "Subtitle1"
+                            markup: True
+
+
+                        MDLabel:
+                            id: Label_LtArla
+                            text: "[b]ABC123[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
 
                 MDSwiperItem:
-                    FitImage:
-                        source: "assets/logo3.png"
-                        radius: [20]
-                        size_hint: None, None
-                        size: dp(250), dp(350)
-                        pos_hint: {"center_x": 0.5, "center_y": 0.53}
+                    orientation: 'vertical'
+                    md_bg_color: 0.10, 0.15, 0.22, 1  # Azul escuro mais visível
+                    size_hint: None, None
+                    size: dp(250), dp(100)
+                    radius: [20]
+                    padding: dp(30), dp(0), dp(30), dp(10)
+
+                    
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        spacing: dp(5)
+                        padding: dp(0), dp(30), dp(0), dp(10)
+                        pos_hint: {"center_x": 0.54}
+
+                        MDIcon:
+                            icon: "calendar-today"
+                            font_size: "25sp"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            size_hint: None, None
+                            size: self.texture_size
+                            pos_hint: {"center_x":0.5,"center_y": 0.5}
+
+                        MDLabel:
+                            text: "[b]Status Última Data[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "H6"
+                            markup: True
+
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
+
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        md_bg_color: 0.18, 0.54, 0.47, 1
+                        padding: dp(10), dp(5), dp(10), dp(5)
+                        radius: dp(15)
+
+                        MDLabel:
+                            text: "[b]Data:[/b]"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "Subtitle1"
+                            markup: True
+
+
+                        MDLabel:
+                            id: Label_Data
+                            text: "[b]04191[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
+
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        # md_bg_color: 0.25, 0.35, 0.55, 1
+                        md_bg_color: 0.18, 0.54, 0.47, 1
+                        padding: dp(10), dp(5), dp(10), dp(5)
+                        radius: dp(15)
+
+                        MDLabel:
+                            text: "[b]Data Chegada:[/b]"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "Subtitle1"
+                            markup: True
+
+
+                        MDLabel:
+                            id: Label_DataChegada
+                            text: "[b]Rafael Teste[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
+
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        md_bg_color: 0.18, 0.54, 0.47, 1
+                        padding: dp(10), dp(5), dp(10), dp(5)
+                        radius: dp(15)
+
+                        MDLabel:
+                            text: "[b]Data Saida:[/b]"
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "Subtitle1"
+                            markup: True
+
+
+                        MDLabel:
+                            id: Label_DataSaida
+                            text: "[b]ABC123[/b]"
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1
+                            font_style: "Body1"
+                            markup: True
+
+                    # Espaço "\n"
+                    MDBoxLayout:
+                        orientation: "horizontal"
+
+                        MDLabel:
+                            text: " "
+                            theme_text_color: "Custom"
+                            text_color: (0.66, 0.73, 0.27, 1)
+                            font_style: "H6"
+                            markup: True
+
+  
     #         orientation: "horizontal"
     #         padding: dp(20)
     #         spacing: dp(10)
