@@ -119,12 +119,75 @@ ScreenManager:
                     font_style: "H6"
                     markup: True
             
+
             MDCard:
                 orientation: "vertical"
                 padding: dp(20)
-                spacing: dp(2)
+                spacing: dp(15)
                 md_bg_color: 0.10, 0.15, 0.22, 1  # Azul escuro mais visível
                 radius: [15, 15, 15, 15]
+                size_hint_y: None
+                height: dp(300) 
+
+                # Espaço "\n"
+                MDBoxLayout:
+                    orientation: "horizontal"
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: (0.66, 0.73, 0.27, 1)
+                        font_style: "H6"
+                        markup: True
+
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_style: "Body1"
+                        markup: True
+
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+
+                    MDLabel:
+                        text: "[b]ID:[/b]"
+                        theme_text_color: "Custom"
+                        text_color: (0.66, 0.73, 0.27, 1)
+                        font_style: "H6"
+                        markup: True
+
+
+                    MDLabel:
+                        id: Label_ideficador
+                        text: "[b]04191[/b]"
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_style: "Body2"
+                        markup: True
+
+                # Espaço "\n"
+                MDBoxLayout:
+                    orientation: "horizontal"
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: (0.66, 0.73, 0.27, 1)
+                        font_style: "H6"
+                        markup: True
+
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_style: "Body1"
+                        markup: True
+
+
 
                 MDBoxLayout:
                     orientation: "horizontal"
@@ -138,10 +201,11 @@ ScreenManager:
 
 
                     MDLabel:
+                        id: Label_nome
                         text: "[b]Rafael Teste[/b]"
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
-                        font_style: "Body1"
+                        font_style: "Body2"
                         markup: True
 
                 # Espaço "\n"
@@ -175,10 +239,11 @@ ScreenManager:
 
 
                     MDLabel:
+                        id: Label_placa
                         text: "[b]ABC123[/b]"
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
-                        font_style: "Body1"
+                        font_style: "Body2"
                         markup: True
 
                 # Espaço "\n"
@@ -213,10 +278,69 @@ ScreenManager:
 
 
                     MDLabel:
+                        id: Label_caminhao
                         text: "[b]Volvo FH 540[/b]"
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
+                        font_style: "Body2"
+                        markup: True
+
+                # Espaço "\n"
+                MDBoxLayout:
+                    orientation: "horizontal"
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: (0.66, 0.73, 0.27, 1)
+                        font_style: "H6"
+                        markup: True
+
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
                         font_style: "Body1"
+                        markup: True
+
+                
+                MDBoxLayout:
+                    orientation: "horizontal"
+
+                    MDLabel:
+                        text: "[b]Frota:[/b]"
+                        theme_text_color: "Custom"
+                        text_color: (0.66, 0.73, 0.27, 1)
+                        font_style: "H6"
+                        markup: True
+
+
+                    MDLabel:
+                        id: Label_frota
+                        text: "[b]3572[/b]"
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_style: "Body2"
+                        markup: True
+
+                # Espaço "\n"
+                MDBoxLayout:
+                    orientation: "horizontal"
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: (0.66, 0.73, 0.27, 1)
+                        font_style: "H6"
+                        markup: True
+
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_style: "Body2"
                         markup: True
 
             
