@@ -14,7 +14,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.list import TwoLineIconListItem, IconLeftWidget
 
-#import matplotlib.pyplot as plt # Lib do Gráfico
 import os
 
 from services.func import *
@@ -213,14 +212,7 @@ class MainApp(MDApp, App):
 
     def salvar_config(self):
         pass
-    
-    
-    
 
-
-
-    
-    
 
 if __name__ == "__main__":
     MainApp().run()
