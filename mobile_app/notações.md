@@ -7,6 +7,7 @@
 [ ] - Revisar os dados utilizados e que não foram utilizados.
 [ ] - Criar a lógica para trocar o tema do App.
 [ ] - Criar a lógica de salvar o config.kv.
+[ ] - Adicionar um Button de Help do App.
 [ ] - Melhorar a parte das fucionalidades.
 [ ] - Organizar o código.
 [X] - Criar página de Login.
