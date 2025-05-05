@@ -1,0 +1,29 @@
+<ErroScreen>:
+    name: "erro"
+    MDFloatLayout:
+        md_bg_color: 0, 0, 0, 1  
+
+        MDLabel:
+            text: "Sem conexão com a internet"
+            halign: "center"
+            theme_text_color: "Error"
+            font_style: "H5"
+            pos_hint: {"center_x": 0.5, "center_y": 0.6}
+
+        MDIcon:
+            icon: "wifi-off"
+            halign: "center"
+            theme_text_color: "Error"
+            font_size: "72sp"
+            pos_hint: {"center_x": 0.5, "center_y": 0.75}
+
+        MDRectangleFlatIconButton:
+            text: "[b]Tentar Novamente[/b]"
+            icon: "refresh"
+            theme_text_color: "Custom"
+            text_color: "white"
+            line_color: "white"
+            md_bg_color: 0.66, 0.73, 0.27, 1
+            icon_color: "white"
+            pos_hint: {"center_x": 0.5, "center_y": 0.4}
+            on_release: app.verificar_conexao()
