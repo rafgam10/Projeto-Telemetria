@@ -1,5 +1,16 @@
-import requests, json
 import matplotlib.pyplot as plt
+from datetime import datetime
+import pandas as pd
+import os
+import requests, json
+
+# Objeto do Historico:
+class ObjHistorico:
+    
+    def __init__(self, *args, **kwargs):
+         super(CLASS_NAME, self).__init__(*args, **kwargs)
+    
+    
 
 
 # Função para verificar a placa para acesso de login:
@@ -24,3 +35,26 @@ def pegar_dado(placaId):
             return response.json()
 
 
+#Gráficos:
+def atualizar_swiper_com_graficos(self):
+    home_screen = self.sm.get_screen("home")
+    swiper = home_screen.ids.meu_swiper  # << Certifique-se que o ID no .kv está correto
+
+    swiper.clear_widgets()  # Limpa os swiper items anteriores
+
+    lista_de_dados = [self.dados_motorista]  # Pode ser múltiplos conjuntos futuramente
+
+    for i, dados in enumerate(lista_de_dados):
+        caminho_grafico = gerar_grafico_dados_motorista([dados], salvar_em=f"grafico{i}.png")
+        caminho_grafico = os.path.join("mobile_app", "static", f"grafico{i}.png")
+
+        swiper_item = MDSwiperItem()
+        imagem = FitImage(
+            source=caminho_grafico,
+            radius=[20],
+            size_hint=(None, None),
+            size=(250, 350),
+            pos_hint={"center_x": 0.5, "center_y": 0.53},
+        )
+        swiper_item.add_widget(imagem)
+        swiper.add_widget(swiper_item)
