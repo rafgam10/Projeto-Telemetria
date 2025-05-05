@@ -18,4 +18,5 @@
 [X] - Criar a Tela de Sem Conexão no KivyMD.
 [X] - Colocar msg para avisa/Snackbar de o acesso no App Mobile não for achado.
 [ ] - Finalizar as rotas da API para os dados.
+[ ] - Fazer o Apk.
 [ ] - Fazer o Teste no Celular.
