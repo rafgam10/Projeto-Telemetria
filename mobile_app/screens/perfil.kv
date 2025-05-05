@@ -122,12 +122,12 @@ ScreenManager:
 
             MDCard:
                 orientation: "vertical"
-                padding: dp(20)
+                padding: dp(20), dp(15), dp(20), dp(15)
                 spacing: dp(15)
                 md_bg_color: 0.10, 0.15, 0.22, 1  # Azul escuro mais visível
                 radius: [15, 15, 15, 15]
                 size_hint_y: None
-                height: dp(300) 
+                height: dp(400) 
 
                 # Espaço "\n"
                 MDBoxLayout:
@@ -165,7 +165,7 @@ ScreenManager:
                         text: "[b]04191[/b]"
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
-                        font_style: "Body2"
+                        font_style: "Body1"
                         markup: True
 
                 # Espaço "\n"
@@ -243,7 +243,7 @@ ScreenManager:
                         text: "[b]ABC123[/b]"
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
-                        font_style: "Body2"
+                        font_style: "Body1"
                         markup: True
 
                 # Espaço "\n"
@@ -282,7 +282,7 @@ ScreenManager:
                         text: "[b]Volvo FH 540[/b]"
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
-                        font_style: "Body2"
+                        font_style: "Body1"
                         markup: True
 
                 # Espaço "\n"
@@ -321,7 +321,7 @@ ScreenManager:
                         text: "[b]3572[/b]"
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
-                        font_style: "Body2"
+                        font_style: "Body1"
                         markup: True
 
                 # Espaço "\n"
@@ -340,7 +340,83 @@ ScreenManager:
                         text: " "
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
-                        font_style: "Body2"
+                        font_style: "Body1"
+                        markup: True
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+
+                    MDLabel:
+                        text: "[b]Quatidade de Dias:[/b]"
+                        theme_text_color: "Custom"
+                        text_color: (0.66, 0.73, 0.27, 1)
+                        font_style: "Subtitle1"
+                        markup: True
+
+
+                    MDLabel:
+                        id: Label_qtdDias
+                        text: "[b]3572[/b]"
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_style: "Body1"
+                        markup: True
+
+                # Espaço "\n"
+                MDBoxLayout:
+                    orientation: "horizontal"
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: (0.66, 0.73, 0.27, 1)
+                        font_style: "H6"
+                        markup: True
+
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_style: "Body1"
+                        markup: True
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+
+                    MDLabel:
+                        text: "[b]Total Horas:[/b]"
+                        theme_text_color: "Custom"
+                        text_color: (0.66, 0.73, 0.27, 1)
+                        font_style: "H6"
+                        markup: True
+
+
+                    MDLabel:
+                        id: Label_totalHrs
+                        text: "[b]3572[/b]"
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_style: "Body1"
+                        markup: True
+
+                # Espaço "\n"
+                MDBoxLayout:
+                    orientation: "horizontal"
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: (0.66, 0.73, 0.27, 1)
+                        font_style: "H6"
+                        markup: True
+
+
+                    MDLabel:
+                        text: " "
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_style: "Body1"
                         markup: True
 
             
