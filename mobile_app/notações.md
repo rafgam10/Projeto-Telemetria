@@ -5,6 +5,7 @@
 [X] - Ajeitar o Switch e deixar centralizando com o texto.
 [X] - Deixar a cor do login de texto ativo quando perde o foco.
 [ ] - Revisar os dados utilizados e que não foram utilizados.
+[ ] - Colocar sombra no navbar do app.
 [ ] - Criar a lógica para trocar o tema do App.
 [ ] - Criar a lógica de salvar o config.kv.
 [ ] - Adicionar um Button de Help do App.

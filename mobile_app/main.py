@@ -77,7 +77,7 @@ class MainApp(MDApp, App):
 
         return self.sm
         #return Builder.load_file(os.path.join("mobile_app", "screens", "home.kv"))
-        #return Builder.load_file(os.path.join("mobile_app", "screens", "historico.kv"))
+        #return Builder.load_file(os.path.join("mobile_app", "screens", "suporte.kv"))
     
     def verificar_conexao(self):
         try:

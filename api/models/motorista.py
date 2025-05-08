@@ -1,15 +1,29 @@
-from flask_restful import Resource
-from flask import jsonify
+from flask_sqlalchemy import SQLAlchemy
 
-motoristaModel = {
-    "Nome": "João da Silva",
-    "Data": "01/04/2025",
-    "Km/h": 110,
-    "Km/l": 8.5,
-    "Km Rodados": 125
-}
+db = SQLAlchemy()
 
-class MotoristaModel(Resource):
-    
-    def get(self):
-        return jsonify(motoristaModel) 
+class MotoristaModel(db.Model):
+    __tablename__ = "motoristas"
+
+    id = db.Column(db.Integer, primary_key=True)
+    motorista = db.Column(db.String)
+    placa = db.Column(db.String)
+    frota = db.Column(db.String)
+    marca = db.Column(db.String)
+
+    data = db.Column(db.String)
+    datasSaida = db.Column(db.String)
+    dataChegada = db.Column(db.String)
+    qtdDias = db.Column(db.Integer)
+    totalHrs = db.Column(db.Integer)
+
+    KmSaida = db.Column(db.Integer)
+    KmChegada = db.Column(db.Integer)
+    KmRodado = db.Column(db.Integer)
+
+    LtArla = db.Column(db.Float)
+    LtDiesel = db.Column(db.Float)
+    LtPorDia = db.Column(db.Float)
+
+    def __repr__(self):
+        return f"<Motorista {self.motorista}>"
