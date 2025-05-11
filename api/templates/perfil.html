@@ -16,7 +16,7 @@
     
     <!-- navbar legal -->
     <header class="fixed top-0 left-0 right-0 z-50 w-full flex
-    sm:flex-row items-center justify-between bg-[#0d121e]
+    flex-col sm:flex-row items-center justify-between bg-[#0d121e]
     border-b border-[#0e1424] px-4 sm:px-8 lg:px-60 py-4 shadow-sm">
         
         <!-- logo -->
@@ -35,9 +35,6 @@
             <button id="perfil" class="text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-identification-card text-2xl sm:text-3xl bg-[#2c3326] p-1 rounded-lg"></i>
             </button>
-            <button id="historico" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
-                <i class="ph-duotone ph-clock-counter-clockwise text-2xl sm:text-3xl"></i>
-            </button>
             <button id="config" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-gear text-2xl sm:text-3xl"></i>
             </button>
@@ -52,13 +49,198 @@
 
 
     <!-- conteudo da página -->
-    <main class="pt-24 sm:pt-18">
-        
+    <main class="pt-25 sm:pt-22">
+        <!-- Titulo legal -->
+        <div class="flex items-center p-6 ">
+            <i class="ph-duotone ph-identification-card text-3xl text-[#a8ba44] mr-3"></i>
+            <h1 class="text-2xl font-bold text-white">Registros do usuario</h1>
+        </div>
+
+        <div class="flex flex-col md:flex-row p-4 gap-4 md:gap-8">
+            <!-- parte de info do motorista -->
+            <div class="w-full md:w-2/4 lg:w-1/3 bg-[#0d121e] rounded-lg p-6 shadow-lg">
+                <!-- titulo do card de info-->
+                <div class="flex row-auto">
+                    <i class="ph-duotone ph-steering-wheel text-2xl px-2 self-center text-white font-semibold mb-4"></i>
+                    <h2 class="text-white text-lg font-semibold mb-4">Informações do Motorista</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
+
+                    <!-- cada um desse é um cardzinho de info daquele da esquerda -->
+                    <div class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
+                        <i class="ph-duotone ph-user-circle text-3xl self-center text-[#a8ba44] pl-3  "></i>
+                        <div class="p-5 flex flex-col">
+                            <p class="text-gray-400 text-sm flex items-center gap-2">
+                                Nome:
+                            </p>
+                            <p class="text-white text-lg font-bold mt-1">
+                                João Motorista da silva
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
+                        <i class="ph-duotone ph-truck text-3xl self-center text-[#a8ba44] pl-3  "></i>
+                        <div class="p-5 flex flex-col">
+                            <p class="text-gray-400 text-sm flex items-center gap-2">
+                                Caminhão
+                            </p>
+                            <p class="text-white text-lg font-bold mt-1">
+                                Volvo FH 540
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
+                        <i class="ph-duotone ph-barcode text-3xl self-center text-[#a8ba44] pl-3  "></i>
+                        <div class="p-5 flex flex-col">
+                            <p class="text-gray-400 text-sm flex items-center gap-2">
+                                Placa:
+                            </p>
+                            <p class="text-white text-lg font-bold mt-1">
+                                ABC1234
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
+                        <i class="ph-duotone ph-traffic-sign text-3xl self-center text-[#a8ba44] pl-3 group-hover:text-[#a8ba44]"></i>
+                        <div class="p-5 flex flex-col">
+                            <p class="text-gray-400 text-sm flex items-center gap-2">
+                                Frota:
+                            </p>
+                            <p class="text-white text-lg font-bold mt-1">
+                                1630
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- parte do histórico -->
+            <div class="w-full md:w-2/4 lg:w-2/3 bg-[#0d121e] rounded-lg p-6 shadow-lg">
+                <div class="flex row-auto">
+                    <i class="ph-duotone ph-clock-counter-clockwise text-2xl px-2 self-center text-white font-semibold mb-4"></i>
+                    <h2 class="text-white text-lg font-semibold mb-4">Histórico de Viagens</h2>
+                </div>
+                <!-- ul listar cada viagem-->    
+                <ul class="grid grid-cols-1 md:grid-cols-1 h-100 overflow-scroll">
+                    <!-- cada li é uma viagem -->  
+                    <li class="group hover:bg-[#1a2235]
+                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
+                        <i class="ph-duotone ph-road-horizon text-3xl self-center
+                        text-white pl-3  "></i>
+                        <div class="p-4 flex flex-col">
+                            <p class="text-white text-lg font-bold mb-1">
+                                02/04/2025 - 748 km
+                            </p>
+                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
+                                Desempenho: 88%
+                            </p>
+                        </div>
+                    </li>
+                    <!-- varios li iguais pra preencher -->  
+                    <li class="group hover:bg-[#1a2235]
+                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
+                        <i class="ph-duotone ph-road-horizon text-3xl self-center
+                        text-white pl-3  "></i>
+                        <div class="p-4 flex flex-col">
+                            <p class="text-white text-lg font-bold mb-1">
+                                02/04/2025 - 748 km
+                            </p>
+                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
+                                Desempenho: 88%
+                            </p>
+                        </div>
+                    </li>
+                    <li class="group hover:bg-[#1a2235]
+                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
+                        <i class="ph-duotone ph-road-horizon text-3xl self-center
+                        text-white pl-3  "></i>
+                        <div class="p-4 flex flex-col">
+                            <p class="text-white text-lg font-bold mb-1">
+                                02/04/2025 - 748 km
+                            </p>
+                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
+                                Desempenho: 88%
+                            </p>
+                        </div>
+                    </li>
+                    <li class="group hover:bg-[#1a2235]
+                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
+                        <i class="ph-duotone ph-road-horizon text-3xl self-center
+                        text-white pl-3  "></i>
+                        <div class="p-4 flex flex-col">
+                            <p class="text-white text-lg font-bold mb-1">
+                                02/04/2025 - 748 km
+                            </p>
+                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
+                                Desempenho: 88%
+                            </p>
+                        </div>
+                    </li>
+                    <li class="group hover:bg-[#1a2235]
+                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
+                        <i class="ph-duotone ph-road-horizon text-3xl self-center
+                        text-white pl-3  "></i>
+                        <div class="p-4 flex flex-col">
+                            <p class="text-white text-lg font-bold mb-1">
+                                02/04/2025 - 748 km
+                            </p>
+                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
+                                Desempenho: 88%
+                            </p>
+                        </div>
+                    </li>
+                    <li class="group hover:bg-[#1a2235]
+                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
+                        <i class="ph-duotone ph-road-horizon text-3xl self-center
+                        text-white pl-3  "></i>
+                        <div class="p-4 flex flex-col">
+                            <p class="text-white text-lg font-bold mb-1">
+                                02/04/2025 - 748 km
+                            </p>
+                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
+                                Desempenho: 88%
+                            </p>
+                        </div>
+                    </li>
+                    <li class="group hover:bg-[#1a2235]
+                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
+                        <i class="ph-duotone ph-road-horizon text-3xl self-center
+                        text-white pl-3  "></i>
+                        <div class="p-4 flex flex-col">
+                            <p class="text-white text-lg font-bold mb-1">
+                                02/04/2025 - 748 km
+                            </p>
+                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
+                                Desempenho: 88%
+                            </p>
+                        </div>
+                    </li>
+                    <li class="group hover:bg-[#1a2235]
+                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
+                        <i class="ph-duotone ph-road-horizon text-3xl self-center
+                        text-white pl-3  "></i>
+                        <div class="p-4 flex flex-col">
+                            <p class="text-white text-lg font-bold mb-1">
+                                02/04/2025 - 748 km
+                            </p>
+                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
+                                Desempenho: 88%
+                            </p>
+                        </div>
+                    </li>
+
+                </ul>    
+            </div>
+        </div>
     </main>
 
-    <!-- script pros grafico -->
     <script>
-
+        // Seu código JavaScript aqui
     </script>
 </body>
 </html>

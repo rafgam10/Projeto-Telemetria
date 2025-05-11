@@ -5,38 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configurações</title>
     <link rel="icon" href="../static/assets/logo.png">
-    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script><!-- pros icones -->
-    <link href="../static/output.css" rel="stylesheet"><!-- css do tailwind -->
-
-    <!-- O LANCE DO CHARTJS PROS GRAFICOS -->
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+    <link href="../static/output.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 <body class="bg-[#0e0e14]">
     
-    <!-- navbar legal -->
-    <header class="fixed top-0 left-0 right-0 z-50 w-full flex
-    sm:flex-row items-center justify-between bg-[#0d121e]
-    border-b border-[#0e1424] px-4 sm:px-8 lg:px-60 py-4 shadow-sm">
-        
-        <!-- logo -->
+    <!-- navbar -->
+    <header class="fixed top-0 left-0 right-0 z-50 w-full flex flex-col sm:flex-row items-center justify-between bg-[#0d121e] border-b border-[#0e1424] px-4 sm:px-8 lg:px-60 py-4 shadow-sm">
         <div class="flex items-center space-x-2">
             <img src="../static/assets/logo.png" alt="logo" class="h-8 sm:h-11 w-auto" />
             <span class="text-xl sm:text-2xl font-semibold text-white">Motorista</span>
             <span class="text-xl sm:text-2xl font-semibold text-[#a8ba44]">Legal</span>
         </div>
     
-        <!-- botoes da navbar -->
         <div class="flex space-x-2 sm:space-x-4 pb-1 pt-2">
-            
             <button id="home" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-house text-2xl sm:text-3xl"></i>
             </button>
-            <button id="perfil" class="text-gray-600 hover:text-[#a8ba44]  transition-colors">
+            <button id="perfil" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-identification-card text-2xl sm:text-3xl"></i>
-            </button>
-            <button id="historico" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
-                <i class="ph-duotone ph-clock-counter-clockwise text-2xl sm:text-3xl"></i>
             </button>
             <button id="config" class="text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-gear text-2xl sm:text-3xl bg-[#2c3326] p-1 rounded-lg"></i>
@@ -50,15 +38,84 @@
         </div>
     </header>
 
-
     <!-- conteudo da página -->
-    <main class="pt-24 sm:pt-18">
-        
+    <main class="pt-30 sm:pt-24 px-4">
+        <div class="max-w-3xl mx-auto">
+
+            <!-- Titulo legal -->
+            <div class="flex items-center mb-4 sm:mb-6 p-4 sm:p-6">
+                <i class="ph-duotone ph-gear text-2xl sm:text-3xl text-[#a8ba44] mr-3"></i>
+                <h1 class="text-xl sm:text-2xl font-bold text-white">Configurações do sistema</h1>
+            </div>
+
+            <!-- parte de notificação -->
+            <div class="bg-[#0d121e] rounded-lg p-4 sm:p-6 shadow-lg mb-6 sm:mb-8">
+                <h2 class="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center">
+                    <i class="ph-duotone ph-warning-circle text-[#a8ba44] mr-2"></i> Notificações
+                </h2>
+                
+                <div class="space-y-4">
+                    <!-- pra aticar a notifocação-->
+                    <div class="flex sm:flex-row justify-between items-start
+                    sm:items-center p-3 bg-[#1a2235] rounded-lg">
+                        <div class="flex items-start sm:items-center mb-2 sm:mb-0">
+                            <i class="ph-duotone ph-bell-ringing
+                            text-xl text-[#a8ba44] mr-3 mt-1"></i>
+                            <div>
+                                <p class="text-white font-medium">Notificações de desempenho</p>
+                                <p class="text-[13px] text-gray-400">
+                                    Envia notificações de desempenho para o seu email
+                                </p>
+                            </div>
+                        </div>
+                        <!-- a checkbox de notificaçãio-->
+                        <input id="ativar-notificacao" type="checkbox" class="mt-4 ml-4 sm:ml-6 accent-[#a8ba44]
+                        h-5 w-5 min-w-[20px] cursor-pointer sm:mt-0">
+                    </div>
+                    
+                    <!-- parte de botar o email-->
+                    <div class="flex flex-col p-3 bg-[#1a2235] rounded-lg">
+                        <div class="flex items-center mb-2">
+                            <i class="ph-duotone ph-envelope text-xl text-[#a8ba44] mr-2"></i>
+                            <p class="text-white font-medium">Email para notificações</p>
+                        </div>
+                        <!-- form com o input pra botar o email-->
+                        <form class="w-full">
+                            <input type="email" placeholder="seu-email@exemplo.com" id="email-notificacao"
+                            class="w-full sm:w-80 ring-1 ring-gray-400 rounded p-2
+                            focus:outline-none bg-[#0d121e] text-white
+                            focus:ring-2 focus:ring-[#a8ba44] hover:ring-[#a8ba44]
+                            focus:border-transparent transition-all">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- card de aparencia (talvez a gente tire, vamo ter mesmo q fazer um tema claro???) -->
+            <div class="bg-[#0d121e] rounded-lg p-4 sm:p-6 shadow-lg">
+                <h2 class="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center">
+                    <i class="ph-duotone ph-palette text-[#a8ba44] mr-2"></i> Aparência
+                </h2>
+                
+                <div class="flex sm:flex-row justify-between items-start
+                sm:items-center p-3 bg-[#1a2235] rounded-lg">
+                    <div class="flex items-center mb-2 sm:mb-0">
+                        <i class="ph-duotone ph-moon text-xl text-[#a8ba44] mr-3"></i>
+                        <div>
+                            <p class="text-white font-medium">Modo Escuro</p>
+                            <p class="text-sm text-gray-400">Ativar/desativar tema escuro</p>
+                        </div>
+                    </div>
+                    <!-- checkbox de tema escuro (😞😞😞)-->
+                    <input id="modo-escuro" checked type="checkbox"class="mt-4 
+                    ml-4 sm:ml-6 accent-[#a8ba44] h-5 w-5 min-w-[20px] cursor-pointer sm:mt-0">
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- script pros grafico -->
     <script>
-
+        // Seu código JavaScript aqui
     </script>
 </body>
 </html>
