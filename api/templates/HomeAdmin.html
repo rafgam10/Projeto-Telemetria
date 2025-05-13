@@ -5,45 +5,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <link rel="icon" href="../static/assets/logo.png">
-    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script><!-- pros icones -->
-    <link href="../static/output.css" rel="stylesheet"><!-- css do tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+    <link href="../static/output.css" rel="stylesheet">
 
-    <!-- O LANCE DO CHARTJS PROS GRAFICOS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 <body class="bg-[#0e0e14]">
-    
-    <!-- navbar legal -->
-    <header class="fixed top-0 left-0 right-0 z-50 w-full flex
-    sm:flex-row items-center justify-between bg-[#0d121e]
-    border-b border-[#0e1424] px-4 sm:px-8 lg:px-60 py-4 shadow-sm">
-        
-        <!-- logo -->
-        <div class="flex items-center space-x-2">
-            <img src="../static/assets/logo.png" alt="logo" class="h-8 sm:h-11 w-auto" />
-            <span class="text-xl sm:text-2xl font-semibold text-white">Motorista</span>
-            <span class="text-xl sm:text-2xl font-semibold text-[#a8ba44]">Legal</span>
-            <span class="pb-4 text-sm font-semibold text-white">admin</span>
+
+    <div class="flex flex-col md:flex-row h-screen">
+        <div class="w-full md:w-64 bg-[#0d121e] text-white flex-shrink-0">
+            <div class="p-3 border-b border-[#1a2236]">
+                <div class="flex items-center space-x-2">
+                    <img src="../static/assets/logo.png" alt="logo" class="h-8 sm:h-11 w-auto" />
+                    <span class="text-xl sm:text-2xl font-semibold text-white">Motorista</span>
+                    <span class="text-xl sm:text-2xl font-semibold text-[#a8ba44]">Legal</span>
+                </div>
+            </div>
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <button id="adm-dashboard" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-gauge mr-3"></i>
+                            Dashboard
+                        </button>
+                    </li>
+                    <li>
+                        <button id="adm-motoristas" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-users mr-3"></i>
+                            Gestão de Motoristas
+                        </button>
+                    </li>
+                    <li>
+                        <button id="adm-veiculos" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-truck mr-3"></i>
+                            Gestão de Veículos
+                        </button>
+                    </li>
+                    <li>
+                        <button id="adm-importar" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-upload mr-3"></i>
+                            Importação de Dados
+                        </button>
+                    </li>
+                    <li>
+                        <button id="adm-relatorios" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-chart-bar mr-3"></i>
+                            Relatórios e Estatísticas
+                        </button>
+                    </li>
+                    <li>
+                        <button id="adm-logs" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-clipboard-text mr-3"></i>
+                            Logs de Auditoria
+                        </button>
+                    </li>
+                </ul>
+            </nav>
         </div>
     
-        <!-- botoes da navbar -->
-        <div class="flex pb-1 pt-2">
-            <button id="voltar" class="  text-gray-600 hover:text-[#a8ba44] transition-colors">
-                <i class="ph-duotone ph-sign-out text-2xl sm:text-3xl"></i>
-            </button>
-        </div>
-    </header>
-
-
-    <!-- conteudo da página -->
-    <main class="pt-24 sm:pt-18">
         
-    </main>
+        <div class="flex-1 flex flex-col overflow-hidden">
+            
+            <header class="flex items-center bg-[#0d121e] border-b border-[#1a2236] shadow-sm p-4 border-t md:p-5 md:border-t-0">
+                <!-- botao para mostrar/esconder sidebar em mobile -->
+                <button class="md:hidden mr-4 text-gray-300 hover:text-white" id="sidebarToggle">
+                    <i class="ph ph-list"></i>
+                </button>
+                <!-- Titulo :> -->
+                <h1 class="text-xl font-bold text-white">Dashboard</h1>
+            </header>
+            
+            
+            <!-- conteudo da página -->
+            <main class="flex-1 overflow-y-auto p-4 bg-[#0e0e14]">
+                <div class="container mx-auto">
+                    <!--parte de Dashboard-->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 ">
 
-    <!-- script pros grafico -->
+                        <div class="bg-[#0d121e] rounded-lg p-4 text-gray-300 flex flex-row
+                        space-x-4 border-t-4 border-[#a8ba44]">
+                            <i class=" mb-7 ph-duotone ph-map-pin-line text-3xl self-center text-[#a8ba44] py-2 px-1 rounded-2xl bg-[#2c3326]"></i>
+                            <div class="p-2 flex flex-col">
+                                <p class="text-white text-lg font-bold mt-1">
+                                    Total de Viagens
+                                </p>
+                                <p class="text-2xl font-bold">1.248</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#0d121e] rounded-lg p-4 text-gray-300 flex flex-row
+                        space-x-4 border-t-4 border-[#218176]">
+                            <i class="mb-7 ph-duotone ph-map-trifold text-3xl self-center text-[#218176] py-2 px-1 rounded-2xl bg-[#112830]"></i>
+                            <div class="p-2 flex flex-col">
+                                <p class="text-white text-lg font-bold mt-1">
+                                    Média Km/Motorista
+                                </p>
+                                <p class="text-2xl font-bold">3.245 km</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-[#0d121e] rounded-lg p-4 text-gray-300 flex flex-row
+                        space-x-4 border-t-4 border-[#ba447f]">
+                            <i class="mb-7 ph-duotone ph-gas-pump text-3xl self-center text-[#ba447f] py-2 px-1 rounded-2xl bg-[#2f1c31]"></i>
+                            <div class="p-2 flex flex-col">
+                                <p class="text-white text-lg font-bold mt-1">
+                                    Consumo de combustível
+                                </p>
+                                <p class="text-2xl font-bold">1,248</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#0d121e] rounded-lg p-4 text-gray-300 flex flex-row
+                        space-x-4 border-t-4 border-[#4452ba]">
+                            <i class="mb-7 ph-duotone ph-medal text-3xl self-center text-[#4452ba] py-2 px-1 rounded-2xl bg-[#181e3d]"></i>
+                            <div class="p-2 flex flex-col">
+                                <p class="text-white text-lg font-bold mt-1">
+                                    Motorista com melhor média
+                                </p>
+                                <p class="text-2xl font-bold">João Motorista da silva</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--card ai-->
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+
+    <!-- Script pro botao de esconder a sidebar no mobile -->
     <script>
-
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            const sidebar = document.querySelector('div.w-full.md\\:w-64');
+            sidebar.classList.toggle('hidden');
+            sidebar.classList.toggle('block');
+        });
     </script>
 </body>
 </html>
