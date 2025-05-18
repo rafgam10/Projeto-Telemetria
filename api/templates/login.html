@@ -14,7 +14,7 @@
     </div>
     <span>Monitore sua direção, conquiste metas e receba prêmios pela sua condução segura.</span>
 
-    <form method="post", action="/autenticar">
+    <form method="post", action="{{ url_for('exibir_login') }}">
 
         <h3>Insira sua Senha ou Placa para Acessar!</h3>
 
@@ -24,6 +24,9 @@
                 <img id="iconSenhaVer" src="{{ url_for('static', filename='assets/eye-refresh.svg') }}" alt="" width="20px" height="20px">
             </div>
             <button type="submit">Acessar</button>
+            {% if erro %}
+                <p style="color:red">{{ erro }}</p>
+            {% endif %}
           
         </div>
         
