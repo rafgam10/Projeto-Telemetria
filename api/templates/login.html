@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <title>Login</title>
+</head>
+<body>
+    
+    <img id="logo" src="{{ url_for('static', filename='assets/logo3.png') }}" alt="Logo">
+    <div class="h2Subtitulo">
+        <h2 id="subt1">Motorista</h2><h2 id="subt2">Legal</h2>
+    </div>
+    <span>Monitore sua direção, conquiste metas e receba prêmios pela sua condução segura.</span>
+
+    <form method="post", action="/autenticar">
+
+        <h3>Insira sua Senha ou Placa para Acessar!</h3>
+
+        <div id="Box">
+            <div class="inputBox">
+                <input type="password" name="InputSenha" placeholder="Digite a sua Senha/Placa...">
+                <img id="iconSenhaVer" src="{{ url_for('static', filename='assets/eye-refresh.svg') }}" alt="" width="20px" height="20px">
+            </div>
+            <button type="submit">Acessar</button>
+          
+        </div>
+        
+    </form>
+
+    
+
+    <!--Código Simples de Js para Front-->
+    <script>
+        const iconVerSenha = document.querySelector("#iconSenhaVer")
+        const inputSenha = document.querySelector("input");
+        iconVerSenha.addEventListener("click", event => {
+            if (inputSenha.type === "password"){
+                inputSenha.type = "text";
+            }else{
+                inputSenha.type = "password"
+            }
+        })
+    </script>
+</body>
+</html>
