@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request, render_template, redirect
+from flask import Flask, jsonify, request, render_template, redirect, url_for, session
 from database.database_handler import obter_dados
 
 app = Flask(__name__)
+app.secret_key = 'motoristaLegal'
 
-# ✅ Colunas padrão para os dados
+# Colunas padrão para os dados
 COLUNAS_DADOS = [
     "motorista", "placa", "frota", "marca",
     "data", "datasSaida", "dataChegada", "qtdDias", "totalHrs",
@@ -11,7 +12,7 @@ COLUNAS_DADOS = [
     "LtArla", "LtDiesel", "LtPorDia"
 ]
 
-# ✅ Função utilitária para converter dados
+# Utilitário para transformar dados brutos em dicionários
 def transformar_dados(dados):
     return [dict(zip(COLUNAS_DADOS, linha)) for linha in dados]
 
@@ -33,25 +34,91 @@ def dados_por_placa(placa):
     filtrados = [linha for linha in dados if linha[1].upper() == placa.upper()]
     return jsonify(transformar_dados(filtrados))
 
-# ================= PÁGINAS HTML ====================
-@app.route("/login", methods=["GET", 'POST'])
+
+# ================= LOGIN ====================
+@app.route("/login", methods=["GET", "POST"])
 def exibir_login():
-    return render_template('loginAdmin.html')
+    erro = None
+    session['logado'] = None
+    if request.method == "POST":
+        senha = request.form.get("InputSenha")
+        if senha == "admin":
+            session.permanent = False  # Sessão acaba ao fechar o navegador
+            session['logado'] = True
+            return redirect(url_for('pagina_admin'))
+        else:
+            erro = "Senha/Placa incorreta. Tente novamente."
+    return render_template('login.html', erro=erro)
 
-@app.route("/autenticar", methods=["POST"])
-def autenticar():
-    senha = request.form.get("InputSenha")
-    if senha == "admin":
-        return redirect("/admin")
-    return redirect('/login')
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for('exibir_login'))
 
+# ================= PROTEÇÃO DE ROTAS ====================
+@app.before_request
+def verificar_autenticacao_global():
+    caminhos_livres = ['exibir_login', 'autenticar', 'static']
+    endpoint = request.endpoint
+
+    if (
+        endpoint in caminhos_livres
+        or (endpoint and endpoint.startswith('api'))
+        or request.path.startswith('/static')
+    ):
+        return
+
+    if not session.get('logado'):
+        return redirect(url_for('exibir_login'))
+
+
+# ================= ADMIN ====================
 @app.route("/admin", methods=["GET", 'POST'])
 def pagina_admin():
     return render_template('HomeAdmin.html')
 
+@app.route("/admin/gestaoMotoristas", methods=["GET", "POST"])
+def pagina_gestao_motoristas():
+    return render_template('motoristasAdmin.html')
+
+@app.route("/admin/gestaoVeiculos", methods=["GET", "POST"])
+def pagina_gestao_veiculos():
+    return render_template("veiculosAdmin.html")
+
 @app.route('/admin/inserirDados', methods=['GET', "POST"])
 def pagina_inserir_dados():
-    return render_template('inserirExcel.html')
+    return render_template('importAdmin.html')
+
+@app.route("/admin/relatorios", methods=["GET", "POST"])
+def pagina_relatorios():
+    return render_template("relatorioAdmin.html")
+
+@app.route("/admin/logs", methods=["GET", "POST"])
+def pagina_logs():
+    return render_template("logsAdmin.html")
+
+
+# ================= USER ====================
+@app.route("/user", methods=["GET"])
+def pagina_user():
+    return render_template('HomeUser.html')
+
+@app.route("/user/perfil", methods=["GET"])
+def pagina_perfil():
+    return render_template('perfilUser.html')
+
+@app.route("/user/historico", methods=["GET"])
+def pagina_historico():
+    return render_template('historicoUser.html')
+
+@app.route("/user/config", methods=["GET"])
+def pagina_config():
+    return render_template('configUser.html')
+
+@app.route("/user/suporte", methods=["GET"])
+def pagina_suporte():
+    return render_template('suporteUser.html')
+
 
 # ================= MAIN ====================
 if __name__ == "__main__":
