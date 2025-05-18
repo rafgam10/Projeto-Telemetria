@@ -6,7 +6,8 @@
     <title>Admin</title>
     <link rel="icon" href="../static/assets/logo.png">
     <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
-    <link href="../static/output.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='output.css') }}"  rel="stylesheet">
+    <!-- href="../static/output.css" -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-[#0e0e14]">
@@ -24,37 +25,37 @@
             <nav class="p-4">
                 <ul class="space-y-2">
                     <li>
-                        <button id="adm-dashboard" class="flex w-full items-center p-2 rounded bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                        <button onclick="window.location.href='/admin';" id="adm-dashboard" class="flex w-full items-center p-2 rounded bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
                             <i class="ph ph-gauge mr-3"></i>
                             Dashboard
                         </button>
                     </li>
                     <li>
-                        <button id="adm-motoristas" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                        <button onclick="window.location.href='/admin/gestaoMotoristas';" id="adm-motoristas" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
                             <i class="ph ph-users mr-3"></i>
                             Gestão de Motoristas
                         </button>
                     </li>
                     <li>
-                        <button id="adm-veiculos" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                        <button onclick="window.location.href='/admin/gestaoVeiculos';" id="adm-veiculos" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
                             <i class="ph ph-truck mr-3"></i>
                             Gestão de Veículos
                         </button>
                     </li>
                     <li>
-                        <button id="adm-importar" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                        <button onclick="window.location.href='/admin/inserirDados';" id="adm-importar" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
                             <i class="ph ph-upload mr-3"></i>
                             Importação de Dados
                         </button>
                     </li>
                     <li>
-                        <button id="adm-relatorios" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                        <button onclick="window.location.href='/admin/relatorios';" id="adm-relatorios" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
                             <i class="ph ph-chart-bar mr-3"></i>
                             Relatórios e Estatísticas
                         </button>
                     </li>
                     <li>
-                        <button id="adm-logs" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                        <button onclick="window.location.href='/admin/logs';" id="adm-logs" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
                             <i class="ph ph-clipboard-text mr-3"></i>
                             Logs de Auditoria
                         </button>
