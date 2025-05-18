@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Importação de Dados</title>
+    <link rel="icon" href="../static/assets/logo.png">
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+    <!-- Biblioteca para ler CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <!-- Biblioteca para ler Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="../static/output.css" rel="stylesheet">
+</head>
+<body class="bg-[#0e0e14]">
+
+    <div class="flex flex-col lg:flex-row h-screen">
+        <!-- Sidebar -->
+        <div class="w-full lg:w-64 bg-[#0d121e] text-white flex-shrink-0 hidden lg:block" id="sidebar">
+            <div class="p-3 border-b border-[#1a2236]">
+                <div class="flex items-center space-x-2">
+                    <img src="../static/assets/logo.png" alt="logo" class="h-8 sm:h-11 w-auto" />
+                    <span class="text-xl sm:text-2xl font-semibold text-white">Motorista</span>
+                    <span class="text-xl sm:text-2xl font-semibold text-[#a8ba44]">Legal</span>
+                </div>
+            </div>
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <button id="adm-dashboard" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-gauge mr-3"></i>
+                            Dashboard
+                        </button>
+                    </li>
+                    <li>
+                        <button id="adm-motoristas" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-white transition-colors">
+                            <i class="ph ph-users mr-3"></i>
+                            Gestão de Motoristas
+                        </button>
+                    </li>
+                    <li>
+                        <button id="adm-veiculos" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-truck mr-3"></i>
+                            Gestão de Veículos
+                        </button>
+                    </li>
+                    <li>
+                        <button id="adm-importar" class="flex w-full items-center p-2 rounded bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-upload mr-3"></i>
+                            Importação de Dados
+                        </button>
+                    </li>
+                    <li>
+                        <button id="adm-relatorios" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-chart-bar mr-3"></i>
+                            Relatórios e Estatísticas
+                        </button>
+                    </li>
+                    <li>
+                        <button id="adm-logs" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-clipboard-text mr-3"></i>
+                            Logs de Auditoria
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Cabeçalho -->
+            <header class="flex items-center bg-[#0d121e] shadow-sm p-4 border-t md:p-5 md:border-t-0">
+                <button class="md:hidden mr-4 text-gray-300 hover:text-white" id="sidebarToggle">
+                    <i class="ph ph-list"></i>
+                </button>
+                <h1 class="text-xl font-bold text-white">Importação de Dados</h1>
+            </header>
+            
+            <!-- Container principal com scroll -->
+            <main class="flex-1 overflow-y-auto p-4">
+                <!-- Área de upload -->
+                <div class="bg-[#0d121e] rounded-lg border border-[#1a2236] p-6 mb-6">
+                    <div class="text-center">
+                        <h2 class="text-lg font-medium text-white mb-2">Upload de Arquivo</h2>
+                        <p class="text-gray-400 mb-4">Selecione um arquivo .xlsx, .xlsm ou .csv para importar</p>
+                        
+                        <div class="mt-4 border-2 border-dashed border-[#2d3748] rounded-lg p-8 bg-[#1a2236]">
+                            <div class="flex flex-col items-center justify-center">
+                                <i class="ph ph-cloud-arrow-up text-4xl text-[#a8ba44] mb-3"></i>
+                                <p class="text-sm text-gray-400 mb-3">Arraste e solte seu arquivo aqui ou</p>
+                                <label for="file-upload" class="cursor-pointer bg-[#a8ba44] hover:bg-[#8fa038] text-white px-4 py-2 rounded-md transition-colors">
+                                    <i class="ph ph-upload-simple mr-2"></i>
+                                    Selecionar Arquivo
+                                </label>
+                                <input id="file-upload" name="file-upload" type="file" class="sr-only" accept=".xlsx,.xlsm,.csv">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal de pré-visualização -->
+    <div id="preview-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center">
+        <div class="bg-[#0d121e] border border-[#1a2236] rounded-lg w-full max-w-6xl max-h-[100vh] flex flex-col">
+            <div class="p-4 border-b border-[#1a2236] flex justify-between items-center">
+                <h3 class="text-lg font-medium text-white">
+                    <i class="ph ph-table text-[#a8ba44] mr-2"></i>
+                    Pré-visualização do Arquivo: <span id="file-name" class="font-normal text-gray-300"></span>
+                    <span id="loading-text" class="text-sm text-gray-400 ml-2 hidden">
+                        <i class="ph ph-circle-notch animate-spin mr-1"></i> Processando...
+                    </span>
+                </h3>
+                <button id="close-modal" class="text-gray-400 hover:text-white">
+                    <i class="ph ph-x"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto p-4">
+                <div class="max-h-[65vh] overflow-auto scrollbar-thin scrollbar-thumb-[#a8ba44] scrollbar-track-[#1a2236]">
+                    <table id="preview-table" class="min-w-full divide-y divide-[#2d3748]">
+                        <thead class="bg-[#1a2236] sticky top-0">
+                            <tr id="table-headers"></tr>
+                        </thead>
+                        <tbody class="bg-[#0d121e] divide-y divide-[#2d3748]" id="table-body"></tbody>
+                    </table>
+                </div>
+                <div id="pagination-controls" class="mt-4 justify-between items-center text-sm text-gray-400 hidden">
+                    <div id="row-count">Mostrando 0-0 de 0 registros</div>
+                    <div class="flex space-x-2">
+                        <button id="prev-page" class="px-3 py-1 rounded bg-[#1a2236] hover:bg-[#2d3748] disabled:opacity-50" disabled>
+                            <i class="ph ph-caret-left"></i> Anterior
+                        </button>
+                        <button id="next-page" class="px-3 py-1 rounded bg-[#1a2236] hover:bg-[#2d3748]">
+                            Próxima <i class="ph ph-caret-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-[#1a2236] flex justify-end gap-2">
+                <button id="cancel-btn" class="flex items-center gap-2 bg-[#1a2236] hover:bg-[#2d3748] text-white px-4 py-2 rounded-md transition-colors">
+                    <i class="ph ph-x"></i>
+                    Cancelar
+                </button>
+                <button id="import-btn" class="flex items-center gap-2 bg-[#a8ba44] hover:bg-[#8fa038] text-white px-4 py-2 rounded-md transition-colors">
+                    <i class="ph ph-check"></i>
+                    Confirmar Importação
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay de carregamento -->
+    <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center">
+        <div class="bg-[#0d121e] border border-[#1a2236] rounded-lg p-8 max-w-md text-center">
+            <div class="animate-spin text-[#a8ba44] text-4xl mb-4">
+                <i class="ph ph-circle-notch"></i>
+            </div>
+            <h3 class="text-lg font-medium text-white mb-2">Processando arquivo...</h3>
+            <p class="text-gray-400" id="loading-progress">Lendo dados, por favor aguarde</p>
+            <div class="w-full bg-[#1a223600] rounded-full h-2.5 mt-4">
+                <div id="progress-bar" class="bg-[#a8ba44] h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+    // Configurações
+    const MAX_PREVIEW_ROWS = 1000; // Mostrar as últimas 1000 linhas
+    const ROWS_PER_PAGE = 50; // Linhas por página na paginação
+    const CHUNK_SIZE = 50000; // Tamanho maior para chunks (melhor performance)
+
+    // Elementos DOM
+    const fileUpload = document.getElementById('file-upload');
+    const previewModal = document.getElementById('preview-modal');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingProgress = document.getElementById('loading-progress');
+    const progressBar = document.getElementById('progress-bar');
+    const fileNameSpan = document.getElementById('file-name');
+    const tableHeaders = document.getElementById('table-headers');
+    const tableBody = document.getElementById('table-body');
+    const paginationControls = document.getElementById('pagination-controls');
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    const rowCount = document.getElementById('row-count');
+
+    // Variáveis de estado
+    let currentData = [];
+    let currentHeaders = [];
+    let currentPage = 0;
+
+    // Função para processar o arquivo
+    fileUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        fileNameSpan.textContent = file.name;
+        showLoadingOverlay('Iniciando processamento...');
+
+        if (file.name.endsWith('.csv')) {
+            parseCSV(file);
+        } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xlsm')) {
+            parseExcel(file);
+        } else {
+            hideLoadingOverlay();
+            alert('Formato não suportado. Use .csv, .xlsx ou .xlsm');
+        }
+    });
+
+    // Função para parsear CSV otimizada
+    function parseCSV(file) {
+        let chunks = [];
+        let headers = [];
+        let rowCount = 0;
+
+        Papa.parse(file, {
+            header: true,
+            dynamicTyping: false, // Manter tudo como string para preservar formato
+            skipEmptyLines: true,
+            chunkSize: CHUNK_SIZE,
+            chunk: function(results, parser) {
+                if (!headers.length) headers = results.meta.fields;
+                
+                // Armazena chunks para processamento posterior
+                chunks.push(results.data);
+                rowCount += results.data.length;
+                
+                updateProgress(
+                    Math.min(99, (rowCount / 500000 * 100)), // Estimativa
+                    `Lidas ${rowCount.toLocaleString()} linhas...`
+                );
+                
+                if (chunks.length > 5) {
+                    processChunks(chunks, headers);
+                    chunks = [];
+                    setTimeout(() => parser.resume(), 0);
+                } else {
+                    parser.resume();
+                }
+            },
+            complete: function() {
+                processChunks(chunks, headers, true);
+                showLastRows(headers);
+            },
+            error: function(error) {
+                console.error("CSV Error:", error);
+                hideLoadingOverlay();
+                alert("Erro ao ler CSV: " + error.message);
+            }
+        });
+    }
+
+    let allRows = [];
+    
+    function processChunks(chunks, headers, isLast = false) {
+        chunks.forEach(chunk => {
+            const processed = chunk.map(row => {
+                const newRow = {};
+                headers.forEach(header => {
+                    // Preserva exatamente o valor original
+                    newRow[header] = row[header] !== undefined && row[header] !== null ? row[header] : '';
+                });
+                return newRow;
+            });
+            allRows = allRows.concat(processed);
+            
+            // Mantém apenas as últimas MAX_PREVIEW_ROWS * 1.5
+            if (allRows.length > MAX_PREVIEW_ROWS * 1.5) {
+                allRows = allRows.slice(-MAX_PREVIEW_ROWS * 1.5);
+            }
+        });
+        
+        if (isLast) {
+            allRows = allRows.slice(-MAX_PREVIEW_ROWS);
+        }
+    }
+
+    function showLastRows(headers) {
+        currentData = allRows;
+        currentHeaders = headers;
+        
+        updateProgress(100, 'Preparando visualização...');
+        showPreviewModal();
+        hideLoadingOverlay();
+        currentPage = 0;
+        updatePagination();
+    }
+
+    // Função para parsear Excel otimizada
+    function parseExcel(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {
+                type: 'array',
+                cellText: true,
+                cellDates: true
+            });
+
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonData = XLSX.utils.sheet_to_json(firstSheet, {
+                header: 1,
+                defval: '',
+                raw: false,
+                blankrows: false
+            });
+
+            if (!jsonData.length) throw new Error('Planilha vazia');
+
+            const headers = jsonData[0].map((h, i) => {
+                // Se houver duplicatas, adiciona um índice
+                const name = String(h || `(vazio)`);
+                const count = jsonData[0].slice(0, i).filter(x => x === h).length;
+                return count > 0 ? `${name} (${count + 1})` : name;
+            });
+
+            const startRow = 1;
+            const rows = [];
+
+            function formatDateBR(input) {
+                if (Object.prototype.toString.call(input) === '[object Date]' && !isNaN(input)) {
+                    const day = String(input.getDate()).padStart(2, '0');
+                    const month = String(input.getMonth() + 1).padStart(2, '0');
+                    const year = input.getFullYear();
+                    return `${day}/${month}/${year}`;
+                }
+
+                if (typeof input === 'string' && /^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(input)) {
+                    const [m, d, y] = input.split('/');
+                    const day = String(d).padStart(2, '0');
+                    const month = String(m).padStart(2, '0');
+                    const year = y.length === 2 ? `20${y}` : y;
+                    return `${day}/${month}/${year}`;
+                }
+
+                return String(input);
+            }
+
+            for (let i = startRow; i < jsonData.length; i++) {
+                const rowData = jsonData[i];
+                const formattedRow = [];
+
+                for (let idx = 0; idx < headers.length; idx++) {
+                    const cell = rowData[idx];
+                    formattedRow.push(formatDateBR(cell));
+                }
+
+                rows.push(formattedRow);
+
+                if (i % 1000 === 0) {
+                    updateProgress(
+                        ((i - startRow) / (jsonData.length - startRow) * 100),
+                        `Processando linha ${i.toLocaleString()}...`
+                    );
+                }
+            }
+
+            currentData = rows.slice(-MAX_PREVIEW_ROWS);
+            currentHeaders = headers;
+
+            updateProgress(100, 'Preparando visualização...');
+            showPreviewModal();
+            hideLoadingOverlay();
+            currentPage = 0;
+            updatePagination();
+
+        } catch (error) {
+            console.error("Excel Error:", error);
+            hideLoadingOverlay();
+            alert("Erro ao ler Excel: " + error.message);
+        }
+    };
+
+    reader.onerror = function () {
+        hideLoadingOverlay();
+        alert("Erro ao ler o arquivo");
+    };
+
+    reader.readAsArrayBuffer(file);
+}
+
+
+    // Funções de exibição
+    function displayPage(page) {
+        const start = page * ROWS_PER_PAGE;
+        const end = start + ROWS_PER_PAGE;
+        const pageData = currentData.slice(start, end);
+        
+        tableBody.innerHTML = '';
+        
+        pageData.forEach(row => {
+    const tr = document.createElement('tr');
+    row.forEach(cell => {
+        const td = document.createElement('td');
+        td.className = 'px-6 py-4 text-sm text-gray-300 whitespace-nowrap';
+        td.textContent = cell !== undefined && cell !== null && cell !== '' ? cell : '-';
+        tr.appendChild(td);
+    });
+    tableBody.appendChild(tr);
+});
+
+        
+        rowCount.textContent = `Mostrando ${start + 1}-${Math.min(end, currentData.length)} de ${currentData.length.toLocaleString()}`;
+        prevPageBtn.disabled = page === 0;
+        nextPageBtn.disabled = end >= currentData.length;
+    }
+
+    function showPreviewModal() {
+        previewModal.classList.remove('hidden');
+        previewModal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+        
+        tableHeaders.innerHTML = '';
+        currentHeaders.forEach(header => {
+            const th = document.createElement('th');
+            th.scope = 'col';
+            th.className = 'px-6 py-3 text-left text-xs font-medium text-[#a8ba44] uppercase tracking-wider whitespace-nowrap';
+            th.textContent = header;
+            tableHeaders.appendChild(th);
+        });
+    }
+
+    function updatePagination() {
+        if (currentData.length > ROWS_PER_PAGE) {
+            paginationControls.classList.remove('hidden');
+            paginationControls.classList.add('flex');
+            displayPage(currentPage);
+        } else {
+            paginationControls.classList.remove('flex');
+            paginationControls.classList.add('hidden');
+            displayPage(0);
+        }
+    }
+
+    // Funções auxiliares de UI
+    function showLoadingOverlay(message) {
+        loadingProgress.textContent = message;
+        progressBar.style.width = '0%';
+        loadingOverlay.classList.remove('hidden');
+        loadingOverlay.classList.add('flex');
+    }
+
+    function updateProgress(percent, message) {
+        progressBar.style.width = `${percent}%`;
+        if (message) loadingProgress.textContent = message;
+    }
+
+    function hideLoadingOverlay() {
+        loadingOverlay.classList.remove('flex');
+        loadingOverlay.classList.add('hidden');
+    }
+
+    // Event listeners
+    document.getElementById('close-modal').addEventListener('click', () => {
+        previewModal.classList.remove('flex');
+        previewModal.classList.add('hidden');
+        fileUpload.value = '';
+        currentData = [];
+    });
+
+    prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 0) displayPage(--currentPage);
+    });
+
+    nextPageBtn.addEventListener('click', () => {
+        if ((currentPage + 1) * ROWS_PER_PAGE < currentData.length) {
+            displayPage(++currentPage);
+        }
+    });
+
+    // Drag and drop
+    const dropArea = document.querySelector('.border-dashed');
+    dropArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropArea.classList.add('border-[#a8ba44]');
+    });
+    
+    dropArea.addEventListener('dragleave', () => {
+        dropArea.classList.remove('border-[#a8ba44]');
+    });
+    
+    dropArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropArea.classList.remove('border-[#a8ba44]');
+        if (e.dataTransfer.files.length) {
+            fileUpload.files = e.dataTransfer.files;
+            fileUpload.dispatchEvent(new Event('change'));
+        }
+    });
+    </script>
+
+</body>
+</html>
