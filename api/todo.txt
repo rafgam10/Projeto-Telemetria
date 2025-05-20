@@ -38,14 +38,13 @@ Upload de planilha Excel (.xlsx ou .csv)✅
 Pré-visualização dos dados antes de salvar no banco ✅
 
 
-5. Relatórios e Estatísticas ✏️🛵
+5. Relatórios e Estatísticas 🫨
+Relatório de consumo de combustível (por veículo ou motorista) ✅
 
-Relatório de consumo de combustível (por veículo ou motorista) ✏️
-
-Análise de tempo médio de viagem ✏️
+Análise de tempo médio de viagem ✅
 "Análise de tempo com informação da frota e motorista"
 
-Exportação de relatórios em PDF ou Excel ✏️
+Exportação de relatórios em PDF ou Excel ✅
 
 
 

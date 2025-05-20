@@ -3,106 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suporte</title>
-    <link rel="icon" href="../static/assets/logo.png">
-    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script><!-- pros icones -->
-    <link href="../static/output.css" rel="stylesheet"><!-- css do tailwind -->
-
-    <!-- O LANCE DO CHARTJS PROS GRAFICOS -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <title>Login</title>
+    <link rel="icon" href="{{ url_for('static', filename='assets/logo.png') }}">
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+    <link href="{{ url_for('static', filename='output.css') }}" rel="stylesheet">
 </head>
-<body class="bg-[#0e0e14]">
+<body class="min-h-screen bg-[#0e0e14] flex flex-col items-center justify-center p-4">
+    <!-- Logo -->
+    <img id="logo" src="{{ url_for('static', filename='assets/logo3.png') }}" alt="Logo" class="w-32 h-32 mb-4">
     
-    <!-- navbar legal -->
-    <header class="fixed top-0 left-0 right-0 z-50 w-full flex
-    flex-col sm:flex-row items-center justify-between bg-[#0d121e]
-    border-b border-[#0e1424] px-4 sm:px-8 lg:px-60 py-4 shadow-sm">
-        
-        <!-- logo -->
-        <div class="flex items-center space-x-2">
-            <img src="../static/assets/logo.png" alt="logo" class="h-8 sm:h-11 w-auto" />
-            <span class="text-xl sm:text-2xl font-semibold text-white">Motorista</span>
-            <span class="text-xl sm:text-2xl font-semibold text-[#a8ba44]">Legal</span>
-        </div>
+    <!-- Título -->
+    <div class="flex items-center justify-center mb-2">
+        <h2 class="text-2xl font-bold text-white">Motorista</h2>
+        <h2 class="text-2xl font-bold text-[#a8ba44] ml-1">Legal</h2>
+    </div>
     
-        <!-- botoes da navbar -->
-        <div class="flex space-x-2 sm:space-x-4 pb-1 pt-2">
+    <!-- Subtítulo -->
+    <span class="text-gray-400 text-center mb-8 max-w-md">
+        Monitore sua direção, conquiste metas e receba prêmios pela sua condução segura.
+    </span>
+
+    <!-- Formulário -->
+    <form method="post" action="{{ url_for('exibir_login') }}" class="w-full max-w-md bg-[#0d121e] p-8 rounded-lg border border-[#1a2236] shadow-lg">
+        <h3 class="text-lg font-semibold text-white mb-6 text-center">
+            Insira sua Senha ou Placa para Acessar!
+        </h3>
+
+        <div class="space-y-4">
+            <!-- Input de Senha -->
+            <div class="relative">
+                <input 
+                    type="password" 
+                    name="InputSenha" 
+                    placeholder="Digite a sua Senha/Placa..." 
+                    class="w-full px-4 py-2 bg-[#1a2236] border border-[#2d3748] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a8ba44] focus:border-transparent placeholder-gray-500"
+                >
+                <img 
+                    id="iconSenhaVer" 
+                    src="{{ url_for('static', filename='assets/eye-refresh.svg') }}" 
+                    alt="Mostrar senha" 
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer w-5 h-5"
+                >
+            </div>
             
-            <button onclick="window.location.href='/user';" id="home" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
-                <i class="ph-duotone ph-house text-2xl sm:text-3xl"></i>
+            <!-- Botão de Acesso -->
+            <button 
+                type="submit" 
+                class="w-full bg-[#a8ba44] hover:bg-[#8fa038] text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+            >
+                Acessar
             </button>
-            <button onclick="window.location.href='/user/perfil';" id="perfil" class="text-gray-600 hover:text-[#a8ba44]  transition-colors">
-                <i class="ph-duotone ph-identification-card text-2xl sm:text-3xl"></i>
-            </button>
-            <button onclick="window.location.href='/user/historico';" id="config" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
-                <i class="ph-duotone ph-gear text-2xl sm:text-3xl"></i>
-            </button>
-            <button onclick="window.location.href='/user/config';" id="suporte" class="text-[#a8ba44] transition-colors">
-                <i class="ph-duotone ph-question text-2xl sm:text-3xl bg-[#2c3326] p-1 rounded-lg"></i>
-            </button>
-            <button onclick="window.location.href='/user/suporte';" id="voltar" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
-                <i class="ph-duotone ph-sign-out text-2xl sm:text-3xl"></i>
-            </button>
+            
+            <!-- Mensagem de Erro -->
+            {% if erro %}
+                <p class="text-red-400 text-sm text-center">{{ erro }}</p>
+            {% endif %}
         </div>
-    </header>
+    </form>
 
-
-    <!-- conteudo da página -->
-    <main class="pt-40">
-        <div class="max-w-4xl mx-auto">
-
-            <!-- Titulo legal -->
-            <div class="text-center mb-10">
-                <h1 class="text-2xl sm:text-3xl font-bold text-white mb-2 flex items-center justify-center">
-                    <i class="ph-duotone ph-chats text-[#a8ba44] mr-3"></i> Suporte ao Motorista
-                </h1>
-                <p class="text-gray-400 p-5">Se você estiver com dúvidas ou problemas, entre em contato conosco:</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 p-6">
-                <!-- Card de telefone -->
-                <div class="bg-[#0d121e] rounded-lg p-6 shadow-lg border-l-4 border-[#a8ba44]">
-                    <div class="flex items-center mb-2">
-                        <i class="ph-duotone ph-phone text-3xl text-[#a8ba44] mr-3"></i>
-                        <p class="text-xl font-semibold text-white">Atendimento por Telefone</p>
-                    </div>
-
-                    <p class="text-gray-400 mb-4 text-sm">Tire suas dúvidas com um de nossos atendentes</p>
-                    
-                    <!-- botão q leva pra telefone -->
-                    <a href="tel:+5511999999999"
-                    class="inline-flex items-center text-white bg-[#1a2235] hover:bg-[#2c3326]
-                    px-4 py-2 rounded-lg transition-colors">
-                        <i class="ph-duotone ph-phone-call mr-2"></i>
-                        (11) 99999-0000
-                    </a>
-                </div>
-                
-                <!-- Card de email -->
-                <div class="bg-[#0d121e] rounded-lg p-6 shadow-lg border-l-4 border-[#218176]">
-                    <div class="flex items-center mb-2">
-                    <i class="ph-duotone ph-envelope text-3xl text-[#218176] mr-3"></i>
-                    <p class="text-xl font-semibold text-white">Atendimento por Email</p>
-                    </div>
-
-                    <p class="text-gray-400 mb-4 text-sm">Respondemos em até 24 horas úteis</p>
-                    
-                    <!-- botão q leva pra mandar email -->
-                    <a href="mailto:suporte@motoristalegal.com.br"
-                    class="inline-flex items-center text-white bg-[#1a2235] hover:bg-[#2c3326]
-                    px-4 py-2 rounded-lg transition-colors">
-                        <i class="ph-duotone ph-paper-plane-tilt mr-2"></i>
-                        suporte@motoristalegal.com.br
-                    </a>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- script pros grafico -->
+    <!-- Script para mostrar/esconder senha -->
     <script>
-
+        const iconVerSenha = document.querySelector("#iconSenhaVer");
+        const inputSenha = document.querySelector("input[name='InputSenha']");
+        
+        iconVerSenha.addEventListener("click", (event) => {
+            event.preventDefault();
+            inputSenha.type = inputSenha.type === "password" ? "text" : "password";
+        });
     </script>
 </body>
 </html>
