@@ -19,7 +19,7 @@
 [X] - Msg de aviso quando não ache a placa/senha.
 [X] - Validação de páginas.
 [ ] - Colocar Prompts para editar os dados no Painel Admin.
-[ ] - Colocar as rotas do APP User(Web) para sidebar. 
+[X] - Colocar as rotas do APP User(Web) para sidebar. 
 [ ] - Melhorar o código para filtrar os dados do Excel.
 [X] - Criar a Tela de Sem Conexão no KivyMD.
 [X] - Colocar msg para avisa/Snackbar de o acesso no App Mobile não for achado.
