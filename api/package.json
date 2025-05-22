@@ -10,6 +10,7 @@
   "description": "",
   "dependencies": {
     "@tailwindcss/cli": "^4.1.6",
+    "animate.css": "^4.1.1",
     "tailwindcss": "^4.1.6"
   }
 }

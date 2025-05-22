@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Motorista Legal</title>
+    <link rel="icon" href="{{ url_for('static', filename='assets/logo.png') }}">
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link href="{{ url_for('static', filename='output.css') }}" rel="stylesheet">
+</head>
+<body class=" min-h-screen bg-[#181826] flex flex-col items-center justify-center p-4">
+
+    <div class=" flex flex-col items-center mb-6">
+        <div class="items-center flex flex-col  animate__animated animate__flipInX">
+            <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" class="h-24 w-auto mb-0">
+            <div class="flex items-center">
+                <h2 class="text-4xl font-semibold text-white">Motorista</h2>
+                <h2 class="text-4xl font-semibold text-[#a8ba44]">Legal</h2>
+            </div>
+        </div>
+        
+
+        <span class="text-white mt-2 text-center text-sm max-w-xs  animate__animated animate__fadeInUp">
+            Bem-vindo à plataforma Motorista Legal!<br>Monitorando sua direção para uma estrada mais segura!
+        </span>
+
+        <button class=" animate__animated animate__jackInTheBox
+        w-full bg-[#a8ba44] hover:bg-[#8fa038] text-white mt-5 text-lg py-2 px-4 rounded-md items-center justify-center">
+        Começar
+        <i class="ph-duotone ph-rocket-launch text-sm"></i>
+        </button>
+    </div>
+
+
+    <div class="absolute bottom-0 left-20 lg:left-50 
+    h-2 bg-[#a8ba44] p-7 lg:p-10 rounded-full blur-3xl
+    animate__animated animate__pulse animate__slower animate__infinite   
+    "></div>
+    
+    <div class="absolute bottom-40 right-20 lg:right-50 
+    h-2 bg-[#a8ba44] p-10 lg:p-15 rounded-full blur-3xl
+    animate__animated animate__pulse animate__slower animate__infinite   
+    "></div>
+    
+    <div class="absolute top-20 lg:top-0 left-10 lg:left-80 
+    h-2 bg-[#a8ba44] p-15 lg:p-20 rounded-full blur-3xl
+    animate__animated animate__pulse animate__slower animate__infinite   
+    "></div>
+    
+</body>
+</html>
