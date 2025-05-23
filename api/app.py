@@ -1,15 +1,23 @@
+import os
 from flask import Flask, jsonify, request, render_template, redirect, url_for, session
 from database.database_handler import obter_dados
 
 app = Flask(__name__)
 app.secret_key = 'motoristaLegal'
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Colunas padrão para os dados
 COLUNAS_DADOS = [
-    "motorista", "placa", "frota", "marca",
-    "data", "datasSaida", "dataChegada", "qtdDias", "totalHrs",
-    "KmSaida", "KmChegada", "KmRodado",
-    "LtArla", "LtDiesel", "LtPorDia"
+    "motorista", "nr_acerto",
+    "data", "data_saida", "data_chegada",
+    "km_saida", "km_chegada", "km_rodado", "km_vazio", "porcento_vazio",
+    "qtd_dias", "total_hrs",
+    "frota", "placa", "marca_modelo", "ano_veiculo",
+    "lt_diesel", "media", "lt_arla", "porcento_arla",
+    "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
+    "lt_diesel_equip", "media_1", "media_2",
+    "lt_por_dia", "km_rodado_dup", "dif", "media_dup", "dif_media"
 ]
 
 # Utilitário para transformar dados brutos em dicionários
@@ -35,6 +43,11 @@ def dados_por_placa(placa):
     return jsonify(transformar_dados(filtrados))
 
 
+# ================ BEM VINDO ==================
+@app.route("/", methods=["GET"])
+def bem_vindo():
+    return render_template('BemVindo.html')
+
 # ================= LOGIN ====================
 @app.route("/login", methods=["GET", "POST"])
 def exibir_login():
@@ -58,7 +71,7 @@ def logout():
 # ================= PROTEÇÃO DE ROTAS ====================
 @app.before_request
 def verificar_autenticacao_global():
-    caminhos_livres = ['exibir_login', 'autenticar', 'static']
+    caminhos_livres = ['exibir_login', 'autenticar', 'static', 'listar_placas', 'listar_dados_completos', 'dados_por_placa' ]
     endpoint = request.endpoint
 
     if (
@@ -85,9 +98,22 @@ def pagina_gestao_motoristas():
 def pagina_gestao_veiculos():
     return render_template("veiculosAdmin.html")
 
+# ==== Upload do Arquivo Excel ========
 @app.route('/admin/inserirDados', methods=['GET', "POST"])
 def pagina_inserir_dados():
     return render_template('importAdmin.html')
+
+
+@app.route('/admin/importar-excel', methods=["POST"])
+def importar_Excel():
+    arquivo = request.file.get('arquivo_excel') 
+    if not arquivo:
+        return "Nenhum arquivo foi achando/ou está com formato errado.", 400
+
+    caminho = os.path.join("uploads", arquivo.filename)
+    arquivo.save(caminho)
+    return redirect(url_for('pagina_inserir_dados'))
+
 
 @app.route("/admin/relatorios", methods=["GET", "POST"])
 def pagina_relatorios():
