@@ -24,9 +24,12 @@
 [X] - Colocar as rotas do APP User(Web) para sidebar. 
 [X] - Criar a lógica para pegar os dados(Excel) pelo site inserir no DB.
 [X] - Corrigir bug para visualizar a página infinito.
-[ ] - Melhorar o código para listar as consultas dos dados do Excel.
-[ ] - Melhorar o código para filtrar os dados do Excel.
+[ ] - Corrigir a página de suporter User.
+[X] - Erro das rotas da API.
+[ ] - Criar o código para listar as consultas(Pesquisar) dos dados do Excel.
+[ ] - Criar o código para filtrar os dados do Excel.
 [ ] - Criar o Sistema de Avaliação do User.
+[ ] - Fazer Verificação dos códigos e Fazer boas práticas.
 [X] - Criar a Tela de Sem Conexão no KivyMD.
 [X] - Colocar msg para avisa/Snackbar de o acesso no App Mobile não for achado.
 [X] - Finalizar as rotas da API para os dados.
