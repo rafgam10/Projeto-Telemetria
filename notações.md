@@ -12,7 +12,7 @@
 [ ] - Adicionar um Button de Help do App.
 [ ] - Melhorar a parte das fucionalidades.
 [ ] - Organizar o código.
-[X] - Criar página de Login.
+[X] - Criar página de Login. - Rafael = Remake - João
 [X] - Fazer autenticação simples para acessar a página Admin
 [X] - Criar Painel Admin (Web).
 [X] - Criar página de Inserir excel (Web).
@@ -20,8 +20,8 @@
 [X] - Validação de páginas.
 [ ] - Colocar Prompts para editar os dados no Painel Admin.
 [X] - Colocar as rotas do APP User(Web) para sidebar. 
-[-] - Criar a lógica para pegar os dados(Excel) pelo site inserir no DB.
-    -[ ] - Corrigir bug para visualizar a página infinito.
+[X] - Criar a lógica para pegar os dados(Excel) pelo site inserir no DB.
+[X] - Corrigir bug para visualizar a página infinito.
 [ ] - Melhorar o código para listar as consultas dos dados do Excel.
 [ ] - Melhorar o código para filtrar os dados do Excel.
 [X] - Criar a Tela de Sem Conexão no KivyMD.
