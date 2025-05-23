@@ -113,6 +113,17 @@ def obter_dados():
     con.close()
     return dados
 
+def placas_dados():
+    con = conectar()
+    cursor = con.cursor()
+    cursor.execute("SELECT placa FROM DadosTelemetria;")
+    dados = cursor.fetchall()
+    con.close()
+    
+    # Extrair as placas como strings e colocar em maiúsculas
+    return [linha[0].upper() for linha in dados]
+
+
 def main():
     with open("dados_filtrados_2025.json", "r", encoding="utf-8") as f:
         dados_json = json.load(f)
