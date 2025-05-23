@@ -65,7 +65,6 @@
                 </ul>
             </nav>
         </div>
-    
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Cabeçalho -->
             <header class="flex items-center bg-[#0d121e] shadow-sm p-4 border-t md:p-5 md:border-t-0">
@@ -74,99 +73,95 @@
                 </button>
                 <h1 class="text-xl font-bold text-white">Importação de Dados</h1>
             </header>
-            
-            <!-- Container principal com scroll -->
-            <main class="flex-1 overflow-y-auto p-4">
-                <!-- Área de upload com formulário -->
-                <form action="/admin/importar-excel" method="POST" enctype="multipart/form-data" class="bg-[#0d121e] rounded-lg border border-[#1a2236] p-6 mb-6">
-                    <div class="text-center">
-                        <h2 class="text-lg font-medium text-white mb-2">Upload de Arquivo</h2>
-                        <p class="text-gray-400 mb-4">Selecione um arquivo .xlsx, .xlsm ou .csv para importar</p>
-
-                        <div class="mt-4 border-2 border-dashed border-[#2d3748] rounded-lg p-8 bg-[#1a2236]">
-                            <div class="flex flex-col items-center justify-center">
-                                <i class="ph ph-cloud-arrow-up text-4xl text-[#a8ba44] mb-3"></i>
-                                <p class="text-sm text-gray-400 mb-3">Arraste e solte seu arquivo aqui ou</p>
-                                <label for="file-upload" class="cursor-pointer bg-[#a8ba44] hover:bg-[#8fa038] text-white px-4 py-2 rounded-md transition-colors">
-                                    <i class="ph ph-upload-simple mr-2"></i>
-                                    Selecionar Arquivo
-                                </label>
-                                <input id="file-upload" name="arquivo_excel" type="file" class="sr-only" accept=".xlsx,.xlsm,.csv" required>
+            <form action="/admin/importar-excel" method="POST" enctype="multipart/form-data" class="bg-[#0d121e] rounded-lg border border-[#1a2236] p-6 mb-6">
+                
+                <!-- Container principal com scroll -->
+                <main class="flex-1 overflow-y-auto p-4">
+                    <!-- Área de upload com formulário -->
+                    
+                        <div class="text-center">
+                            <h2 class="text-lg font-medium text-white mb-2">Upload de Arquivo</h2>
+                            <p class="text-gray-400 mb-4">Selecione um arquivo .xlsx, .xlsm ou .csv para importar</p>
+    
+                            <div class="mt-4 border-2 border-dashed border-[#2d3748] rounded-lg p-8 bg-[#1a2236]">
+                                <div class="flex flex-col items-center justify-center">
+                                    <i class="ph ph-cloud-arrow-up text-4xl text-[#a8ba44] mb-3"></i>
+                                    <p class="text-sm text-gray-400 mb-3">Arraste e solte seu arquivo aqui ou</p>
+                                    <label for="file-upload" class="cursor-pointer bg-[#a8ba44] hover:bg-[#8fa038] text-white px-4 py-2 rounded-md transition-colors">
+                                        <i class="ph ph-upload-simple mr-2"></i>
+                                        Selecionar Arquivo
+                                    </label>
+                                    <input id="file-upload" name="arquivo_excel" type="file" class="sr-only" accept=".xlsx,.xlsm,.csv" required>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Botão para enviar o formulário -->
-                        <button type="submit" class="mt-6 bg-[#a8ba44] hover:bg-[#8fa038] text-white px-6 py-2 rounded-md">
-                            Enviar Arquivo
-                        </button>
-                    </div>
-                </form>
-            </main>
-        </div>
-    </div>
-
-    <!-- Modal de pré-visualização -->
-    <div id="preview-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center">
-        <div class="bg-[#0d121e] border border-[#1a2236] rounded-lg w-full max-w-6xl max-h-[100vh] flex flex-col">
-            <div class="p-4 border-b border-[#1a2236] flex justify-between items-center">
-                <h3 class="text-lg font-medium text-white">
-                    <i class="ph ph-table text-[#a8ba44] mr-2"></i>
-                    Pré-visualização do Arquivo: <span id="file-name" class="font-normal text-gray-300"></span>
-                    <span id="loading-text" class="text-sm text-gray-400 ml-2 hidden">
-                        <i class="ph ph-circle-notch animate-spin mr-1"></i> Processando...
-                    </span>
-                </h3>
-                <button id="close-modal" class="text-gray-400 hover:text-white">
-                    <i class="ph ph-x"></i>
-                </button>
+                </main>
             </div>
-            <div class="flex-1 overflow-auto p-4">
-                <div class="max-h-[65vh] overflow-auto scrollbar-thin scrollbar-thumb-[#a8ba44] scrollbar-track-[#1a2236]">
-                    <table id="preview-table" class="min-w-full divide-y divide-[#2d3748]">
-                        <thead class="bg-[#1a2236] sticky top-0">
-                            <tr id="table-headers"></tr>
-                        </thead>
-                        <tbody class="bg-[#0d121e] divide-y divide-[#2d3748]" id="table-body"></tbody>
-                    </table>
+        </div>
+    
+        <!-- Modal de pré-visualização -->
+        <div id="preview-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center">
+            <div class="bg-[#0d121e] border border-[#1a2236] rounded-lg w-full max-w-6xl max-h-[100vh] flex flex-col">
+                <div class="p-4 border-b border-[#1a2236] flex justify-between items-center">
+                    <h3 class="text-lg font-medium text-white">
+                        <i class="ph ph-table text-[#a8ba44] mr-2"></i>
+                        Pré-visualização do Arquivo: <span id="file-name" class="font-normal text-gray-300"></span>
+                        <span id="loading-text" class="text-sm text-gray-400 ml-2 hidden">
+                            <i class="ph ph-circle-notch animate-spin mr-1"></i> Processando...
+                        </span>
+                    </h3>
+                    <button id="close-modal" class="text-gray-400 hover:text-white">
+                        <i class="ph ph-x"></i>
+                    </button>
                 </div>
-                <div id="pagination-controls" class="mt-4 justify-between items-center text-sm text-gray-400 hidden">
-                    <div id="row-count">Mostrando 0-0 de 0 registros</div>
-                    <div class="flex space-x-2">
-                        <button id="prev-page" class="px-3 py-1 rounded bg-[#1a2236] hover:bg-[#2d3748] disabled:opacity-50" disabled>
-                            <i class="ph ph-caret-left"></i> Anterior
-                        </button>
-                        <button id="next-page" class="px-3 py-1 rounded bg-[#1a2236] hover:bg-[#2d3748]">
-                            Próxima <i class="ph ph-caret-right"></i>
-                        </button>
+                <div class="flex-1 overflow-auto p-4">
+                    <div class="max-h-[65vh] overflow-auto scrollbar-thin scrollbar-thumb-[#a8ba44] scrollbar-track-[#1a2236]">
+                        <table id="preview-table" class="min-w-full divide-y divide-[#2d3748]">
+                            <thead class="bg-[#1a2236] sticky top-0">
+                                <tr id="table-headers"></tr>
+                            </thead>
+                            <tbody class="bg-[#0d121e] divide-y divide-[#2d3748]" id="table-body"></tbody>
+                        </table>
+                    </div>
+                    <div id="pagination-controls" class="mt-4 justify-between items-center text-sm text-gray-400 hidden">
+                        <div id="row-count">Mostrando 0-0 de 0 registros</div>
+                        <div class="flex space-x-2">
+                            <button id="prev-page" class="px-3 py-1 rounded bg-[#1a2236] hover:bg-[#2d3748] disabled:opacity-50" disabled>
+                                <i class="ph ph-caret-left"></i> Anterior
+                            </button>
+                            <button id="next-page" class="px-3 py-1 rounded bg-[#1a2236] hover:bg-[#2d3748]">
+                                Próxima <i class="ph ph-caret-right"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="p-4 border-t border-[#1a2236] flex justify-end gap-2">
-                <button id="cancel-btn" class="flex items-center gap-2 bg-[#1a2236] hover:bg-[#2d3748] text-white px-4 py-2 rounded-md transition-colors">
-                    <i class="ph ph-x"></i>
-                    Cancelar
-                </button>
-                <button id="import-btn" class="flex items-center gap-2 bg-[#a8ba44] hover:bg-[#8fa038] text-white px-4 py-2 rounded-md transition-colors">
-                    <i class="ph ph-check"></i>
-                    Confirmar Importação
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Overlay de carregamento -->
-    <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center">
-        <div class="bg-[#0d121e] border border-[#1a2236] rounded-lg p-8 max-w-md text-center">
-            <div class="animate-spin text-[#a8ba44] text-4xl mb-4">
-                <i class="ph ph-circle-notch"></i>
-            </div>
-            <h3 class="text-lg font-medium text-white mb-2">Processando arquivo...</h3>
-            <p class="text-gray-400" id="loading-progress">Lendo dados, por favor aguarde</p>
-            <div class="w-full bg-[#1a223600] rounded-full h-2.5 mt-4">
-                <div id="progress-bar" class="bg-[#a8ba44] h-2.5 rounded-full" style="width: 0%"></div>
+                <div class="p-4 border-t border-[#1a2236] flex justify-end gap-2">
+                    <button id="cancel-btn" class="flex items-center gap-2 bg-[#1a2236] hover:bg-[#2d3748] text-white px-4 py-2 rounded-md transition-colors">
+                        <i class="ph ph-x"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" id="import-btn" class="flex items-center gap-2 bg-[#a8ba44] hover:bg-[#8fa038] text-white px-4 py-2 rounded-md transition-colors">
+                        <i class="ph ph-check"></i>
+                        Confirmar Importação
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
+    
+        <!-- Overlay de carregamento -->
+        <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 items-center justify-center">
+            <div class="bg-[#0d121e] border border-[#1a2236] rounded-lg p-8 max-w-md text-center">
+                <div class="animate-spin text-[#a8ba44] text-4xl mb-4">
+                    <i class="ph ph-circle-notch"></i>
+                </div>
+                <h3 class="text-lg font-medium text-white mb-2">Processando arquivo...</h3>
+                <p class="text-gray-400" id="loading-progress">Lendo dados, por favor aguarde</p>
+                <div class="w-full bg-[#1a223600] rounded-full h-2.5 mt-4">
+                    <div id="progress-bar" class="bg-[#a8ba44] h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        </form>
 
 
     <script>

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, request, render_template, redirect, url_for, session
+from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session
 from database.database_handler import obter_dados
 
 app = Flask(__name__)
@@ -99,6 +99,10 @@ def pagina_gestao_veiculos():
     return render_template("veiculosAdmin.html")
 
 # ==== Upload do Arquivo Excel ========
+
+if not os.path.exists('uploads'):
+    os.makedirs('uploads')
+
 @app.route('/admin/inserirDados', methods=['GET', "POST"])
 def pagina_inserir_dados():
     return render_template('importAdmin.html')
@@ -106,13 +110,33 @@ def pagina_inserir_dados():
 
 @app.route('/admin/importar-excel', methods=["POST"])
 def importar_Excel():
-    arquivo = request.file.get('arquivo_excel') 
-    if not arquivo:
-        return "Nenhum arquivo foi achando/ou está com formato errado.", 400
-
-    caminho = os.path.join("uploads", arquivo.filename)
-    arquivo.save(caminho)
-    return redirect(url_for('pagina_inserir_dados'))
+    # Verifica se o arquivo foi enviado
+    if 'arquivo_excel' not in request.files:
+        flash('Nenhum arquivo enviado', 'error')
+        return redirect(url_for('pagina_inserir_dados'))
+    
+    arquivo = request.files['arquivo_excel']
+    
+    # Verifica se o arquivo tem um nome
+    if arquivo.filename == '':
+        flash('Nenhum arquivo selecionado', 'error')
+        return redirect(url_for('pagina_inserir_dados'))
+    
+    # Verifica se é um arquivo Excel (opcional)
+    if not arquivo.filename.lower().endswith(('.xls', '.xlsx', '.xlsm')):
+        flash('Formato de arquivo inválido. Envie um arquivo Excel.', 'error')
+        return redirect(url_for('pagina_inserir_dados'))
+    
+    try:
+        # Salva o arquivo na pasta uploads
+        caminho = os.path.join("uploads", arquivo.filename)
+        arquivo.save(caminho)
+        flash('Arquivo importado com sucesso!', 'success')
+        return redirect(url_for('pagina_inserir_dados'))
+    
+    except Exception as e:
+        flash(f'Erro ao importar arquivo: {str(e)}', 'error')
+        return redirect(url_for('pagina_inserir_dados'))
 
 
 @app.route("/admin/relatorios", methods=["GET", "POST"])

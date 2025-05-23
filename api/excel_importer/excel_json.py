@@ -2,7 +2,7 @@ import pandas as pd
 
 
 # Caminho do arquivo
-arquivo = "uploads/dados2.xlsm"
+arquivo = "./uploads/dados2.xlsm"
 #'api/excel_importer/dados2.xlsm'
 #arquivo = '/home/rafael/Documentos/Projetos/Projetos Feelancer/Projeto-Telemetria/api/excel_importer/dados2.xlsm'
 
