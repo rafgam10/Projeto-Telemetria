@@ -9,21 +9,24 @@
 [X] - Colocar sombra no navbar do app.
 [-] - Criar a lógica para trocar o tema do App.
 [-] - Criar a lógica de salvar o config.kv.
-[ ] - Adicionar um Button de Help do App.
-[ ] - Melhorar a parte das fucionalidades.
-[ ] - Organizar o código.
+[-] - Adicionar um Button de Help do App.
+[-] - Melhorar a parte das fucionalidades.
+[-] - Organizar o código.
 [X] - Criar página de Login. - Rafael = Remake - João
 [X] - Fazer autenticação simples para acessar a página Admin
 [X] - Criar Painel Admin (Web).
 [X] - Criar página de Inserir excel (Web).
 [X] - Msg de aviso quando não ache a placa/senha.
 [X] - Validação de páginas.
+[X] - Corrigir error de acesso ao admin ou user.
+[ ] - Colocar os dados do DB para o site Admin e User.
 [ ] - Colocar Prompts para editar os dados no Painel Admin.
 [X] - Colocar as rotas do APP User(Web) para sidebar. 
 [X] - Criar a lógica para pegar os dados(Excel) pelo site inserir no DB.
 [X] - Corrigir bug para visualizar a página infinito.
 [ ] - Melhorar o código para listar as consultas dos dados do Excel.
 [ ] - Melhorar o código para filtrar os dados do Excel.
+[ ] - Criar o Sistema de Avaliação do User.
 [X] - Criar a Tela de Sem Conexão no KivyMD.
 [X] - Colocar msg para avisa/Snackbar de o acesso no App Mobile não for achado.
 [X] - Finalizar as rotas da API para os dados.
