@@ -1,7 +1,11 @@
 import pandas as pd
 
+
 # Caminho do arquivo
-arquivo = '/home/rafael/Documentos/Projetos/Projetos Feelancer/Projeto-Telemetria/api/excel_importer/dados2.xlsm'
+arquivo = "uploads/dados2.xlsm"
+#'api/excel_importer/dados2.xlsm'
+#arquivo = '/home/rafael/Documentos/Projetos/Projetos Feelancer/Projeto-Telemetria/api/excel_importer/dados2.xlsm'
+
 
 # Lê a primeira aba (ou especifique o nome se souber)
 df = pd.read_excel(arquivo, sheet_name=0)
