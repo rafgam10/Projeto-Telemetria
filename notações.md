@@ -4,8 +4,8 @@
 [X] - Fazer o Objeto(Instâcia)/Função com Container de Dados para página Histórico.
 [X] - Ajeitar o Switch e deixar centralizando com o texto.
 [X] - Deixar a cor do login de texto ativo quando perde o foco.
-[ ] - Revisar os dados utilizados e que não foram utilizados.
-[ ] - Pegar todos os dados do excel e colocar na API e no Banco de Dados.
+[X] - Revisar os dados utilizados e que não foram utilizados.
+[X] - Pegar todos os dados do excel e colocar na API e no Banco de Dados.
 [X] - Colocar sombra no navbar do app.
 [-] - Criar a lógica para trocar o tema do App.
 [-] - Criar a lógica de salvar o config.kv.
@@ -20,6 +20,9 @@
 [X] - Validação de páginas.
 [ ] - Colocar Prompts para editar os dados no Painel Admin.
 [X] - Colocar as rotas do APP User(Web) para sidebar. 
+[-] - Criar a lógica para pegar os dados(Excel) pelo site inserir no DB.
+    -[ ] - Corrigir bug para visualizar a página infinito.
+[ ] - Melhorar o código para listar as consultas dos dados do Excel.
 [ ] - Melhorar o código para filtrar os dados do Excel.
 [X] - Criar a Tela de Sem Conexão no KivyMD.
 [X] - Colocar msg para avisa/Snackbar de o acesso no App Mobile não for achado.
