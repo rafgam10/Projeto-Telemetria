@@ -144,7 +144,9 @@ def motorista_dados():
             media_1, 
             media_2,
             media,
+            data_chegada,
             km_rodado_dup
+            
         FROM DadosTelemetria;
         """
     )
@@ -154,7 +156,8 @@ def motorista_dados():
     colunas = [
         "motorista","frota", "placa", "marca_modelo", "data", "ano_veiculo",
         "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
-        "lt_diesel", "lt_arla", "lt_diesel_equip", "media_1", "media_2", "media", "km_rodado_dup"
+        "lt_diesel", "lt_arla", "lt_diesel_equip", "media_1", "media_2", "media", "data_chegada",
+        "km_rodado_dup"
     ]
     
     dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]
