@@ -32,7 +32,10 @@
 [ ] - Criar o Sistema de Avaliação do User.
 [ ] - Melhorar o código de validação de usuários.
 [ ] - Fazer Verificação dos códigos e Fazer boas práticas.
+[ ] - Criar a lógica da Exportação de Relatórios Estático.
+[ ] - Criar a lógica da página Historico de Logs.
 [ ] - Migrar o SQLite para o MySQL e configurar os códigos do Python.
+[ ] - Código para mesclar o dados com outro.
 [X] - Criar a Tela de Sem Conexão no KivyMD.
 [X] - Colocar msg para avisa/Snackbar de o acesso no App Mobile não for achado.
 [X] - Finalizar as rotas da API para os dados.

@@ -161,13 +161,16 @@ def veiculo_dados():
             frota, 
             placa, 
             marca_modelo, 
+            data,
             ano_veiculo,
             nr_equipamento, 
             marca_modelo_equipamento, 
             ano_equipamento,
             lt_diesel_equip, 
             media_1, 
-            media_2
+            media_2,
+            media,
+            km_rodado_dup
         FROM DadosTelemetria;
         """
     )
@@ -175,9 +178,9 @@ def veiculo_dados():
     con.close()
 
     colunas = [
-        "frota", "placa", "marca_modelo", "ano_veiculo",
+        "frota", "placa", "marca_modelo", "data", "ano_veiculo",
         "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
-        "lt_diesel_equip", "media_1", "media_2"
+        "lt_diesel_equip", "media_1", "media_2", "media", "km_rodado_dup"
     ]
 
     dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]
