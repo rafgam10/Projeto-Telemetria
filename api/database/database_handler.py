@@ -4,6 +4,7 @@ import json
 NOMETABELA = "DadosTelemetria"
 
 def conectar():
+    #return sqlite3.connect(f"Projeto-Telemetria/api/database/{NOMETABELA}.db")
     return sqlite3.connect(f"api/database/{NOMETABELA}.db")
 
 
@@ -124,29 +125,65 @@ def placas_dados():
     return [linha[0].upper() for linha in dados]
 
 def motorista_dados():
+    con = conectar()
+    cursor = con.cursor()
+    cursor.execute(
+        """
+        SELECT 
+            motorista, nr_acerto, data, data_saida, data_chegada,
+            km_saida, km_chegada, km_rodado, km_vazio, porcento_vazio,
+            qtd_dias, total_hrs, lt_diesel, media, lt_arla, 
+            porcento_arla,lt_por_dia, km_rodado_dup, dif, media_dup, 
+            dif_media
+        FROM DadosTelemetria;
+        """
+    )
+    dados_tuplas = cursor.fetchall()
+    con.close()
     
-    # Dados utilizandos:
-    # motorista, frota ,placa, marca_modelo, data, data_chegada
-    # km_rodado , lt_diesel, lt_arla 
+    colunas = [
+        "motorista", "nr_acerto", "data", "data_saida", "data_chegada",
+        "km_saida", "km_chegada", "km_rodado", "km_vazio", "porcento_vazio",
+        "qtd_dias", "total_hrs", "lt_diesel", "media", "lt_arla", "porcento_arla",
+        "lt_por_dia", "km_rodado_dup", "dif", "media_dup", "dif_media"
+    ]
+    
+    dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]
+    return dados
+
+def veiculo_dados():
     
     con = conectar()
     cursor = con.cursor()
     cursor.execute(
         """
-        SELECT motorista, frota, placa, marca_modelo, data, data_chegada,
-        km_rodado, lt_diesel, lt_arla FROM DadosTelemetria;
-        """)
+        SELECT 
+            frota, 
+            placa, 
+            marca_modelo, 
+            ano_veiculo,
+            nr_equipamento, 
+            marca_modelo_equipamento, 
+            ano_equipamento,
+            lt_diesel_equip, 
+            media_1, 
+            media_2
+        FROM DadosTelemetria;
+        """
+    )
     dados_tuplas = cursor.fetchall()
     con.close()
-    
+
     colunas = [
-        "motorista", "frota", "placa", "marca_modelo", "data", "data_chegada",
-        "km_rodado", "lt_diesel", "lt_arla"
+        "frota", "placa", "marca_modelo", "ano_veiculo",
+        "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
+        "lt_diesel_equip", "media_1", "media_2"
     ]
-    
+
     dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]
-    
     return dados
+    
+    
     
 
 def main():
