@@ -24,12 +24,17 @@
 [X] - Corrigir bug para visualizar a página infinito.
 [X] - Corrigir a página de suporter User.
 [X] - Erro das rotas da API.
-[-] - Colocar os dados do DB para o site Admin e User.
-[ ] - Corrigir o color do htmls para os dados DB no Jinja2.
-[ ] - Colocar Prompts para editar os dados no Painel Admin.
+[X] - Colocar os dados do DB para o site Admin.
+[ ] - Colocar os resto dos dados do DB para o inputs editar no html.
+[ ] - Colocar os dados do DB para o site User.
+[ ] - Colocar os dados do DB no gráficos.
+[ ] - Criar um Tabela que tem Placa(PK) e email(Text/Varchar) para colocar o email do motorista.
+[X] - Corrigir o color do htmls para os dados DB no Jinja2.
+[-] - Colocar Prompts para editar os dados no Painel Admin.
+--- [] - Criar as funções para editar os atributos no Jinja2 para o DB.
 [ ] - Criar o código para listar as consultas(Pesquisar) dos dados do Excel.
 [ ] - Criar o código para filtrar os dados do Excel.
-[ ] - Criar o Sistema de Avaliação do User.
+[ ] - Criar o Sistema de Avaliação e Desempenho do User/Usuário.
 [ ] - Melhorar o código de validação de usuários.
 [ ] - Fazer Verificação dos códigos e Fazer boas práticas.
 [ ] - Criar a lógica da Exportação de Relatórios Estático.
