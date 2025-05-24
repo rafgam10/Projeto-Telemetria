@@ -26,7 +26,8 @@
 [X] - Erro das rotas da API.
 [X] - Colocar os dados do DB para o site Admin.
 [ ] - Colocar os resto dos dados do DB para o inputs editar no html.
-[ ] - Colocar os dados do DB para o site User.
+[X] - Colocar os dados do DB para o site User.
+[ ] - Fazer um Método POST no /user/config para coleta de email por placa e salvar no DB.
 [ ] - Colocar os dados do DB no gráficos.
 [ ] - Criar um Tabela que tem Placa(PK) e email(Text/Varchar) para colocar o email do motorista.
 [X] - Corrigir o color do htmls para os dados DB no Jinja2.
