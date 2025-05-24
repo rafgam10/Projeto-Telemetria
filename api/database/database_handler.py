@@ -165,6 +165,9 @@ def motorista_dados():
     
     for motorista in dados:
         try:
+            idMotorista_nomeMotorista = str(motorista['motorista']).split(" - ")
+            motorista["id_motorista"] = idMotorista_nomeMotorista[0].strip()
+            motorista["nome_motorista"] = idMotorista_nomeMotorista[1].strip()
             km = float(motorista["km_rodado_dup"])
             diesel = float(motorista["lt_diesel"])
             arla = float(motorista["lt_arla"])
@@ -237,6 +240,11 @@ def user_dados(placa):
     
     con.close()
     return dados_dict
+
+
+#================== Funções de Edição =================
+
+
     
 
 def main():
