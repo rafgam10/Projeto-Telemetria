@@ -129,6 +129,7 @@ def motorista_dados():
     cursor.execute(
         """
         SELECT 
+            motorista,
             frota, 
             placa, 
             marca_modelo, 
@@ -151,7 +152,7 @@ def motorista_dados():
     con.close()
     
     colunas = [
-        "frota", "placa", "marca_modelo", "data", "ano_veiculo",
+        "motorista","frota", "placa", "marca_modelo", "data", "ano_veiculo",
         "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
         "lt_diesel", "lt_arla", "lt_diesel_equip", "media_1", "media_2", "media", "km_rodado_dup"
     ]
@@ -212,6 +213,27 @@ def veiculo_dados():
     dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]
     return dados    
 
+    
+def user_dados(placa):
+    con = conectar()
+    cursor = con.cursor()
+    cursor.execute("SELECT * FROM DadosTelemetria WHERE placa = ?", (placa,))
+    dados_tuplas = cursor.fetchall()
+
+    colunas = [
+        "motorista", "nr_acerto", "data", "data_saida", "data_chegada",
+        "km_saida", "km_chegada", "km_rodado", "km_vazio", "porcento_vazio",
+        "qtd_dias", "total_hrs", "frota", "placa", "marca_modelo", "ano_veiculo",
+        "lt_diesel", "media", "lt_arla", "porcento_arla",
+        "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
+        "lt_diesel_equip", "media_1", "media_2",
+        "lt_por_dia", "km_rodado_dup", "dif", "media_dup", "dif_media"
+    ]
+
+    dados_dict = [dict(zip(colunas, linha)) for linha in dados_tuplas]
+    
+    con.close()
+    return dados_dict
     
 
 def main():
