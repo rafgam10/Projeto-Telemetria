@@ -75,7 +75,7 @@
                                 Nome:
                             </p>
                             <p class="text-white text-lg font-bold mt-1">
-                                João Motorista da silva
+                                {{dados[0].motorista}}
                             </p>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                                 Caminhão
                             </p>
                             <p class="text-white text-lg font-bold mt-1">
-                                Volvo FH 540
+                                {{dados[0].marca_modelo}}
                             </p>
                         </div>
                     </div>
@@ -99,7 +99,7 @@
                                 Placa:
                             </p>
                             <p class="text-white text-lg font-bold mt-1">
-                                ABC1234
+                                {{dados[0].placa}}
                             </p>
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                                 Frota:
                             </p>
                             <p class="text-white text-lg font-bold mt-1">
-                                1630
+                                {{dados[0].frota}}
                             </p>
                         </div>
                     </div>
@@ -119,123 +119,37 @@
                 </div>
             </div>
 
-            <!-- parte do histórico -->
-            <div class="w-full md:w-2/4 lg:w-2/3 bg-[#0d121e] rounded-lg p-6 shadow-lg">
-                <div class="flex row-auto">
-                    <i class="ph-duotone ph-clock-counter-clockwise text-2xl px-2 self-center text-white font-semibold mb-4"></i>
-                    <h2 class="text-white text-lg font-semibold mb-4">Histórico de Viagens</h2>
-                </div>
-                <!-- ul listar cada viagem-->    
-                <ul class="grid grid-cols-1 md:grid-cols-1 h-100 overflow-scroll">
-                    <!-- cada li é uma viagem -->  
-                    <li class="group hover:bg-[#1a2235]
-                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
-                        <i class="ph-duotone ph-road-horizon text-3xl self-center
-                        text-white pl-3  "></i>
-                        <div class="p-4 flex flex-col">
-                            <p class="text-white text-lg font-bold mb-1">
-                                02/04/2025 - 748 km
-                            </p>
-                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
-                                Desempenho: 88%
-                            </p>
-                        </div>
-                    </li>
-                    <!-- varios li iguais pra preencher -->  
-                    <li class="group hover:bg-[#1a2235]
-                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
-                        <i class="ph-duotone ph-road-horizon text-3xl self-center
-                        text-white pl-3  "></i>
-                        <div class="p-4 flex flex-col">
-                            <p class="text-white text-lg font-bold mb-1">
-                                02/04/2025 - 748 km
-                            </p>
-                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
-                                Desempenho: 88%
-                            </p>
-                        </div>
-                    </li>
-                    <li class="group hover:bg-[#1a2235]
-                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
-                        <i class="ph-duotone ph-road-horizon text-3xl self-center
-                        text-white pl-3  "></i>
-                        <div class="p-4 flex flex-col">
-                            <p class="text-white text-lg font-bold mb-1">
-                                02/04/2025 - 748 km
-                            </p>
-                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
-                                Desempenho: 88%
-                            </p>
-                        </div>
-                    </li>
-                    <li class="group hover:bg-[#1a2235]
-                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
-                        <i class="ph-duotone ph-road-horizon text-3xl self-center
-                        text-white pl-3  "></i>
-                        <div class="p-4 flex flex-col">
-                            <p class="text-white text-lg font-bold mb-1">
-                                02/04/2025 - 748 km
-                            </p>
-                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
-                                Desempenho: 88%
-                            </p>
-                        </div>
-                    </li>
-                    <li class="group hover:bg-[#1a2235]
-                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
-                        <i class="ph-duotone ph-road-horizon text-3xl self-center
-                        text-white pl-3  "></i>
-                        <div class="p-4 flex flex-col">
-                            <p class="text-white text-lg font-bold mb-1">
-                                02/04/2025 - 748 km
-                            </p>
-                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
-                                Desempenho: 88%
-                            </p>
-                        </div>
-                    </li>
-                    <li class="group hover:bg-[#1a2235]
-                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
-                        <i class="ph-duotone ph-road-horizon text-3xl self-center
-                        text-white pl-3  "></i>
-                        <div class="p-4 flex flex-col">
-                            <p class="text-white text-lg font-bold mb-1">
-                                02/04/2025 - 748 km
-                            </p>
-                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
-                                Desempenho: 88%
-                            </p>
-                        </div>
-                    </li>
-                    <li class="group hover:bg-[#1a2235]
-                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
-                        <i class="ph-duotone ph-road-horizon text-3xl self-center
-                        text-white pl-3  "></i>
-                        <div class="p-4 flex flex-col">
-                            <p class="text-white text-lg font-bold mb-1">
-                                02/04/2025 - 748 km
-                            </p>
-                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
-                                Desempenho: 88%
-                            </p>
-                        </div>
-                    </li>
-                    <li class="group hover:bg-[#1a2235]
-                        border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
-                        <i class="ph-duotone ph-road-horizon text-3xl self-center
-                        text-white pl-3  "></i>
-                        <div class="p-4 flex flex-col">
-                            <p class="text-white text-lg font-bold mb-1">
-                                02/04/2025 - 748 km
-                            </p>
-                            <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
-                                Desempenho: 88%
-                            </p>
-                        </div>
-                    </li>
+                <!-- parte do histórico -->
+                <div class="w-full md:w-2/4 lg:w-2/3 bg-[#0d121e] rounded-lg p-6 shadow-lg">
+                    <div class="flex row-auto">
+                        <i class="ph-duotone ph-clock-counter-clockwise text-2xl px-2 self-center text-white font-semibold mb-4"></i>
+                        <h2 class="text-white text-lg font-semibold mb-4">Histórico de Viagens</h2>
+                    </div>
+                    <!-- ul listar cada viagem-->    
+                    <ul class="grid grid-cols-1 md:grid-cols-1 h-100 overflow-scroll">
+                        
+                        {% for dado in dados %}
+                        
+                            <!-- cada li é uma viagem -->  
+                            <li class="group hover:bg-[#1a2235]
+                                border-b-1 border-gray-700 flex flex-row space-x-2 mr-3 h-min">
+                                <i class="ph-duotone ph-road-horizon text-3xl self-center
+                                text-white pl-3  "></i>
+                                <div class="p-4 flex flex-col">
+                                    <p class="text-white text-lg font-bold mb-1">
+                                        {{dado.data_chegada}} - {{dado.km_rodado}} Km
+                                    </p>
+                                    <p class="text-gray-400 text-sm flex items-center gap-2 mb-1">
+                                        Desempenho: 88%
+                                    </p>
+                                </div>
+                            </li>
+                        
+                        {% endfor %}
 
-                </ul>    
-            </div>
+                    </ul>    
+                </div>
+            
         </div>
     </main>
 
