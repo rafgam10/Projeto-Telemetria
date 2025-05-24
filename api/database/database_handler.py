@@ -123,6 +123,31 @@ def placas_dados():
     # Extrair as placas como strings e colocar em maiúsculas
     return [linha[0].upper() for linha in dados]
 
+def motorista_dados():
+    
+    # Dados utilizandos:
+    # motorista, frota ,placa, marca_modelo, data, data_chegada
+    # km_rodado , lt_diesel, lt_arla 
+    
+    con = conectar()
+    cursor = con.cursor()
+    cursor.execute(
+        """
+        SELECT motorista, frota, placa, marca_modelo, data, data_chegada,
+        km_rodado, lt_diesel, lt_arla FROM DadosTelemetria;
+        """)
+    dados_tuplas = cursor.fetchall()
+    con.close()
+    
+    colunas = [
+        "motorista", "frota", "placa", "marca_modelo", "data", "data_chegada",
+        "km_rodado", "lt_diesel", "lt_arla"
+    ]
+    
+    dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]
+    
+    return dados
+    
 
 def main():
     with open("dados_filtrados_2025.json", "r", encoding="utf-8") as f:

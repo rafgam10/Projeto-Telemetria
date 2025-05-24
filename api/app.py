@@ -1,7 +1,7 @@
 import os
 from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session
-from database.database_handler import obter_dados
-from excel_importer import excel_json
+from database.database_handler import obter_dados, placas_dados, motorista_dados
+# from excel_importer import excel_json
 
 app = Flask(__name__)
 app.secret_key = 'motoristaLegal'
@@ -28,8 +28,8 @@ def transformar_dados(dados):
 # ================= API ====================
 @app.route("/api/placas", methods=["GET"]) 
 def listar_placas():
-    dados = obter_dados()
-    placas = list({linha[1].upper() for linha in dados})
+    dados = transformar_dados(obter_dados())
+    placas = list({linha["placa"].upper() for linha in dados})
     return jsonify({"placas": placas})
 
 @app.route("/api/dados", methods=["GET"])
@@ -39,9 +39,9 @@ def listar_dados_completos():
 
 @app.route("/api/dados/<placa>", methods=["GET"])
 def dados_por_placa(placa):
-    dados = obter_dados()
-    filtrados = [linha for linha in dados if linha[1].upper() == placa.upper()]
-    return jsonify(transformar_dados(filtrados))
+    dados = transformar_dados(obter_dados())  # Já vira lista de dicts
+    filtrados = [linha for linha in dados if linha["placa"].upper() == placa.upper()]
+    return jsonify(filtrados)
 
 
 # ================ BEM VINDO ==================
@@ -56,12 +56,25 @@ def exibir_login():
     session['logado'] = None
     if request.method == "POST":
         senha = request.form.get("InputSenha")
+        
+        # Verifica se a placa existe nos dados
+        dados = placas_dados()
+        
         if senha == "admin":
-            session.permanent = False  # Sessão acaba ao fechar o navegador
+            session.permanent = False
             session['logado'] = True
             return redirect(url_for('pagina_admin'))
+
+        elif senha.upper() in dados:
+            session.permanent = False
+            session['logado'] = True
+            session['placa'] = senha
+            return redirect(url_for('pagina_user'))
+
         else:
             erro = "Senha/Placa incorreta. Tente novamente."
+
+            
     return render_template('login.html', erro=erro)
 
 @app.route("/logout")
@@ -93,13 +106,15 @@ def pagina_admin():
 
 @app.route("/admin/gestaoMotoristas", methods=["GET", "POST"])
 def pagina_gestao_motoristas():
+    motoristas = motorista_dados()
     
-    
-    
-    return render_template('motoristasAdmin.html')
+    return render_template('motoristasAdmin.html', motoristas=motoristas)
 
 @app.route("/admin/gestaoVeiculos", methods=["GET", "POST"])
 def pagina_gestao_veiculos():
+    
+    
+    
     return render_template("veiculosAdmin.html")
 
 # ==== Upload do Arquivo Excel ========
@@ -159,19 +174,19 @@ def pagina_user():
 
 @app.route("/user/perfil", methods=["GET"])
 def pagina_perfil():
-    return render_template('perfilUser.html')
+    return render_template('perfil.html')
 
-@app.route("/user/historico", methods=["GET"])
-def pagina_historico():
-    return render_template('historicoUser.html')
+# @app.route("/user/historico", methods=["GET"])
+# def pagina_historico():
+#     return render_template('historicoUser.html')
 
 @app.route("/user/config", methods=["GET"])
 def pagina_config():
-    return render_template('configUser.html')
+    return render_template('config.html')
 
 @app.route("/user/suporte", methods=["GET"])
 def pagina_suporte():
-    return render_template('suporteUser.html')
+    return render_template('suporte.html')
 
 
 # ================= MAIN ====================

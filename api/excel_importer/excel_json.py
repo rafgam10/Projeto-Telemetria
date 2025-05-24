@@ -8,7 +8,7 @@ arquivo = "./uploads/dados2.xlsm"
 
 
 # Lê a primeira aba (ou especifique o nome se souber)
-df = pd.read_excel(arquivo, sheet_name=0)
+df = pd.read_excel(arquivo, sheet_name=0, engine="openpyxl")
 
 # Remove linhas onde 'Data' está vazio
 df = df[df['Data'].notna()]

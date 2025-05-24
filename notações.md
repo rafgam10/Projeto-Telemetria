@@ -19,16 +19,18 @@
 [X] - Msg de aviso quando não ache a placa/senha.
 [X] - Validação de páginas.
 [X] - Corrigir error de acesso ao admin ou user.
-[ ] - Colocar os dados do DB para o site Admin e User.
-[ ] - Colocar Prompts para editar os dados no Painel Admin.
 [X] - Colocar as rotas do APP User(Web) para sidebar. 
 [X] - Criar a lógica para pegar os dados(Excel) pelo site inserir no DB.
 [X] - Corrigir bug para visualizar a página infinito.
-[ ] - Corrigir a página de suporter User.
+[X] - Corrigir a página de suporter User.
 [X] - Erro das rotas da API.
+[-] - Colocar os dados do DB para o site Admin e User.
+[ ] - Corrigir o color do htmls para os dados DB no Jinja2.
+[ ] - Colocar Prompts para editar os dados no Painel Admin.
 [ ] - Criar o código para listar as consultas(Pesquisar) dos dados do Excel.
 [ ] - Criar o código para filtrar os dados do Excel.
 [ ] - Criar o Sistema de Avaliação do User.
+[ ] - Melhorar o código de validação de usuários.
 [ ] - Fazer Verificação dos códigos e Fazer boas práticas.
 [X] - Criar a Tela de Sem Conexão no KivyMD.
 [X] - Colocar msg para avisa/Snackbar de o acesso no App Mobile não for achado.
