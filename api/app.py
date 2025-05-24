@@ -1,6 +1,6 @@
 import os
 from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session
-from database.database_handler import obter_dados, placas_dados, motorista_dados, veiculo_dados
+from database.database_handler import obter_dados, placas_dados, motorista_dados, veiculo_dados, user_dados
 # from excel_importer import excel_json
 
 app = Flask(__name__)
@@ -167,15 +167,54 @@ def pagina_logs():
 # ================= USER ====================
 @app.route("/user", methods=["GET"])
 def pagina_user():
-    return render_template('HomeUser.html')
+    placa = session.get("placa")
+    if not placa:
+        return redirect(url_for("exibir_login"))
+
+    dados = user_dados(placa)
+
+    for linha in dados:
+        try:
+            km = float(linha["km_rodado"])
+            horas = float(linha["total_hrs"])
+            diesel = float(linha["lt_diesel"])
+            arla = float(linha["lt_arla"])
+
+            linha["velocidade_media"] = round(km / horas, 2) if horas > 0 else 0
+            linha["consumo_diesel"] = round((diesel / km) * 100, 2) if km > 0 else 0
+            linha["consumo_arla"] = round((arla / km) * 100, 2) if km > 0 else 0
+        except (ValueError, TypeError):
+            linha["velocidade_media"] = 0
+            linha["consumo_diesel"] = 0
+            linha["consumo_arla"] = 0
+
+    return render_template("HomeUser.html", dados=dados[-1] if dados else {})
 
 @app.route("/user/perfil", methods=["GET"])
 def pagina_perfil():
-    return render_template('perfil.html')
+    placa = session.get("placa")
+    if not placa:
+        return redirect(url_for("exibir_login"))
 
-# @app.route("/user/historico", methods=["GET"])
-# def pagina_historico():
-#     return render_template('historicoUser.html')
+    dados = user_dados(placa)
+
+    for linha in dados:
+        try:
+            km = float(linha["km_rodado"])
+            horas = float(linha["total_hrs"])
+            diesel = float(linha["lt_diesel"])
+            arla = float(linha["lt_arla"])
+
+            linha["velocidade_media"] = round(km / horas, 2) if horas > 0 else 0
+            linha["consumo_diesel"] = round((diesel / km) * 100, 2) if km > 0 else 0
+            linha["consumo_arla"] = round((arla / km) * 100, 2) if km > 0 else 0
+        except (ValueError, TypeError):
+            linha["velocidade_media"] = 0
+            linha["consumo_diesel"] = 0
+            linha["consumo_arla"] = 0
+            
+    return render_template('perfil.html', dados=dados)
+
 
 @app.route("/user/config", methods=["GET"])
 def pagina_config():
