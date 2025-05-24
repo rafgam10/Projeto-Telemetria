@@ -133,15 +133,30 @@ def motorista_dados():
     cursor = con.cursor()
     cursor.execute(
         """
-        SELECT motorista, frota, placa, marca_modelo, data, data_chegada,
-        km_rodado, lt_diesel, lt_arla FROM DadosTelemetria;
-        """)
+        SELECT 
+            frota, 
+            placa, 
+            marca_modelo, 
+            data,
+            ano_veiculo,
+            nr_equipamento, 
+            marca_modelo_equipamento, 
+            ano_equipamento,
+            lt_diesel_equip, 
+            media_1, 
+            media_2,
+            media,
+            km_rodado_dup
+        FROM DadosTelemetria;
+        """
+    )
     dados_tuplas = cursor.fetchall()
     con.close()
     
     colunas = [
-        "motorista", "frota", "placa", "marca_modelo", "data", "data_chegada",
-        "km_rodado", "lt_diesel", "lt_arla"
+        "frota", "placa", "marca_modelo", "data", "ano_veiculo",
+        "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
+        "lt_diesel_equip", "media_1", "media_2", "media", "km_rodado_dup"
     ]
     
     dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]

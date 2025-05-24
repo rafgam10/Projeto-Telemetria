@@ -146,8 +146,8 @@
                                     <div class="flex-1 space-y-3">
                                         <div>
                                             <p class="text-sm text-[#a8ba44]"><i class="ph-duotone ph-gas-pump"></i> Consumo</p>
-                                            <p class="text-sm">Diesel: {{motorista.lt_diesel|int}}L/100km</p>
-                                            <p class="text-sm">Arla: {{motorista.lt_arla|int}}L/100km</p>
+                                            <p class="text-sm">Diesel: {{(motorista.lt_diesel/100)|int}}L/100km</p>
+                                            <p class="text-sm">Arla: {{(motorista.lt_arla/100)|int}}L/100km</p>
                                         </div>
                                     </div>
                                 </div>
