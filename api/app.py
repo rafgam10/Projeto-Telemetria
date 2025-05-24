@@ -1,6 +1,6 @@
 import os
 from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session
-from database.database_handler import obter_dados, placas_dados, motorista_dados
+from database.database_handler import obter_dados, placas_dados, motorista_dados, veiculo_dados
 # from excel_importer import excel_json
 
 app = Flask(__name__)
@@ -108,14 +108,20 @@ def pagina_admin():
 def pagina_gestao_motoristas():
     motoristas = motorista_dados()
     
+    # Dividir consumo por 100 e limitar a 2 casas decimais
+    for m in motoristas:
+        m["lt_diesel"] = round(m["lt_diesel"] / 1, 2) if m["lt_diesel"] else 0
+        m["lt_arla"] = round(m["lt_arla"] / 1, 2) if m["lt_arla"] else 0
+
+    
     return render_template('motoristasAdmin.html', motoristas=motoristas)
 
 @app.route("/admin/gestaoVeiculos", methods=["GET", "POST"])
 def pagina_gestao_veiculos():
+    veiculos = veiculo_dados()
     
     
-    
-    return render_template("veiculosAdmin.html")
+    return render_template("veiculosAdmin.html", veiculos=veiculos)
 
 # ==== Upload do Arquivo Excel ========
 
