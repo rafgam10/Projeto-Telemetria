@@ -124,11 +124,6 @@ def placas_dados():
     return [linha[0].upper() for linha in dados]
 
 def motorista_dados():
-    
-    # Dados utilizandos:
-    # motorista, frota ,placa, marca_modelo, data, data_chegada
-    # km_rodado , lt_diesel, lt_arla 
-    
     con = conectar()
     cursor = con.cursor()
     cursor.execute(
@@ -142,6 +137,8 @@ def motorista_dados():
             nr_equipamento, 
             marca_modelo_equipamento, 
             ano_equipamento,
+            lt_diesel,
+            lt_arla,
             lt_diesel_equip, 
             media_1, 
             media_2,
@@ -156,12 +153,65 @@ def motorista_dados():
     colunas = [
         "frota", "placa", "marca_modelo", "data", "ano_veiculo",
         "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
-        "lt_diesel_equip", "media_1", "media_2", "media", "km_rodado_dup"
+        "lt_diesel", "lt_arla", "lt_diesel_equip", "media_1", "media_2", "media", "km_rodado_dup"
     ]
     
     dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]
     
+    
+    for motorista in dados:
+        try:
+            km = float(motorista["km_rodado_dup"])
+            diesel = float(motorista["lt_diesel"])
+            arla = float(motorista["lt_arla"])
+
+            if km > 0:
+                motorista["lt_diesel"] = round((diesel / km) * 100, 2)
+                motorista["lt_arla"] = round((arla / km) * 100, 2)
+            else:
+                motorista["lt_diesel"] = 0
+                motorista["lt_arla"] = 0
+        except (ValueError, ZeroDivisionError, TypeError):
+            motorista["lt_diesel"] = 0
+            motorista["lt_arla"] = 0
+
     return dados
+    
+
+def veiculo_dados():
+     
+    con = conectar()
+    cursor = con.cursor()
+    cursor.execute(
+        """
+        SELECT 
+            frota, 
+            placa, 
+            marca_modelo, 
+            ano_veiculo,
+            nr_equipamento, 
+            marca_modelo_equipamento, 
+            ano_equipamento,
+            lt_diesel_equip, 
+            media_1, 
+            media_2,
+            media,
+            km_rodado_dup,
+            data
+        FROM DadosTelemetria;
+        """
+    )
+    dados_tuplas = cursor.fetchall()
+    con.close()
+
+    colunas = [
+        "frota", "placa", "marca_modelo", "ano_veiculo",
+        "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
+        "lt_diesel_equip", "media_1", "media_2", "media", "km_rodado_dup", "data"]
+
+    dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]
+    return dados    
+
     
 
 def main():
