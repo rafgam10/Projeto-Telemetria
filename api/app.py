@@ -1,6 +1,7 @@
 import os
 from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session
 from database.database_handler import obter_dados
+from excel_importer import excel_json
 
 app = Flask(__name__)
 app.secret_key = 'motoristaLegal'
@@ -92,6 +93,9 @@ def pagina_admin():
 
 @app.route("/admin/gestaoMotoristas", methods=["GET", "POST"])
 def pagina_gestao_motoristas():
+    
+    
+    
     return render_template('motoristasAdmin.html')
 
 @app.route("/admin/gestaoVeiculos", methods=["GET", "POST"])
