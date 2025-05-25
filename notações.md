@@ -33,6 +33,7 @@
 [X] - Corrigir o color do htmls para os dados DB no Jinja2.
 [-] - Colocar Prompts para editar os dados no Painel Admin.
 --- [] - Criar as funções para editar os atributos no Jinja2 para o DB.
+[ ] - Salvar as informações dos objetos (de motorista e veiculo) no DB.
 [ ] - Criar o código para listar as consultas(Pesquisar) dos dados do Excel.
 [ ] - Criar o código para filtrar os dados do Excel.
 [ ] - Criar o Sistema de Avaliação e Desempenho do User/Usuário.

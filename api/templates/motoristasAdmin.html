@@ -225,9 +225,9 @@
                                     <div class="flex items-start">
                                         <div class="">
                                             <p class="self-center text-lg font-medium text-[#a8ba44] mb-1">Status</p>
-                                            <select class="bg-[#1a2236] border border-[#2d3748] text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
-                                                <option>Ativos</option>
-                                                <option>Inativos</option>
+                                            <select id="editar-status" class="bg-[#1a2236] border border-[#2d3748] text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
+                                                <option>Ativo</option>
+                                                <option>Inativo</option>
                                             </select>
                                         </div>
                                     </div>
@@ -239,7 +239,7 @@
                                 <i class="ph ph-x"></i>
                                 Cancelar
                             </button>
-                            <button type="submit" id="import-btn" class="flex items-center gap-2 bg-[#a8ba44] hover:bg-[#8fa038] text-white px-4 py-2 rounded-md transition-colors">
+                            <button type="submit" id="save-btn" class="flex items-center gap-2 bg-[#a8ba44] hover:bg-[#8fa038] text-white px-4 py-2 rounded-md transition-colors">
                                 <i class="ph ph-check"></i>
                                 Salvar Edição
                             </button>
@@ -268,6 +268,7 @@
                 document.getElementById('editar-nome').value = motorista.nome;
                 document.getElementById('editar-caminhao').value = motorista.caminhao;
                 document.getElementById('editar-placa').value = motorista.placa;
+                document.getElementById('editar-status').value = motorista.status;
 
                 visualizar.classList.remove('hidden');
                 visualizar.classList.add('flex');
@@ -282,8 +283,10 @@
                         id: card.querySelector('.id-motorista').textContent,
                         nome: card.querySelector('.nome-motorista').textContent,
                         caminhao: card.querySelector('.marca-modelo').textContent,
-                        placa: card.querySelector('.placa').textContent
+                        placa: card.querySelector('.placa').textContent,
+                        status: card.querySelector('.status-motorista').textContent.trim()
                     };
+
 
                     mostrarInfo(motorista);
                 });
@@ -297,13 +300,23 @@
             });
 
 
+
+            document.getElementById('save-btn').addEventListener('click', function() {
+                const dadosMotorista = {
+                    id: document.getElementById('editar-id').value,
+                    nome: document.getElementById('editar-nome').value,
+                    caminhao: document.getElementById('editar-caminhao').value,
+                    placa: document.getElementById('editar-placa').value,
+                    status: document.querySelector('#visualizar select').value
+                };
+
+                
+                // rafael arruma um jeito de mandar esse objeto ai com os valores pro banco 
+
+
+            });
+
         document.addEventListener('DOMContentLoaded', function() {
-
-            
-
-
-
-
             
             const textoInput = document.getElementById("pesquisa-motorista");
             const filtroInput = document.getElementById("filtro-status");
