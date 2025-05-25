@@ -82,130 +82,127 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- Lista de relatórios em coluna única -->
-    <div class="space-y-6">
-        <!-- Seletor de Motorista -->
-        <div class="bg-[#0d121e] p-4 rounded-lg border border-[#1a2236]">
-            <h2 class="text-lg font-semibold mb-3 text-white">Selecione o Motorista</h2>
-            <select id="selectMotorista">
-                    <option value="" selected disabled>Busque por nome ou placa...</option>
-                    <option value="1">ABC1234 - João Motorista da Silva</option>
-                    <option value="2">DEF5678 - Carlos Roberto Almeida</option>
-                    <option value="3">GHI9012 - Ana Paula Santos</option>
-                    <option value="4">JKL3456 - Marcos Vinicius Oliveira</option>
-                    <option value="5">MNO7890 - Roberto Carlos Mendes</option>
-                    <option value="6">PQR1234 - Fernanda Lima Costa</option>
+        <div class="space-y-6">
+            <!-- Seletor de Motorista -->
+            <div class="bg-[#0d121e] p-4 rounded-lg border border-[#1a2236]">
+                <h2 class="text-lg font-semibold mb-3 text-white">Selecione o Motorista</h2>
+                <select id="selectMotorista">
+                        <option value="" selected disabled>Busque por nome ou placa...</option>
+                        {% for m in motoristas %}
+                            <option value="{{ m.id }}">{{ m.placa }} - {{ m.nome }}</option>
+                        {% endfor %}
                 </select>
-        </div>
+            </div>
 
-        <!-- Relatório de Consumo (sem seleção) -->
-        <div class="text-gray-300 bg-[#0d121e] rounded-lg border h-max border-[#1a2236] hidden" id="semSelecao">    
-            <div class="p-4">
-                <div class="text-center py-45 text-gray-400">
-                    <i class="ph ph-magnifying-glass text-4xl mb-3"></i>
-                    <p class="text-lg">Selecione um motorista para visualizar o relatório</p>
+            <!-- Relatório de Consumo (sem seleção) -->
+            <div class="text-gray-300 bg-[#0d121e] rounded-lg border h-max border-[#1a2236] hidden" id="semSelecao">    
+                <div class="p-4">
+                    <div class="text-center py-45 text-gray-400">
+                        <i class="ph ph-magnifying-glass text-4xl mb-3"></i>
+                        <p class="text-lg">Selecione um motorista para visualizar o relatório</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Relatório de Consumo (com seleção) -->
-        <div class="text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236]" id="relatorioSelecionado">
-            <div class="p-4 border-b border-[#1a2236]">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="ph ph-gas-pump text-[#a8ba44]"></i>
-                    Relatório de Consumo de Combustível
-                </h3>
-                <p class="text-sm text-gray-400" id="infoMotoristaSelecionado">ABC1234 - João Motorista da Silva</p>
-            </div>
-            
-            <div class="p-4">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
-                        <p class="text-sm text-[#a8ba44]">Média de Consumo</p>
-                        <p class="text-2xl font-bold">2.8 km/L</p>
-                    </div>
-                    <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
-                        <p class="text-sm text-[#a8ba44]">Melhor Consumo</p>
-                        <p class="text-2xl font-bold">3.2 km/L</p>
-                    </div>
-                    <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
-                        <p class="text-sm text-[#a8ba44]">Pior Consumo</p>
-                        <p class="text-2xl font-bold">2.3 km/L</p>
-                    </div>
+            <!-- Relatório de Consumo (com seleção) -->
+            <div class="text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236]" id="relatorioSelecionado">
+                <div class="p-4 border-b border-[#1a2236]">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="ph ph-gas-pump text-[#a8ba44]"></i>
+                        Relatório de Consumo de Combustível
+                    </h3>
+                    <p class="text-sm text-gray-400" id="infoMotoristaSelecionado">ABC1234 - João Motorista da Silva</p>
                 </div>
                 
-                <div class="bg-[#1a2236] rounded border border-[#2d3748] p-4 h-[300px]">
-                    <canvas id="consumoChart" class="w-full h-full"></canvas>
-                </div>
-                
-            </div>
-            
-        </div>
-
-        <!-- Análise de Tempo Médio -->
-        <div class="text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236]" id="analiseTempo">
-            <div class="p-4 border-b border-[#1a2236]">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="ph ph-clock text-[#a8ba44]"></i>
-                    Análise de Tempo Médio de Viagem
-                </h3>
-                <p class="text-sm text-gray-400" id="infoTempoMotorista">ABC1234 - João Motorista da Silva</p>
-            </div>
-            
-            <div class="p-4">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
-                        <p class="text-sm text-[#a8ba44]">Tempo Médio</p>
-                        <p class="text-2xl font-bold">4h 22m</p>
-                    </div>
-                    <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
-                        <p class="text-sm text-[#a8ba44]">Viagem mais longa</p>
-                        <p class="text-2xl font-bold">6h 45m</p>
-                    </div>
-                    <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
-                        <p class="text-sm text-[#a8ba44]">Viagem mais curta</p>
-                        <p class="text-2xl font-bold">2h 15m</p>
-                    </div>
-                </div>
-                
-                <div class="bg-[#1a2236] rounded border border-[#2d3748] p-4 h-[300px]">
-                    <canvas id="tempoChart" class="w-full h-full"></canvas>
-                </div>
-
-            </div>
-            
-            
-        </div>
-
-        <!-- Exportação -->
-        <div class="text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236]" id="exportacaoRelatorios">
-            <div class="p-4 border-b border-[#1a2236]">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="ph ph-download-simple text-[#a8ba44]"></i>
-                    Exportação de Relatórios
-                </h3>
-                <p class="text-sm text-gray-400" id="infoExportMotorista">ABC1234 - João Motorista da Silva</p>
-            </div>
-            
-            <div class="p-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <button class="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white p-4 rounded transition-colors">
-                        <i class="ph ph-file-xls text-2xl"></i>
-                        <div class="text-left">
-                            <p class="font-bold">Exportar para Excel</p>
-                            <p class="text-xs">(XLSX - Planilha)</p>
+                <div class="p-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
+                            <p class="text-sm text-[#a8ba44]">Média de Consumo</p>
+                            <p class="text-2xl font-bold">2.8 km/L</p>
                         </div>
-                    </button>
-                    <button class="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white p-4 rounded transition-colors">
-                        <i class="ph ph-file-pdf text-2xl"></i>
-                        <div class="text-left">
-                            <p class="font-bold">Exportar para PDF</p>
-                            <p class="text-xs">(Documento impresso)</p>
+                        <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
+                            <p class="text-sm text-[#a8ba44]">Melhor Consumo</p>
+                            <p class="text-2xl font-bold">3.2 km/L</p>
                         </div>
-                    </button>
+                        <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
+                            <p class="text-sm text-[#a8ba44]">Pior Consumo</p>
+                            <p class="text-2xl font-bold">2.3 km/L</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-[#1a2236] rounded border border-[#2d3748] p-4 h-[300px]">
+                        <canvas id="consumoChart" class="w-full h-full"></canvas>
+                    </div>
+                    
+                </div>
+                
+            </div>
+
+            <!-- Análise de Tempo Médio -->
+            <div class="text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236]" id="analiseTempo">
+                <div class="p-4 border-b border-[#1a2236]">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="ph ph-clock text-[#a8ba44]"></i>
+                        Análise de Tempo Médio de Viagem
+                    </h3>
+                    <p class="text-sm text-gray-400" id="infoTempoMotorista">ABC1234 - João Motorista da Silva</p>
+                </div>
+                
+                <div class="p-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
+                            <p class="text-sm text-[#a8ba44]">Tempo Médio</p>
+                            <p class="text-2xl font-bold">4h 22m</p>
+                        </div>
+                        <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
+                            <p class="text-sm text-[#a8ba44]">Viagem mais longa</p>
+                            <p class="text-2xl font-bold">6h 45m</p>
+                        </div>
+                        <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
+                            <p class="text-sm text-[#a8ba44]">Viagem mais curta</p>
+                            <p class="text-2xl font-bold">2h 15m</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-[#1a2236] rounded border border-[#2d3748] p-4 h-[300px]">
+                        <canvas id="tempoChart" class="w-full h-full"></canvas>
+                    </div>
+
+                </div>
+                
+                
+            </div>
+
+            <!-- Exportação -->
+            <div class="text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236]" id="exportacaoRelatorios">
+                <div class="p-4 border-b border-[#1a2236]">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="ph ph-download-simple text-[#a8ba44]"></i>
+                        Exportação de Relatórios
+                    </h3>
+                    <p class="text-sm text-gray-400" id="infoExportMotorista">ABC1234 - João Motorista da Silva</p>
+                </div>
+                
+                <div class="p-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button class="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white p-4 rounded transition-colors">
+                            <i class="ph ph-file-xls text-2xl"></i>
+                            <div class="text-left">
+                                <p class="font-bold">Exportar para Excel</p>
+                                <p class="text-xs">(XLSX - Planilha)</p>
+                            </div>
+                        </button>
+                        <button class="flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white p-4 rounded transition-colors">
+                            <i class="ph ph-file-pdf text-2xl"></i>
+                            <div class="text-left">
+                                <p class="font-bold">Exportar para PDF</p>
+                                <p class="text-xs">(Documento impresso)</p>
+                            </div>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 </main>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
