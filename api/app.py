@@ -1,6 +1,6 @@
 import os
 from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session
-from database.database_handler import obter_dados, placas_dados, motorista_dados, veiculo_dados, user_dados
+from database.database_handler import obter_dados, placas_dados, motorista_dados, veiculo_dados, user_dados, dados_relatorios
 # from excel_importer import excel_json
 
 app = Flask(__name__)
@@ -157,7 +157,9 @@ def importar_Excel():
 
 @app.route("/admin/relatorios", methods=["GET", "POST"])
 def pagina_relatorios():
-    return render_template("relatorioAdmin.html")
+    motoristas = dados_relatorios()
+    
+    return render_template("relatorioAdmin.html", motoristas=motoristas)
 
 @app.route("/admin/logs", methods=["GET", "POST"])
 def pagina_logs():
@@ -216,7 +218,7 @@ def pagina_perfil():
     return render_template('perfil.html', dados=dados)
 
 
-@app.route("/user/config", methods=["GET"])
+@app.route("/user/config", methods=["GET","POST"])
 def pagina_config():
     return render_template('config.html')
 
