@@ -217,6 +217,17 @@ def veiculo_dados():
         "lt_diesel_equip", "media_1", "media_2", "media", "km_rodado_dup", "data"]
 
     dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]
+    
+    for veiculos in dados:
+        try:
+            marcaVeiculo_modeloVeiculo = str(veiculos['marca_modelo']).split(" / ")
+            veiculos["marca_veiculo"] = marcaVeiculo_modeloVeiculo[0].strip()
+            veiculos["modelo_veiculo"] = marcaVeiculo_modeloVeiculo[1].strip()
+
+    
+        except (ValueError, ZeroDivisionError, TypeError):
+            pass
+    
     return dados    
 
     
@@ -241,6 +252,37 @@ def user_dados(placa):
     con.close()
     return dados_dict
 
+
+def dados_relatorios():
+    con = conectar()
+    cursor = con.cursor()
+
+    # Buscar o último registro (por data mais recente) de cada motorista
+    cursor.execute("""
+        SELECT motorista, placa, MAX(data) as ultima_data
+        FROM DadosTelemetria
+        GROUP BY motorista, placa
+    """)
+    motoristas = cursor.fetchall()
+    con.close()
+
+    # Processar dados no formato (id, nome, placa)
+    lista_motoristas = []
+    for m in motoristas:
+        try:
+            id_nome = str(m[0]).split(" - ")  # Ex: "23 - João da Silva"
+            id_motorista = id_nome[0].strip()
+            nome_motorista = id_nome[1].strip()
+            placa = m[1]
+            lista_motoristas.append({
+                "id": id_motorista,
+                "nome": nome_motorista,
+                "placa": placa
+            })
+        except Exception as e:
+            print("Erro ao processar motorista:", e)
+        
+    return lista_motoristas
 
 #================== Funções de Edição =================
 
