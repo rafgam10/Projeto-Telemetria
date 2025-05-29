@@ -1,5 +1,6 @@
 import sqlite3
 import json
+from datetime import datetime
 
 NOMETABELA = "DadosTelemetria"
 
@@ -183,10 +184,97 @@ def motorista_dados():
             motorista["lt_arla"] = 0
 
     return dados
+
+
+############################### pra aparecer só um motora ###############
+
+
+def motorista_dados_unicos():
+    con = conectar()
+    cursor = con.cursor()
+    cursor.execute(
+        """
+        SELECT 
+            motorista,
+            frota, 
+            placa, 
+            marca_modelo, 
+            data,
+            ano_veiculo,
+            nr_equipamento, 
+            marca_modelo_equipamento, 
+            ano_equipamento,
+            lt_diesel,
+            lt_arla,
+            lt_diesel_equip, 
+            media_1, 
+            media_2,
+            media,
+            data_chegada,
+            km_rodado_dup
+        FROM DadosTelemetria;
+        """
+    )
+    dados_tuplas = cursor.fetchall()
+    con.close()
+
+    colunas = [
+        "motorista", "frota", "placa", "marca_modelo", "data", "ano_veiculo",
+        "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
+        "lt_diesel", "lt_arla", "lt_diesel_equip", "media_1", "media_2", "media", "data_chegada",
+        "km_rodado_dup"
+    ]
     
+    dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]
+
+    # ✅ Pegar apenas a viagem mais recente de cada motorista
+    motoristas_unicos = {}
+    for m in dados:
+        try:
+            id_nome = str(m["motorista"]).strip()
+            data_str = m.get("data_chegada")
+            data_formatada = datetime.strptime(data_str, "%d/%m/%Y %H:%M")
+        except Exception:
+            continue  # ignora linhas com erro
+
+        if id_nome not in motoristas_unicos or data_formatada > motoristas_unicos[id_nome]["_data"]:
+            m["_data"] = data_formatada
+            motoristas_unicos[id_nome] = m
+
+    dados_filtrados = list(motoristas_unicos.values())
+
+    # ✅ Processar diesel/arla e separar ID e nome
+    for motorista in dados_filtrados:
+        try:
+            idMotorista_nomeMotorista = str(motorista['motorista']).split(" - ")
+            motorista["id_motorista"] = idMotorista_nomeMotorista[0].strip()
+            motorista["nome_motorista"] = idMotorista_nomeMotorista[1].strip()
+        except:
+            motorista["id_motorista"] = ""
+            motorista["nome_motorista"] = motorista["motorista"]
+
+        try:
+            km = float(motorista["km_rodado_dup"])
+            diesel = float(motorista["lt_diesel"])
+            arla = float(motorista["lt_arla"])
+
+            if km > 0:
+                motorista["lt_diesel"] = round((diesel / km) * 100, 2)
+                motorista["lt_arla"] = round((arla / km) * 100, 2)
+            else:
+                motorista["lt_diesel"] = 0
+                motorista["lt_arla"] = 0
+        except (ValueError, ZeroDivisionError, TypeError):
+            motorista["lt_diesel"] = 0
+            motorista["lt_arla"] = 0
+
+        del motorista["_data"]  # remover campo temporário
+
+    return dados_filtrados
+
 
 def veiculo_dados():
-     
+    
     con = conectar()
     cursor = con.cursor()
     cursor.execute(
@@ -229,6 +317,73 @@ def veiculo_dados():
             pass
     
     return dados    
+
+
+############################### pra aparecer só um veiculo ###############
+
+def veiculo_dados_unicos():
+    con = conectar()
+    cursor = con.cursor()
+    cursor.execute(
+        """
+        SELECT 
+            frota, 
+            placa, 
+            marca_modelo, 
+            ano_veiculo,
+            nr_equipamento, 
+            marca_modelo_equipamento, 
+            ano_equipamento,
+            lt_diesel_equip, 
+            media_1, 
+            media_2,
+            media,
+            km_rodado_dup,
+            data
+        FROM DadosTelemetria;
+        """
+    )
+    dados_tuplas = cursor.fetchall()
+    con.close()
+
+    colunas = [
+        "frota", "placa", "marca_modelo", "ano_veiculo",
+        "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
+        "lt_diesel_equip", "media_1", "media_2", "media", "km_rodado_dup", "data"
+    ]
+
+    dados = [dict(zip(colunas, linha)) for linha in dados_tuplas]
+
+    # ✅ Agrupar por placa e manter só o registro com data mais recente
+    veiculos_unicos = {}
+    for v in dados:
+        try:
+            placa = v["placa"].strip()
+            data_str = v.get("data")
+            data_formatada = datetime.strptime(data_str, "%d/%m/%Y")
+        except Exception:
+            continue
+
+        if placa not in veiculos_unicos or data_formatada > veiculos_unicos[placa]["_data"]:
+            v["_data"] = data_formatada
+            veiculos_unicos[placa] = v
+
+    dados_filtrados = list(veiculos_unicos.values())
+
+    # ✅ Dividir marca/modelo
+    for veiculo in dados_filtrados:
+        try:
+            marcaVeiculo_modeloVeiculo = str(veiculo['marca_modelo']).split(" / ")
+            veiculo["marca_veiculo"] = marcaVeiculo_modeloVeiculo[0].strip()
+            veiculo["modelo_veiculo"] = marcaVeiculo_modeloVeiculo[1].strip()
+        except (ValueError, ZeroDivisionError, TypeError):
+            veiculo["marca_veiculo"] = veiculo["marca_modelo"]
+            veiculo["modelo_veiculo"] = ""
+
+        del veiculo["_data"]  # remove campo temporário
+
+    return dados_filtrados
+
 
     
 def user_dados(placa):

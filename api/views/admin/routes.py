@@ -1,6 +1,6 @@
 # admin/routes.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from database.database_handler import motorista_dados, veiculo_dados, dados_relatorios
+from database.database_handler import motorista_dados, motorista_dados_unicos, veiculo_dados, veiculo_dados_unicos, dados_relatorios
 import os
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
@@ -11,12 +11,12 @@ def pagina_admin():
 
 @admin_bp.route("/gestaoMotoristas", methods=["GET", "POST"])
 def pagina_gestao_motoristas():
-    motoristas = motorista_dados()
+    motoristas = motorista_dados_unicos()
     return render_template("motoristasAdmin.html", motoristas=motoristas)
 
 @admin_bp.route("/gestaoVeiculos", methods=["GET", "POST"])
 def pagina_gestao_veiculos():
-    veiculos = veiculo_dados()
+    veiculos = veiculo_dados_unicos()
     return render_template("veiculosAdmin.html", veiculos=veiculos)
 
 @admin_bp.route("/inserirDados", methods=["GET", "POST"])
@@ -55,3 +55,41 @@ def pagina_relatorios():
 @admin_bp.route("/logs", methods=["GET", "POST"])
 def pagina_logs():
     return render_template("logsAdmin.html")
+
+
+
+
+########################## teste ##############################
+
+from flask import jsonify
+from database.database_handler import user_dados
+
+@admin_bp.route("/api/motorista/<placa>")
+def api_dados_motorista(placa):
+    dados = user_dados(placa.upper())
+
+    if not dados:
+        return jsonify({"erro": "Nenhum dado encontrado"}), 404
+
+    consumos = []
+    tempos = []
+    labels = []
+
+    for d in dados:
+        try:
+            media = float(d["media"])
+            tempo_horas = float(d["total_hrs"]) / 60  # transforma minutos em horas
+            if media > 0:
+                consumos.append(round(media, 2))
+                tempos.append(round(tempo_horas, 2))
+                labels.append(d["data_chegada"])
+        except:
+            pass
+
+    return jsonify({
+        "motorista": dados[0]["motorista"],
+        "placa": placa.upper(),
+        "labels": labels,
+        "consumos": consumos,
+        "tempos": tempos
+    })
