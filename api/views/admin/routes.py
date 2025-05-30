@@ -59,14 +59,15 @@ def pagina_logs():
 
 
 
-########################## teste ##############################
+########################## relatorio ##############################
 
 from flask import jsonify
-from database.database_handler import user_dados
+from database.database_handler import dados_por_id_motorista
 
-@admin_bp.route("/api/motorista/<placa>")
-def api_dados_motorista(placa):
-    dados = user_dados(placa.upper())
+@admin_bp.route("/api/motorista-id/<id_motorista>")
+def api_dados_por_id_motorista(id_motorista):
+    id_motorista = id_motorista.upper().strip()
+    dados = dados_por_id_motorista(id_motorista)
 
     if not dados:
         return jsonify({"erro": "Nenhum dado encontrado"}), 404
@@ -78,17 +79,18 @@ def api_dados_motorista(placa):
     for d in dados:
         try:
             media = float(d["media"])
-            tempo_horas = float(d["total_hrs"]) / 60  # transforma minutos em horas
+            tempo_horas = float(d["total_hrs"]) / 60
+            data = d.get("data_chegada") or d.get("data")
+
             if media > 0:
                 consumos.append(round(media, 2))
                 tempos.append(round(tempo_horas, 2))
-                labels.append(d["data_chegada"])
+                labels.append(data)
         except:
-            pass
+            continue
 
     return jsonify({
         "motorista": dados[0]["motorista"],
-        "placa": placa.upper(),
         "labels": labels,
         "consumos": consumos,
         "tempos": tempos

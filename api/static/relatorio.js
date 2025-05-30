@@ -111,15 +111,14 @@ $(document).ready(function () {
 
     // Ao selecionar um motorista
     $('#selectMotorista').on('change', function () {
-        const placa = $(this).val();
-        const selectedText = $(this).find('option:selected').text();
+        const idMotorista = $(this).val();
+        const nomeCompleto = $(this).find('option:selected').text();
 
-        if (placa) {
+        if (idMotorista) {
             $('#semSelecao').hide();
             $('#relatorioSelecionado, #analiseTempo, #exportacaoRelatorios').show();
 
-            // Busca dados reais da API
-            fetch(`/admin/api/motorista/${placa}`)
+            fetch(`/admin/api/motorista-id/${encodeURIComponent(idMotorista)}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.erro) {
@@ -127,12 +126,10 @@ $(document).ready(function () {
                         return;
                     }
 
-                    // Atualiza nomes e info
-                    $('#infoMotoristaSelecionado').text(`${data.placa} - ${data.motorista}`);
-                    $('#infoTempoMotorista').text(`${data.placa} - ${data.motorista}`);
-                    $('#infoExportMotorista').text(`${data.placa} - ${data.motorista}`);
+                    $('#infoMotoristaSelecionado').text(nomeCompleto);
+                    $('#infoTempoMotorista').text(nomeCompleto);
+                    $('#infoExportMotorista').text(nomeCompleto);
 
-                    // Atualiza gráficos
                     atualizarGraficoConsumo(data.labels, data.consumos);
                     atualizarGraficoTempo(data.labels, data.tempos);
                 });
@@ -141,6 +138,8 @@ $(document).ready(function () {
             $('#relatorioSelecionado, #analiseTempo, #exportacaoRelatorios').hide();
         }
     });
+
+
 });
 
 // Funções auxiliares
@@ -183,9 +182,13 @@ function mediaArray(arr) {
 document.getElementById("btnExportarPDF").addEventListener("click", async function () {
     const area = document.getElementById("areaRelatorioPDF");
     const consumoChart = document.getElementById("consumoChart");
+    const areagrafico = document.getElementById("areagrafico");
+    const areagrafico2 = document.getElementById("areagrafico2");
 
     // Limita a largura total da área
     consumoChart.style.maxWidth = "794px";
+    areagrafico.style.height = "200px";
+    areagrafico2.style.height = "200px";
     consumoChart.style.height = "100%";
     area.style.boxSizing = "border-box";
 
@@ -204,7 +207,7 @@ document.getElementById("btnExportarPDF").addEventListener("click", async functi
     const canvases = area.querySelectorAll("canvas");
     canvases.forEach(canvas => {
         canvas.style.maxWidth = "100%";
-        canvas.style.height = "100%";
+        canvas.style.height = "auto";
     });
 
 
@@ -224,4 +227,63 @@ document.getElementById("btnExportarPDF").addEventListener("click", async functi
     }
 
     consumoChart.style.maxWidth = "100%";
+    areagrafico.style.height = "300px";
+    areagrafico2.style.height = "300px";
+});
+
+
+document.getElementById("btnExportarExcel").addEventListener("click", function () {
+    const nomePlaca = document.getElementById("infoExportMotorista").textContent;
+
+    const [placa, ...nomeArr] = nomePlaca.split(" - ");
+    const nomeCompleto = nomeArr.join(" - ").trim();
+    const nomeMotorista = nomeCompleto;
+
+    const datas = consumoChart.data.labels;
+    const consumos = consumoChart.data.datasets[0].data;
+    const tempos = tempoChart.data.datasets[0].data;
+
+    // Cabeçalho + dados
+    const sheetData = [["Motorista", "Placa", "Data", "Consumo (km/L)", "Tempo (h)"]];
+    for (let i = 0; i < datas.length; i++) {
+        sheetData.push([
+            nomeMotorista,
+            placa,
+            datas[i],
+            consumos[i] ?? "",
+            tempos[i] ?? ""
+        ]);
+    }
+
+    // Cria planilha
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(sheetData);
+
+    // Aplica largura personalizada nas colunas
+    ws['!cols'] = [
+        { wch: 40 }, // Motorista
+        { wch: 15 }, // Placa
+        { wch: 20 }, // Data
+        { wch: 20 }, // Consumo
+        { wch: 20 }  // Tempo
+    ];
+
+    // Estiliza o cabeçalho com cor e negrito (hack via XLSX-style compatível)
+    const headerStyle = {
+        fill: { fgColor: { rgb: "A8BA44" } },
+        font: { bold: true, color: { rgb: "FFFFFF" } }
+    };
+
+    const headerRange = ["A1", "B1", "C1", "D1", "E1"];
+    headerRange.forEach(cell => {
+        if (!ws[cell]) return;
+        ws[cell].s = headerStyle;
+    });
+
+    // Anexa e exporta
+    XLSX.utils.book_append_sheet(wb, ws, "Relatório");
+    // Gera nome do arquivo com base no nome do motorista
+    const nomeArquivo = "relatorio_motorista_" + nomeMotorista.replace(/[^\w]/g, "_") + ".xlsx";
+    XLSX.writeFile(wb, nomeArquivo);
+
 });

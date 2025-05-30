@@ -408,6 +408,33 @@ def user_dados(placa):
     return dados_dict
 
 
+def dados_por_id_motorista(id_motorista):
+    con = conectar()
+    cursor = con.cursor()
+
+    # Converte tudo para maiúsculo para garantir a correspondência
+    id_motorista = id_motorista.upper().strip() + '%'
+
+    # Busca todos os registros onde o campo "motorista" começa com o ID informado
+    cursor.execute("SELECT * FROM DadosTelemetria WHERE UPPER(motorista) LIKE ?", (id_motorista,))
+    dados_tuplas = cursor.fetchall()
+
+    colunas = [
+        "motorista", "nr_acerto", "data", "data_saida", "data_chegada",
+        "km_saida", "km_chegada", "km_rodado", "km_vazio", "porcento_vazio",
+        "qtd_dias", "total_hrs", "frota", "placa", "marca_modelo", "ano_veiculo",
+        "lt_diesel", "media", "lt_arla", "porcento_arla",
+        "nr_equipamento", "marca_modelo_equipamento", "ano_equipamento",
+        "lt_diesel_equip", "media_1", "media_2",
+        "lt_por_dia", "km_rodado_dup", "dif", "media_dup", "dif_media"
+    ]
+
+    dados_dict = [dict(zip(colunas, linha)) for linha in dados_tuplas]
+    
+    con.close()
+    return dados_dict
+
+
 def dados_relatorios():
     con = conectar()
     cursor = con.cursor()

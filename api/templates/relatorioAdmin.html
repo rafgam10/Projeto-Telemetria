@@ -106,19 +106,12 @@
             <div class="bg-[#0d121e] p-4 rounded-lg border border-[#1a2236]">
                 <h2 class="text-lg font-semibold mb-3 text-white">Selecione o Motorista</h2>
 
-                <!-- teste -->
-
-
                 <select id="selectMotorista">
                     <option value="" selected disabled>Busque por nome ou placa...</option>
                     {% for m in motoristas %}
-                        <option value="{{ m.placa }}">{{ m.placa }} - {{ m.nome }}</option>
+                        <option value="{{ m.id }}">{{ m.id }} - {{ m.nome }}</option>
                     {% endfor %}
                 </select>
-
-
-
-
 
             </div>
 
