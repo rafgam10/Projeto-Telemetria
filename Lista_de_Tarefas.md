@@ -25,32 +25,33 @@
 [X] - Corrigir a página de suporter User.
 [X] - Erro das rotas da API.
 [X] - Colocar os dados do DB para o site Admin.
-[ ] - Colocar os resto dos dados do DB para o inputs editar no html.
+[X] - Colocar os resto dos dados do DB para o inputs editar no html.
 [X] - Colocar os dados do DB para o site User.
-[ ] - Fazer um Método POST no /user/config para coleta de email por placa e salvar no DB.
+[AN] - Fazer um Método POST no /user/config para coleta de email por placa e salvar no DB.
 [ ] - Colocar os dados do DB no gráficos.
-[ ] - Criar um Tabela que tem Placa(PK) e email(Text/Varchar) para colocar o email do motorista.
+[AN] - Criar um Tabela que tem Placa(PK) e email(Text/Varchar) para colocar o email do motorista.
 [X] - Corrigir o color do htmls para os dados DB no Jinja2.
-[-] - Colocar Prompts para editar os dados no Painel Admin.
---- [] - Criar as funções para editar os atributos no Jinja2 para o DB.
-[ ] - Salvar as informações dos objetos (de motorista e veiculo) no DB.
-[ ] - Criar o código para listar as consultas(Pesquisar) dos dados do Excel.
-[ ] - Criar o código para filtrar os dados do Excel.
+[X] - Colocar Prompts para editar os dados no Painel Admin.
+--- [X] - Criar as funções para editar os atributos no Jinja2 para o DB.
+[AN] - Salvar as informações dos objetos (de motorista e veiculo) no DB.
+[X] - Criar o código para listar as consultas(Pesquisar) dos dados do Excel.
+[X] - Criar o código para filtrar os dados do Excel.
 [ ] - Criar o Sistema de Avaliação e Desempenho do User/Usuário.
 [ ] - Melhorar o código de validação de usuários.
 [ ] - Fazer Verificação dos códigos e Fazer boas práticas.
-[ ] - Criar a lógica da Exportação de Relatórios Estático.
+[X] - Criar a lógica da Exportação de Relatórios Estático.
 [ ] - Criar a lógica da página Historico de Logs.
-[ ] - Criar um arquivo .html base para utilizar como pardão `Opcional`.
-[ ] - Fazer uma lista de dados utilizados.
+[AN] - Criar um arquivo .html base para utilizar como pardão `Opcional`.
+[OP] - Fazer uma lista de dados utilizados `Opcional`.
 [AN] - Migrar o SQLite para o MySQL e configurar os códigos do Python `Opcional`.
-[ ] - Criar os models do projeto.
+[ ] - Criar os models(SqlAlchemy) do projeto.
 [X] - Criar uma pasta de rotas(routes) é `Opcional`.
-[ ] - Ajeitar os dados no FRONT-END.
+[ ] - Ajeitar os dados no FRONT-END `Objetivo`.
 [ ] - Código para mesclar o dados com outro `Análisar - Pensar se vale a pena`.
-[ ] - Fazer testes para todos os tipos de arquivos `excel(xls, xlsx, xlsm, xlsb, csv)`.
+[ ] - Corrigir as Rotas de API `Objetivo`.
+[ ] - Fazer testes para todos os tipos de arquivos `excel(xls, xlsx, xlsm, xlsb, csv) - Objetivo` .
 [X] - Criar a Tela de Sem Conexão no KivyMD.
 [X] - Colocar msg para avisa/Snackbar de o acesso no App Mobile não for achado.
 [X] - Finalizar as rotas da API para os dados.
-[ ] - Fazer o Apk.
-[ ] - Fazer o Teste no Celular.
+[ ] - Fazer o Apk. `Opcional`
+[ ] - Fazer o Teste no Celular. `Opcional`
