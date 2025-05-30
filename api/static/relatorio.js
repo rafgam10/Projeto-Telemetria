@@ -8,7 +8,44 @@ $(document).ready(function () {
         placeholder: "Busque por nome ou placa...",
     });
 
-    // Gráfico de Consumo
+    inicializarGraficos();
+
+    // Esconde relatórios até selecionar motorista
+    $('#relatorioSelecionado, #analiseTempo, #exportacaoRelatorios').hide();
+    $('#semSelecao').show();
+
+    // Evento de mudança do select
+    $('#selectMotorista').on('change', function () {
+        const idMotorista = $(this).val();
+        const nomeCompleto = $(this).find('option:selected').text();
+
+        if (idMotorista) {
+            $('#semSelecao').hide();
+            $('#relatorioSelecionado, #analiseTempo, #exportacaoRelatorios').show();
+
+            fetch(`/admin/api/motorista-id/${encodeURIComponent(idMotorista)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.erro) {
+                        alert(data.erro);
+                        return;
+                    }
+
+                    $('#infoMotoristaSelecionado, #infoTempoMotorista, #infoExportMotorista').text(nomeCompleto);
+
+                    atualizarGraficoConsumo(data.labels, data.consumos);
+                    atualizarGraficoTempo(data.labels, data.tempos);
+                });
+        } else {
+            $('#semSelecao').show();
+            $('#relatorioSelecionado, #analiseTempo, #exportacaoRelatorios').hide();
+        }
+    });
+});
+
+// ---------- FUNÇÕES PRINCIPAIS ----------
+
+function inicializarGraficos() {
     const consumoCtx = document.getElementById('consumoChart').getContext('2d');
     consumoChart = new Chart(consumoCtx, {
         type: 'line',
@@ -29,34 +66,23 @@ $(document).ready(function () {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    labels: {
-                        color: '#e2e8f0'
-                    }
+                    labels: { color: '#e2e8f0' }
                 }
             },
             scales: {
                 y: {
                     beginAtZero: false,
-                    ticks: {
-                        color: '#94a3b8'
-                    },
-                    grid: {
-                        color: '#2d3748'
-                    }
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: '#2d3748' }
                 },
                 x: {
-                    ticks: {
-                        color: '#94a3b8'
-                    },
-                    grid: {
-                        color: '#2d3748'
-                    }
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: '#2d3748' }
                 }
             }
         }
     });
 
-    // Gráfico de Tempo
     const tempoCtx = document.getElementById('tempoChart').getContext('2d');
     tempoChart = new Chart(tempoCtx, {
         type: 'bar',
@@ -75,9 +101,7 @@ $(document).ready(function () {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    labels: {
-                        color: '#e2e8f0'
-                    }
+                    labels: { color: '#e2e8f0' }
                 }
             },
             scales: {
@@ -85,64 +109,18 @@ $(document).ready(function () {
                     beginAtZero: true,
                     ticks: {
                         color: '#94a3b8',
-                        callback: function (value) {
-                            return value + 'h';
-                        }
+                        callback: value => formatarTempo(value)
                     },
-                    grid: {
-                        color: '#2d3748'
-                    }
+                    grid: { color: '#2d3748' }
                 },
                 x: {
-                    ticks: {
-                        color: '#94a3b8'
-                    },
-                    grid: {
-                        color: '#2d3748'
-                    }
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: '#2d3748' }
                 }
             }
         }
     });
-
-    // Esconde relatórios até selecionar motorista
-    $('#relatorioSelecionado, #analiseTempo, #exportacaoRelatorios').hide();
-    $('#semSelecao').show();
-
-    // Ao selecionar um motorista
-    $('#selectMotorista').on('change', function () {
-        const idMotorista = $(this).val();
-        const nomeCompleto = $(this).find('option:selected').text();
-
-        if (idMotorista) {
-            $('#semSelecao').hide();
-            $('#relatorioSelecionado, #analiseTempo, #exportacaoRelatorios').show();
-
-            fetch(`/admin/api/motorista-id/${encodeURIComponent(idMotorista)}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.erro) {
-                        alert(data.erro);
-                        return;
-                    }
-
-                    $('#infoMotoristaSelecionado').text(nomeCompleto);
-                    $('#infoTempoMotorista').text(nomeCompleto);
-                    $('#infoExportMotorista').text(nomeCompleto);
-
-                    atualizarGraficoConsumo(data.labels, data.consumos);
-                    atualizarGraficoTempo(data.labels, data.tempos);
-                });
-        } else {
-            $('#semSelecao').show();
-            $('#relatorioSelecionado, #analiseTempo, #exportacaoRelatorios').hide();
-        }
-    });
-
-
-});
-
-// Funções auxiliares
+}
 
 function atualizarGraficoConsumo(labels, dados) {
     const media = mediaArray(dados);
@@ -160,24 +138,32 @@ function atualizarGraficoConsumo(labels, dados) {
 
 function atualizarGraficoTempo(labels, dados) {
     const media = mediaArray(dados);
-    const maior = Math.max(...dados).toFixed(2);
-    const menor = Math.min(...dados).toFixed(2);
+    const maior = Math.max(...dados);
+    const menor = Math.min(...dados);
 
-    document.querySelector("#analiseTempo .grid div:nth-child(1) p.text-2xl").textContent = `${media} h`;
-    document.querySelector("#analiseTempo .grid div:nth-child(2) p.text-2xl").textContent = `${maior} h`;
-    document.querySelector("#analiseTempo .grid div:nth-child(3) p.text-2xl").textContent = `${menor} h`;
+    document.querySelector("#analiseTempo .grid div:nth-child(1) p.text-2xl").textContent = formatarTempo(media);
+    document.querySelector("#analiseTempo .grid div:nth-child(2) p.text-2xl").textContent = formatarTempo(maior);
+    document.querySelector("#analiseTempo .grid div:nth-child(3) p.text-2xl").textContent = formatarTempo(menor);
 
     tempoChart.data.labels = labels;
     tempoChart.data.datasets[0].data = dados;
     tempoChart.update();
 }
 
+// ---------- UTILITÁRIOS ----------
+
 function mediaArray(arr) {
     if (!arr.length) return 0;
-    return (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(2);
+    return (arr.reduce((a, b) => a + b, 0) / arr.length);
 }
 
+function formatarTempo(decimalHoras) {
+    const horas = Math.floor(decimalHoras);
+    const minutos = Math.round((decimalHoras - horas) * 60);
+    return `${horas}h ${minutos.toString().padStart(2, '0')}m`;
+}
 
+// ---------- EXPORTAÇÃO PDF ----------
 
 document.getElementById("btnExportarPDF").addEventListener("click", async function () {
     const area = document.getElementById("areaRelatorioPDF");
@@ -185,31 +171,23 @@ document.getElementById("btnExportarPDF").addEventListener("click", async functi
     const areagrafico = document.getElementById("areagrafico");
     const areagrafico2 = document.getElementById("areagrafico2");
 
-    // Limita a largura total da área
     consumoChart.style.maxWidth = "794px";
     areagrafico.style.height = "200px";
     areagrafico2.style.height = "200px";
     consumoChart.style.height = "100%";
     area.style.boxSizing = "border-box";
 
-    // Corrige cores incompatíveis (oklch)
+    // Corrige cores oklch incompatíveis
     Array.from(area.querySelectorAll("*")).forEach(el => {
         const style = getComputedStyle(el);
-        if (style.backgroundColor.includes("oklch")) {
-            el.style.backgroundColor = "#1a2236";
-        }
-        if (style.color.includes("oklch")) {
-            el.style.color = "#ffffff";
-        }
+        if (style.backgroundColor.includes("oklch")) el.style.backgroundColor = "#1a2236";
+        if (style.color.includes("oklch")) el.style.color = "#ffffff";
     });
 
-    // Redimensiona canvas
-    const canvases = area.querySelectorAll("canvas");
-    canvases.forEach(canvas => {
+    area.querySelectorAll("canvas").forEach(canvas => {
         canvas.style.maxWidth = "100%";
         canvas.style.height = "auto";
     });
-
 
     const opt = {
         margin: 5,
@@ -231,19 +209,18 @@ document.getElementById("btnExportarPDF").addEventListener("click", async functi
     areagrafico2.style.height = "300px";
 });
 
+// ---------- EXPORTAÇÃO EXCEL ----------
 
 document.getElementById("btnExportarExcel").addEventListener("click", function () {
     const nomePlaca = document.getElementById("infoExportMotorista").textContent;
 
     const [placa, ...nomeArr] = nomePlaca.split(" - ");
-    const nomeCompleto = nomeArr.join(" - ").trim();
-    const nomeMotorista = nomeCompleto;
+    const nomeMotorista = nomeArr.join(" - ").trim();
 
     const datas = consumoChart.data.labels;
     const consumos = consumoChart.data.datasets[0].data;
     const tempos = tempoChart.data.datasets[0].data;
 
-    // Cabeçalho + dados
     const sheetData = [["Motorista", "Placa", "Data", "Consumo (km/L)", "Tempo (h)"]];
     for (let i = 0; i < datas.length; i++) {
         sheetData.push([
@@ -255,35 +232,26 @@ document.getElementById("btnExportarExcel").addEventListener("click", function (
         ]);
     }
 
-    // Cria planilha
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(sheetData);
-
-    // Aplica largura personalizada nas colunas
     ws['!cols'] = [
-        { wch: 40 }, // Motorista
-        { wch: 15 }, // Placa
-        { wch: 20 }, // Data
-        { wch: 20 }, // Consumo
-        { wch: 20 }  // Tempo
+        { wch: 40 },
+        { wch: 15 },
+        { wch: 20 },
+        { wch: 20 },
+        { wch: 20 }
     ];
 
-    // Estiliza o cabeçalho com cor e negrito (hack via XLSX-style compatível)
     const headerStyle = {
         fill: { fgColor: { rgb: "A8BA44" } },
         font: { bold: true, color: { rgb: "FFFFFF" } }
     };
 
-    const headerRange = ["A1", "B1", "C1", "D1", "E1"];
-    headerRange.forEach(cell => {
-        if (!ws[cell]) return;
-        ws[cell].s = headerStyle;
+    ["A1", "B1", "C1", "D1", "E1"].forEach(cell => {
+        if (ws[cell]) ws[cell].s = headerStyle;
     });
 
-    // Anexa e exporta
     XLSX.utils.book_append_sheet(wb, ws, "Relatório");
-    // Gera nome do arquivo com base no nome do motorista
     const nomeArquivo = "relatorio_motorista_" + nomeMotorista.replace(/[^\w]/g, "_") + ".xlsx";
     XLSX.writeFile(wb, nomeArquivo);
-
 });
