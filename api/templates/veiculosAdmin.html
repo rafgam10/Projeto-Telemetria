@@ -256,38 +256,35 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('hidden');
         });
-        
-        const visualizar = document.getElementById('visualizar');
+            
+            const visualizar = document.getElementById('visualizar');
 
-            function mostrarInfo(veiculo) {
+                function mostrarInfo(veiculo) {
+                    document.getElementById('editar-frota').value = veiculo.frota;
+                    document.getElementById('editar-modelo').value = veiculo.modelo;
+                    document.getElementById('editar-marca').value = veiculo.marca;
+                    document.getElementById('editar-placa').value = veiculo.placa;
+                    document.getElementById('editar-status').value = veiculo.status;
 
-                document.getElementById('editar-frota').value = veiculo.frota;
-                document.getElementById('editar-modelo').value = veiculo.modelo;
-                document.getElementById('editar-marca').value = veiculo.marca;
-                document.getElementById('editar-placa').value = veiculo.placa;
-                document.getElementById('editar-status').value = veiculo.status;
+                    visualizar.classList.remove('hidden');
+                    visualizar.classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                }
 
-                visualizar.classList.remove('hidden');
-                visualizar.classList.add('flex');
-                document.body.style.overflow = 'hidden';
-            }
+                document.querySelectorAll('.editar-info').forEach(botaoEditar => {
+                    botaoEditar.addEventListener('click', function(){
+                        const card = this.closest('.card-veiculo');
+                        const veiculo = {
+                            frota: card.querySelector('.frota').textContent,
+                            modelo: card.querySelector('.modelo').textContent,
+                            marca: card.querySelector('.marca').textContent,
+                            placa: card.querySelector('.placa').textContent,
+                            status: card.querySelector('.status-veiculo').textContent.trim()
+                        };
 
-
-            document.querySelectorAll('.editar-info').forEach(botaoEditar => {
-                botaoEditar.addEventListener('click', function(){
-                    const card = this.closest('.card-veiculo');
-                    const veiculo = {
-                        frota: card.querySelector('.frota').textContent,
-                        modelo: card.querySelector('.modelo').textContent,
-                        marca: card.querySelector('.marca').textContent,
-                        placa: card.querySelector('.placa').textContent,
-                        status: card.querySelector('.status-veiculo').textContent.trim()
-                    };
-
-
-                    mostrarInfo(veiculo);
+                        mostrarInfo(veiculo);
+                    });
                 });
-            });
 
             document.getElementById('cancelar').addEventListener('click', () => {
             visualizar.classList.remove('flex');
@@ -299,19 +296,33 @@
 
 
             document.getElementById('save-btn').addEventListener('click', function() {
-                const dadosMotorista = {
-                    frota: document.getElementById('editar-id').value,
-                    modelo: document.getElementById('editar-nome').value,
-                    marca: document.getElementById('editar-caminhao').value,
-                    placa: document.getElementById('editar-placa').value,
-                    status: document.querySelector('#visualizar select').value
-                };
+                const dadosVeiculo = {
+                        frota: document.getElementById('editar-frota').value,
+                        modelo: document.getElementById('editar-modelo').value,
+                        marca: document.getElementById('editar-marca').value,
+                        placa: document.getElementById('editar-placa').value,
+                        status: document.getElementById('editar-status').value
+                    };
 
-                
-                // rafael arruma um jeito de mandar esse objeto ai com os valores pro banco 
+                    fetch('/admin/editar_veiculos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dadosVeiculo)
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            alert("Veículo atualizado com sucesso!");
+                            location.reload();
+                        } else {
+                            alert("Erro ao atualizar veículo.");
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Erro ao enviar dados:", err);
+                        alert("Erro na requisição.");
+                    });
+                });
 
-
-            });
 
         document.addEventListener('DOMContentLoaded', function() {
             
