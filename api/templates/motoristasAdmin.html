@@ -99,11 +99,8 @@
                 
                 <!-- Inicio do For do Jinja2 -->
                 {% for motorista in motoristas %}
-                    <!-- Lista de cards em coluna única -->
                     <div>
-                        <!-- Card do motorista 1 -->
                         <div class="card-motorista mb-5 text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236] hover:border-[#2d3748] transition-colors">
-                            <!-- Cabeçalho do card -->
                             <div class="p-4 border-b border-[#1a2236] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                                 <div class="flex items-center space-x-3">
                                     <div class="bg-[#1a2236] p-2 rounded-full">
@@ -111,33 +108,33 @@
                                     </div>
                                     <div>
                                         <h3 class="text-lg font-bold text-white group-hover:text-[#a8ba44] transition-colors">
-                                            <span class="id-motorista">{{motorista.id_motorista}}</span> - <span class="nome-motorista">{{motorista.nome_motorista}}</span></h3>
+                                            <span class="id-motorista">{{ motorista.id_motorista }}</span> - 
+                                            <span class="nome-motorista">{{ motorista.nome_motorista }}</span>
+                                        </h3>
                                     </div>
                                 </div>
-                                
-                                {% if true %}
+
+                                {% if motorista.status == "Ativo" %}
                                     <span class="status-motorista px-2 py-1 text-xs rounded-full bg-green-900 text-green-200">Ativo</span>
                                 {% else %}
                                     <span class="status-motorista px-2 py-1 text-xs rounded-full bg-red-900 text-red-200">Inativo</span>
                                 {% endif %}
-
                             </div>
-                            
-                            <!-- Conteúdo principal - se adapta conforme espaço -->
+
                             <div class="p-4">
                                 <div class="flex flex-col md:flex-row gap-4">
                                     <div class="flex-1 space-y-3">
                                         <div>
                                             <p class="text-sm text-[#a8ba44]"><i class="ph-duotone ph-truck"></i> Caminhão</p>
-                                            <p class="marca-modelo text-sm font-medium">{{motorista.marca_modelo}}</p>
-                                            <p class="placa text-xs text-gray-400">{{motorista.placa}}</p>
+                                            <p class="marca-modelo text-sm font-medium">{{ motorista.caminhao }}</p>
+                                            <p class="placa text-xs text-gray-400">{{ motorista.placa }}</p>
                                         </div>
                                     </div>
                                     <div class="flex-1 space-y-3">
                                         <div>
                                             <p class="text-sm text-[#a8ba44]"><i class="ph-duotone ph-map-trifold"></i> Última viagem</p>
-                                            <p class="text-sm">{{motorista.data_chegada}}</p>
-                                            <p class="text-xs text-gray-400">{{motorista.km_rodado_dup}} Km</p>
+                                            <p class="text-sm">{{ motorista.ultima_viagem_data }}</p>
+                                            <p class="text-xs text-gray-400">{{ motorista.km_ultima_viagem }} Km</p>
                                         </div>
                                     </div>
                                     <div class="flex-1 space-y-3">
@@ -145,30 +142,29 @@
                                             <p class="text-sm text-[#a8ba44]"><i class="ph-duotone ph-trophy"></i> Avaliação</p>
                                             <div class="flex items-center">
                                                 <i class="ph ph-star-fill text-yellow-400"></i>
-                                                <span class="ml-1">4.8 <i class="ph-fill ph-star text-sm"></i></span>
+                                                <span class="ml-1">{{ motorista.avaliacao_media }} <i class="ph-fill ph-star text-sm"></i></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="flex-1 space-y-3">
                                         <div>
                                             <p class="text-sm text-[#a8ba44]"><i class="ph-duotone ph-gas-pump"></i> Consumo</p>
-                                            <p class="text-sm">Diesel: {{(motorista.lt_diesel) | int}}L/100km</p>
-                                            <p class="text-sm">Arla: {{(motorista.lt_arla) | int}}L/100km</p>
+                                            <p class="text-sm">Diesel: {{ motorista.consumo_diesel_medio | int }}L/100km</p>
+                                            <p class="text-sm">Arla: {{ motorista.consumo_arla_medio | int }}L/100km</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Rodapé com ações -->
+
                             <div class="rounded-b px-4 py-2 border-t border-[#1a2236] bg-[#1a2236] flex justify-between items-center">
                                 <div class="text-xs text-gray-400">
-                                    Cadastrado em: 15/02/2023
+                                    {{motorista.data_Registro}}
                                 </div>
                                 <div class="flex space-x-2">
                                     <button class="editar-info text-blue-400 hover:text-blue-300 p-1" title="Editar">
                                         <i class="ph ph-pencil-simple"></i>
                                     </button>
-                                    <button class="deletar-info text-red-400 hover:text-red-300 p-1" title="Excluir">
+                                    <button onclick="deletarMotorista({{ motorista.id_motorista }})" class="deletar-info text-red-400 hover:text-red-300 p-1" title="Excluir">
                                         <i class="ph ph-trash"></i>
                                     </button>
                                 </div>
@@ -193,7 +189,7 @@
                                     <div class="flex items-start">
                                         <div class="">
                                             <p class="self-center text-lg font-medium text-[#a8ba44] mb-1">Id do motorista</p>
-                                            <input id="editar-id" type="text" class="w-full sm:w-100  p-2 pr-4 py-2 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
+                                            <input id="editar-id" type="text" readonly class="w-full sm:w-100  p-2 pr-4 py-2 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
                                         </div>
                                     </div>
                                 </li>
@@ -295,10 +291,10 @@
             });
 
             document.getElementById('cancelar').addEventListener('click', () => {
-            visualizar.classList.remove('flex');
-            visualizar.classList.add('hidden');
-            fileUpload.value = '';
-            currentData = [];
+                visualizar.classList.remove('flex');
+                visualizar.classList.add('hidden');
+                fileUpload.value = '';
+                currentData = [];
             });
 
 
@@ -307,8 +303,7 @@
                 const idOriginal = document.getElementById('editar-id').getAttribute('data-id-original');
 
                 const dadosAtualizados = {
-                    id_original: idOriginal,
-                    id: document.getElementById('editar-id').value,
+                    id_motorista: document.getElementById('editar-id').value,  // nome correto!
                     nome: document.getElementById('editar-nome').value,
                     caminhao: document.getElementById('editar-caminhao').value,
                     placa: document.getElementById('editar-placa').value,
@@ -337,6 +332,29 @@
                     alert('Erro ao comunicar com o servidor.');
                 });
             });
+
+            // Deletar Registro:
+            function deletarMotorista(id) {
+                if (confirm("Tem certeza que deseja deletar este motorista?")) {
+                    fetch(`/admin/deletar_motorista/${id}`, {
+                    method: 'DELETE'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                    if (data.mensagem) {
+                        alert(data.mensagem);
+                        location.reload(); // recarrega a página para atualizar a lista
+                    } else {
+                        alert(data.erro || 'Erro ao deletar motorista.');
+                    }
+                    })
+                    .catch(error => {
+                    alert('Erro ao deletar motorista.');
+                    console.error(error);
+                    });
+                }
+                }
+
 
         document.addEventListener('DOMContentLoaded', function() {
             

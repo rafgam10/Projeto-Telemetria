@@ -1,70 +1,162 @@
 # admin/routes.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from database.database_handler import conectar, motorista_dados, motorista_dados_unicos, veiculo_dados, veiculo_dados_unicos, dados_relatorios
+from database.admin_database.admin import conectar, adicionar_motorista_banco, motorista_dados_unicos, veiculo_dados_unicos, motorista_dados_unicos_editar
 import sqlite3
+from datetime import datetime
 import os
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
-@admin_bp.route("/")
-def pagina_admin():
-    return render_template("HomeAdmin.html")
 
+
+@admin_bp.route("/", methods=["GET"])
+def pagina_admin():
+    conn = sqlite3.connect("api/database/telemetria.db")
+    cursor = conn.cursor()
+
+    # Total de viagens
+    cursor.execute("SELECT COUNT(*) FROM DadosTelemetria")
+    total_viagens = cursor.fetchone()[0]
+
+    # Média de km por motorista
+    cursor.execute("SELECT id_motorista, SUM(km_rodado) FROM DadosTelemetria GROUP BY id_motorista")
+    km_por_motorista = cursor.fetchall()
+    media_km_motorista = sum([linha[1] for linha in km_por_motorista]) / len(km_por_motorista) if km_por_motorista else 0
+
+    # Consumo mensal de diesel e arla (considerando mês atual)
+    mes_atual = datetime.now().strftime("%Y-%m")
+    cursor.execute("""
+        SELECT SUM(km_rodado), SUM(consumo_diesel), SUM(consumo_arla)
+        FROM DadosTelemetria
+        WHERE substr(data_registro, 1, 7) = ?
+    """, (mes_atual,))
+    resultado = cursor.fetchone()
+    km_mes, diesel_mes, arla_mes = resultado if resultado else (0, 0, 0)
+
+    consumo_diesel_mes = (km_mes / diesel_mes) if diesel_mes else 0
+    consumo_arla_mes = (km_mes / arla_mes) if arla_mes else 0
+
+    conn.close()
+    
+    return render_template("HomeAdmin.html",
+        total_viagens=total_viagens,
+        media_km_motorista=round(media_km_motorista, 2),
+        consumo_diesel_mes=round(consumo_diesel_mes, 2),
+        consumo_arla_mes=round(consumo_arla_mes, 2)
+    )
+
+#### Gerenciamento de Motoristas #################
 @admin_bp.route("/gestaoMotoristas", methods=["GET", "POST"])
 def pagina_gestao_motoristas():
-    motoristas = motorista_dados_unicos()
+    idEmpresa = session.get('id_empresa')
+    motoristas = motorista_dados_unicos(idEmpresa)
     return render_template("motoristasAdmin.html", motoristas=motoristas)
 
 @admin_bp.route("/editar_motorista", methods=["POST"])
 def editar_motorista():
     data = request.get_json()
-    id_original = data.get('placa')
-    motoristaDado =f"{data['id']} - {data['nome']}"
+    
+    id_motorista = data.get("id_motorista")
+    nome = data.get("nome")
+    status = data.get("status")
+    marca_modelo = data.get("caminhao")  # Exemplo: "VOLVO / FH 460"
+    placa = data.get("placa")
 
-    # Exemplo com SQLite
+    # Divide marca e modelo
+    try:
+        marca, modelo = [x.strip() for x in marca_modelo.split("/", 1)]
+    except ValueError:
+        print("1")
+        return jsonify({"success": False, "message": "Caminhão inválido. Use 'Marca / Modelo'."}), 400
+
+    dados = motorista_dados_unicos_editar(id_motorista)
+    if not dados:
+        print("2")
+        return jsonify({"success": False, "message": "Motorista não encontrado"}), 404
+
+    id_veiculo = dados["id_veiculo"]
+    
     conn = conectar()
     cursor = conn.cursor()
 
+    # Atualiza Motorista
     cursor.execute("""
-        UPDATE DadosTelemetria
-        SET motorista=?, marca_modelo=?, placa=?
-        WHERE placa=?
-    """, (
-        motoristaDado, data['caminhao'], data['placa'],
-        id_original
-    ))
+        UPDATE Motoristas
+        SET nome = ?, status = ?
+        WHERE id_motorista = ?
+    """, (nome, status, id_motorista))
+
+    # Atualiza Veículo
+    cursor.execute("""
+        UPDATE Veiculos
+        SET marca = ?, modelo = ?, placa = ?
+        WHERE id_veiculo = ?
+    """, (marca, modelo, placa, id_veiculo))
 
     conn.commit()
     conn.close()
 
-    return jsonify({"success": True})
+    return jsonify({"success": True}), 200
+
+@admin_bp.route('/deletar_motorista/<int:id>', methods=['DELETE'])
+def deletar_motorista(id):
+    try:
+        conn = conectar()
+        cursor = conn.cursor()
+
+        # Verifica se o motorista existe
+        cursor.execute("SELECT * FROM Motoristas WHERE id_motorista = ?", (id,))
+        motorista = cursor.fetchone()
+
+        if not motorista:
+            return jsonify({'erro': 'Motorista não encontrado.'}), 404
+
+        # Deleta motorista
+        cursor.execute("DELETE FROM Motoristas WHERE id_motorista = ?", (id,))
+        conn.commit()
+        return jsonify({'mensagem': 'Motorista deletado com sucesso!'}), 200
+
+    except sqlite3.Error as e:
+        return jsonify({'erro': f'Erro no banco de dados: {str(e)}'}), 500
+
+    finally:
+        conn.close()
+        
+################################################################
 
 
+########## Gereciamento de Veiculos ##################################
 @admin_bp.route("/gestaoVeiculos", methods=["GET", "POST"])
 def pagina_gestao_veiculos():
-    veiculos = veiculo_dados_unicos()
+    idEmpresa = session.get("id_empresa")
+    veiculos = veiculo_dados_unicos(idEmpresa)
     return render_template("veiculosAdmin.html", veiculos=veiculos)
 
 @admin_bp.route("/editar_veiculos", methods=["POST"])
 def editar_veiculos():
     data = request.get_json()
-    frota = data['frota']
-    modelo = data['modelo']
-    marca = data['marca']
-    placa = data['placa']
-    status = data['status']
-    placaId = data['placa']
-    marca_modelo = f"{marca} / {modelo}"
+    
+    id_veiculo = data.get("id_veiculo")  # <-- melhor usar ID fixo
+    frota = data.get("frota")
+    modelo = data.get("modelo")
+    marca = data.get("marca")
+    placa = data.get("placa")
+    status = data.get("status")
 
     try:
         conn = conectar()
         cursor = conn.cursor()
+        
         cursor.execute("""
-            UPDATE DadosTelemetria SET marca_modelo=?, placa=?, frota=?
-            WHERE placa=?
-        """, (marca_modelo, placa, frota, placaId))
+            UPDATE Veiculos
+            SET marca = ?, modelo = ?, placa = ?, frota = ?, status = ?
+            WHERE id_veiculo = ?
+        """, (marca, modelo, placa, frota, status, id_veiculo))
+
         conn.commit()
         conn.close()
+
         return jsonify({'mensagem': 'Veículo atualizado com sucesso'}), 200
     except Exception as e:
         print("Erro ao atualizar veículo:", e)
@@ -107,6 +199,28 @@ def pagina_relatorios():
 @admin_bp.route("/logs", methods=["GET", "POST"])
 def pagina_logs():
     return render_template("logsAdmin.html")
+
+
+########################## Adicionar Motoristas e Veiculos ##############
+
+@admin_bp.route('/adicionar_motorista_veiculos', methods=['GET', 'POST'])
+def adicionar_motorista():
+    if request.method == 'POST':
+        nome = request.form['nome']
+        cpf = request.form['cpf']
+        cnh = request.form['cnh']
+        nascimento = request.form['data_nascimento']
+        id_empresa = session.get('id_empresa')
+
+        if not id_empresa:
+            flash("Sessão inválida. Faça login novamente.", "erro")
+            return redirect(url_for('exibir_login'))
+
+        # Chamar função que adiciona no banco:
+        adicionar_motorista_banco(nome, cpf, cnh, nascimento, id_empresa)
+        return redirect(url_for('admin.listar_motoristas'))
+    
+    return render_template('cadastro_motorista_veiculos.html')
 
 
 

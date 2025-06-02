@@ -28,7 +28,6 @@
 [X] - Colocar os resto dos dados do DB para o inputs editar no html.
 [X] - Colocar os dados do DB para o site User.
 [AN] - Fazer um Método POST no /user/config para coleta de email por placa e salvar no DB.
-[ ] - Colocar os dados do DB no gráficos.
 [AN] - Criar um Tabela que tem Placa(PK) e email(Text/Varchar) para colocar o email do motorista.
 [X] - Corrigir o color do htmls para os dados DB no Jinja2.
 [X] - Colocar Prompts para editar os dados no Painel Admin.
@@ -41,16 +40,35 @@
 [X] - Criar a lógica da Exportação de Relatórios Estático.
     * [X] - Corrigir erro de exportação.
     * [X] - Corrigir as horas e minutos.
-[ ] - Criar a lógica da página Historico de Logs.
-[ ] - Criar a lógica para Adicionar um novo motorista.
-[ ] - Criar a lógica para Adicionar um novo veiculo.
-[ ] - Rever o DB do Projeto `Obrigatório`.
+[X] - Criar a página de add empresa.
+    * [ ] - Customizar a página.
+[X] - Melhorar o DB.
+[ ] - Colocar todas as variaveis nas páginas `Objetivo`:
+    * [X] - Página de UserHome;
+    * [X] - Página de Perfil/HistoricoUser;
+    * [ ] - Página de AdminHome;
+        * [X] - Quantidade de Viagens e outros;
+        * [ ] - Consumo mensal do Diesl e Arla, colocar mais dados no DB.
+    * [X] - Página de Gestão Motorista;
+        * [X] - Editar Gestão Motorista;
+        * [X] - Deletar Gestão Motorista;
+    * [X] - Página de Gestão Veiculos;
+        * [ ] - Editar Gestão Veiculos;
+        * [ ] - Deletar Gestão Veiculos;
+    * [ ] - Página de Relatório e Estátisticas;
+    * [ ] - Página de Logs;
+    * [ ] - Colocar os dados do DB no gráficos.
+[ ] - Criar a página/lógica para Adicionar um novo motorista `Objetivo`.
+    * [ ] - Customizar a página Add Motorista.
+[ ] - Criar a página/lógica para Adicionar um novo veiculo `Objetivo`.
+    * [ ] - Customizar a página Add Veiculos.
+[ ] - Criar a lógica da página Historico de Logs `Objetivo`.
+[ ] - Rever o DB do Projeto `Obrigatório` para mudanças das tabelas do SQLite.
 [AN] - Criar um arquivo .html base para utilizar como pardão `Opcional`.
 [OP] - Fazer uma lista de dados utilizados `Opcional`.
 [AN] - Migrar o SQLite para o MySQL e configurar os códigos do Python `Opcional`.
-[ ] - Criar os models(SqlAlchemy) do projeto.
+[AN] - Criar os models(SqlAlchemy) do projeto.
 [X] - Criar uma pasta de rotas(routes) é `Opcional`.
-[ ] - Ajeitar os dados no FRONT-END `Objetivo`.
 [ ] - Código para mesclar o dados com outro `Análisar - Pensar se vale a pena`.
 [ ] - Corrigir as Rotas de API `Objetivo`.
 [ ] - Fazer testes para todos os tipos de arquivos `excel(xls, xlsx, xlsm, xlsb, csv) - Objetivo` .

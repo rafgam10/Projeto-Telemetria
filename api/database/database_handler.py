@@ -2,56 +2,175 @@ import sqlite3
 import json
 from datetime import datetime
 
-NOMETABELA = "DadosTelemetria"
+NOMETABELA = "telemetria.db"
 
 def conectar():
-    return sqlite3.connect(f"api/database/{NOMETABELA}.db")
+    return sqlite3.connect(f'api/database/{NOMETABELA}')
+    #return sqlite3.connect(f"api/database/{NOMETABELA}.db")
 
 
-def criar_tabela():
-    conec = conectar()
-    cursor = conec.cursor()
-    cursor.execute(f"DROP TABLE IF EXISTS {NOMETABELA}")
-    cursor.execute(f"""
-        CREATE TABLE IF NOT EXISTS {NOMETABELA} (
-            motorista TEXT,
-            nr_acerto INTEGER,
-            data TEXT,
-            data_saida TEXT,
-            data_chegada TEXT,
-            km_saida REAL,
-            km_chegada REAL,
-            km_rodado REAL,
-            km_vazio REAL,
-            porcento_vazio REAL,
-            qtd_dias INTEGER,
-            total_hrs INTEGER,
-            frota TEXT,
-            placa TEXT,
-            marca_modelo TEXT,
-            ano_veiculo INTEGER,
-            lt_diesel REAL,
-            media REAL,
-            lt_arla REAL,
-            porcento_arla REAL,
-            nr_equipamento INTEGER,
-            marca_modelo_equipamento TEXT,
-            ano_equipamento INTEGER,
-            lt_diesel_equip REAL,
-            media_1 REAL,
-            media_2 REAL,
-            lt_por_dia REAL,
-            km_rodado_dup REAL,
-            dif REAL,
-            media_dup REAL,
-            dif_media REAL
-        )
-    """)
+# def criar_tabela():
+#     conec = conectar()
+#     cursor = conec.cursor()
+#     cursor.execute(f"DROP TABLE IF EXISTS {NOMETABELA}")
+#     cursor.execute(f"""
+#         CREATE TABLE IF NOT EXISTS {NOMETABELA} (
+#             motorista TEXT,
+#             nr_acerto INTEGER,
+#             data TEXT,
+#             data_saida TEXT,
+#             data_chegada TEXT,
+#             km_saida REAL,
+#             km_chegada REAL,
+#             km_rodado REAL,
+#             km_vazio REAL,
+#             porcento_vazio REAL,
+#             qtd_dias INTEGER,
+#             total_hrs INTEGER,
+#             frota TEXT,
+#             placa TEXT,
+#             marca_modelo TEXT,
+#             ano_veiculo INTEGER,
+#             lt_diesel REAL,
+#             media REAL,
+#             lt_arla REAL,
+#             porcento_arla REAL,
+#             nr_equipamento INTEGER,
+#             marca_modelo_equipamento TEXT,
+#             ano_equipamento INTEGER,
+#             lt_diesel_equip REAL,
+#             media_1 REAL,
+#             media_2 REAL,
+#             lt_por_dia REAL,
+#             km_rodado_dup REAL,
+#             dif REAL,
+#             media_dup REAL,
+#             dif_media REAL
+#         )
+#     """)
 
-    # cursor.execute(sql)
+#     # cursor.execute(sql)
 
-    conec.commit()
-    cursor.close()
+#     conec.commit()
+#     cursor.close()
+
+
+def criar_banco(nome_arquivo='telemetria.db'):
+    conexao = sqlite3.connect(nome_arquivo)
+    cursor = conexao.cursor()
+
+    # Comandos SQL para criação das tabelas
+    script_sql = """
+    CREATE TABLE IF NOT EXISTS Empresas (
+        id_empresa INTEGER PRIMARY KEY,
+        nome_empresa TEXT NOT NULL,
+        cnpj TEXT UNIQUE NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS Usuarios (
+        id_usuario INTEGER PRIMARY KEY,
+        id_empresa INTEGER NOT NULL,
+        nome TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        senha_hash TEXT NOT NULL,
+        tipo TEXT CHECK(tipo IN ('admin', 'motorista')) NOT NULL,
+        FOREIGN KEY (id_empresa) REFERENCES Empresas(id_empresa)
+    );
+
+    CREATE TABLE IF NOT EXISTS Motoristas (
+        id_motorista INTEGER PRIMARY KEY,
+        id_empresa INTEGER NOT NULL,
+        nome TEXT NOT NULL,
+        cpf TEXT UNIQUE NOT NULL,
+        cnh TEXT NOT NULL,
+        data_nascimento TEXT,
+        avaliacao REAL,
+        status TEXT CHECK(status IN ('Ativo', 'Inativo')) DEFAULT 'Ativo',
+        FOREIGN KEY (id_empresa) REFERENCES Empresas(id_empresa)
+    );
+
+    CREATE TABLE IF NOT EXISTS Veiculos (
+        id_veiculo INTEGER PRIMARY KEY,
+        id_empresa INTEGER NOT NULL,
+        placa TEXT UNIQUE NOT NULL,
+        modelo TEXT NOT NULL,
+        marca TEXT NOT NULL,
+        ano INTEGER,
+        frota TEXT,
+        km_atual REAL,
+        media_km_litro REAL,
+        ultima_manutencao TEXT,
+        status TEXT CHECK(status IN ('Disponível', 'Indisponível', 'Em Manutenção')) DEFAULT 'Disponível',
+        FOREIGN KEY (id_empresa) REFERENCES Empresas(id_empresa)
+    );
+
+    CREATE TABLE IF NOT EXISTS DadosTelemetria (
+        id_telemetria INTEGER PRIMARY KEY,
+        id_empresa INTEGER NOT NULL,
+        id_motorista INTEGER NOT NULL,
+        id_veiculo INTEGER NOT NULL,
+        data_saida TEXT NOT NULL,
+        data_chegada TEXT NOT NULL,
+        hodometro_inicial REAL,
+        hodometro_final REAL,
+        km_rodado REAL,
+        km_vazio REAL,
+        porcento_vazio REAL,
+        velocidade_media REAL,
+        rotacao_maxima INTEGER,
+        consumo_diesel REAL,
+        consumo_arla REAL,
+        marcha_lenta TEXT,
+        total_dias INTEGER,
+        total_hrs INTEGER,
+        media_km_l REAL,
+        lt_diesel_total REAL,
+        lt_arla_total REAL,
+        lt_por_dia REAL,
+        km_rodado_dup REAL,
+        dif_km REAL,
+        media_dup REAL,
+        dif_media REAL,
+        data_registro TEXT DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (id_empresa) REFERENCES Empresas(id_empresa),
+        FOREIGN KEY (id_motorista) REFERENCES Motoristas(id_motorista),
+        FOREIGN KEY (id_veiculo) REFERENCES Veiculos(id_veiculo)
+    );
+
+    CREATE TABLE IF NOT EXISTS LogsAuditoria (
+        id_log INTEGER PRIMARY KEY,
+        id_empresa INTEGER NOT NULL,
+        usuario TEXT NOT NULL,
+        acao TEXT NOT NULL,
+        tabela_afetada TEXT,
+        data_hora TEXT DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (id_empresa) REFERENCES Empresas(id_empresa)
+    );
+    """
+
+    cursor.executescript(script_sql)
+    conexao.commit()
+    conexao.close()
+    print("Banco de dados e tabelas criados com sucesso.")
+
+
+# Inserir empresas novamente agora que a tabela existe
+def inserir_empresas(dados):
+    conexao = conectar()
+    cursor = conexao.cursor()
+    
+    empresas = [
+        ("TransLog Transportes", "12.345.678/0001-90"),
+        ("Rodovia Express", "98.765.432/0001-21")
+    ]
+    
+    cursor.executemany("""
+        INSERT INTO Empresas (nome_empresa, cnpj) 
+        VALUES (?, ?)
+    """, empresas)
+    
+    conexao.commit()
+    conexao.close()
 
 def inserir_dados(dados):
     conec = conectar(); cursor = conec.cursor()

@@ -1,5 +1,6 @@
-from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session
-from database.database_handler import obter_dados, placas_dados
+from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session, make_response
+from database.database_util import obter_dados, obter_placas, obter_empresas
+from database.database_util import add_empresa
 from views.admin.routes import admin_bp
 from views.user.routes import user_bp
 import os
@@ -16,11 +17,15 @@ def transformar_dados(dados):
     return [dict(zip(COLUNAS_DADOS, linha)) for linha in dados]
 
 # ================= API ====================
+@app.route("/api/empresas")
+def listar_empresas():
+    empresas = obter_empresas()
+    return make_response(jsonify(empresas), 200)  # ← isso precisa estar aqui
+
 @app.route("/api/placas")
 def listar_placas():
-    dados = transformar_dados(obter_dados())
-    placas = list({linha["placa"].upper() for linha in dados})
-    return jsonify({"placas": placas})
+    placas = obter_placas()
+    return jsonify({"placas": placas}), 200
 
 @app.route("/api/dados")
 def listar_dados_completos():
@@ -44,7 +49,8 @@ def exibir_login():
     session['logado'] = None
     if request.method == "POST":
         senha = request.form.get("InputSenha")
-        dados = placas_dados()
+        dados = obter_placas()
+        adminDados = obter_empresas()
 
         if senha == "admin":
             session['logado'] = True
@@ -52,8 +58,18 @@ def exibir_login():
 
         elif senha.upper() in dados:
             session['logado'] = True
-            session['placa'] = senha
+            session['placa'] = senha.upper()
             return redirect(url_for('user.pagina_user'))
+        
+        elif any(senha == empresa.get("nome") for empresa in adminDados):
+            empresa = next(e for e in adminDados if senha == e.get("nome"))
+            session['logado'] = True
+            session['id_empresa'] = empresa['id']  # ← Salva ID da empresa na sessão
+            print(session['id_empresa'])
+            return redirect(url_for('admin.pagina_admin'))
+
+        elif senha.lower() == "empresa":
+            return redirect(url_for("cadastra_empresa"))
 
         else:
             erro = "Senha/Placa incorreta. Tente novamente."
@@ -67,7 +83,15 @@ def logout():
 
 @app.before_request
 def verificar_autenticacao_global():
-    caminhos_livres = ['exibir_login', 'listar_placas', 'listar_dados_completos', 'dados_por_placa', 'static']
+    caminhos_livres = [
+        'exibir_login', 
+        'listar_placas', 
+        'listar_dados_completos', 
+        'dados_por_placa', 
+        "listar_empresas", 
+        'static',
+        'cadastra_empresa'  # ← Adicione esta linha
+    ]
     endpoint = request.endpoint
     if (
         endpoint in caminhos_livres
@@ -78,6 +102,21 @@ def verificar_autenticacao_global():
 
     if not session.get("logado"):
         return redirect(url_for("exibir_login"))
+
+@app.route("/empresasCadastro", methods=["GET", "POST"])
+def cadastra_empresa():
+    if request.method == "POST":
+        nomeEmpresa = request.form.get('nome_empresa')
+        cnpjEmpresa = request.form.get('cnpj')
+        
+        if nomeEmpresa and cnpjEmpresa:
+            add_empresa(nomeEmpresa, cnpjEmpresa)
+            return redirect(url_for('exibir_login'))
+        else:
+            erro = "Por favor, preencha todos os campos."
+            return render_template("AddEmpresas.html", erro=erro)
+    
+    return render_template("AddEmpresas.html")
 
 # Cria a pasta de uploads se não existir
 if not os.path.exists('uploads'):

@@ -1,0 +1,52 @@
+<!-- templates/cadastro_motorista_veiculo.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Motoristas e Veículos</title>
+    <link rel="stylesheet" href="/static/estilos.css">
+</head>
+<body>
+    <h1>Cadastro de Motoristas e Veículos</h1>
+
+    {% if erro %}
+        <p style="color:red">{{ erro }}</p>
+    {% endif %}
+    {% if sucesso %}
+        <p style="color:green">{{ sucesso }}</p>
+    {% endif %}
+
+    <form action="{{ url_for('cadastrar_motorista_veiculo') }}" method="post">
+        <fieldset>
+            <legend>Dados da Empresa</legend>
+            <label for="id_empresa">Empresa:</label>
+            <select name="id_empresa" required>
+                {% for empresa in empresas %}
+                    <option value="{{ empresa.id_empresa }}">{{ empresa.nome_empresa }}</option>
+                {% endfor %}
+            </select>
+        </fieldset>
+
+        <fieldset>
+            <legend>Cadastro do Motorista</legend>
+            <input type="text" name="nome_motorista" placeholder="Nome do Motorista" required>
+            <input type="text" name="cpf" placeholder="CPF" required>
+            <input type="text" name="cnh" placeholder="CNH" required>
+            <input type="date" name="data_nascimento">
+        </fieldset>
+
+        <fieldset>
+            <legend>Cadastro do Veículo</legend>
+            <input type="text" name="placa" placeholder="Placa" required>
+            <input type="text" name="modelo" placeholder="Modelo" required>
+            <input type="text" name="marca" placeholder="Marca" required>
+            <input type="number" name="ano" placeholder="Ano">
+            <input type="text" name="frota" placeholder="Frota">
+            <input type="number" step="0.01" name="km_atual" placeholder="KM Atual">
+            <input type="number" step="0.01" name="media_km_litro" placeholder="Média KM/L">
+        </fieldset>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+</body>
+</html>

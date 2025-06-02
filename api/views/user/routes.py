@@ -1,6 +1,7 @@
 # user/routes.py
 from flask import Blueprint, render_template, session, redirect, url_for
 from database.database_handler import user_dados
+from database.user_database.user import user_dados, historico_user
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
 
@@ -11,22 +12,10 @@ def pagina_user():
         return redirect(url_for("exibir_login"))
 
     dados = user_dados(placa)
+    if not dados:
+        return render_template("HomeUser.html", dados={})
 
-    for linha in dados:
-        try:
-            km = float(linha["km_rodado"])
-            horas = float(linha["total_hrs"])
-            diesel = float(linha["lt_diesel"])
-            arla = float(linha["lt_arla"])
-            linha["velocidade_media"] = round(km / horas, 2) if horas > 0 else 0
-            linha["consumo_diesel"] = round((diesel / km) * 100, 2) if km > 0 else 0
-            linha["consumo_arla"] = round((arla / km) * 100, 2) if km > 0 else 0
-        except (ValueError, TypeError):
-            linha["velocidade_media"] = 0
-            linha["consumo_diesel"] = 0
-            linha["consumo_arla"] = 0
-
-    return render_template("HomeUser.html", dados=dados[-1] if dados else {})
+    return render_template("HomeUser.html", dados=dados)
 
 @user_bp.route("/perfil")
 def pagina_perfil():
@@ -35,22 +24,11 @@ def pagina_perfil():
         return redirect(url_for("exibir_login"))
 
     dados = user_dados(placa)
+    historicos = historico_user(placa)
+    if not dados or not historicos:
+        return render_template("perfil.html", dados=[])
 
-    for linha in dados:
-        try:
-            km = float(linha["km_rodado"])
-            horas = float(linha["total_hrs"])
-            diesel = float(linha["lt_diesel"])
-            arla = float(linha["lt_arla"])
-            linha["velocidade_media"] = round(km / horas, 2) if horas > 0 else 0
-            linha["consumo_diesel"] = round((diesel / km) * 100, 2) if km > 0 else 0
-            linha["consumo_arla"] = round((arla / km) * 100, 2) if km > 0 else 0
-        except (ValueError, TypeError):
-            linha["velocidade_media"] = 0
-            linha["consumo_diesel"] = 0
-            linha["consumo_arla"] = 0
-            
-    return render_template('perfil.html', dados=dados)
+    return render_template("perfil.html", dados=dados, historicos=historicos)
 
 @user_bp.route("/config", methods=["GET", "POST"])
 def pagina_config():
