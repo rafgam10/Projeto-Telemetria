@@ -158,11 +158,11 @@
                                     <button id="btn-editar" class="editar-info text-blue-400 hover:text-blue-300 p-1" title="Editar">
                                         <i class="ph ph-pencil-simple"></i>
                                     </button>
-                                    <button id="btn-deletar" class="deletar-info text-red-400 hover:text-red-300 p-1" title="Excluir">
+                                    <button onclick="deletarVeiculo({{ veiculo.id_veiculo }})" id="btn-deletar" class="deletar-info text-red-400 hover:text-red-300 p-1" title="Excluir">
                                         <i class="ph ph-trash"></i>
                                     </button>
                                 </div>
-                            </div>
+                            </div>  
                         </div>
                     </div>
                     {% endfor %}
@@ -229,7 +229,7 @@
                                 </li>
 
                             </ul>
-                        </div>
+                        </div>  
 
                         <!-- Rodapé -->
                         <div class="p-4 border-t border-[#1a2236] flex justify-end gap-2">
@@ -326,6 +326,29 @@ document.addEventListener('DOMContentLoaded', function () {
             alert("Erro na requisição.");
         });
     });
+
+    // Deletar Registro:
+    function deletarVeiculo(id) {
+        if (confirm("Tem certeza que deseja deletar este veiculo?")) {
+            fetch(`/admin/deletar_veiculo/${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.mensagem) {
+                    alert(data.mensagem);
+                    location.reload(); // recarrega a página para atualizar a lista
+                } else {
+                    alert(data.erro || 'Erro ao deletar veiculo.');
+                }
+            })
+            .catch(error => {
+                alert('Erro ao deletar veiculo.');
+                console.error(error);
+            });
+        }
+    }
 
     // Filtro de busca
     const textoInput = document.getElementById("pesquisa-veiculo");

@@ -41,7 +41,7 @@
     * [X] - Corrigir erro de exportação.
     * [X] - Corrigir as horas e minutos.
 [X] - Criar a página de add empresa.
-    * [ ] - Customizar a página.
+    * [X] - Customizar a página.
 [X] - Melhorar o DB.
 [ ] - Colocar todas as variaveis nas páginas `Objetivo`:
     * [X] - Página de UserHome;
@@ -59,9 +59,9 @@
     * [ ] - Página de Logs;
     * [ ] - Colocar os dados do DB no gráficos.
 [ ] - Criar a página/lógica para Adicionar um novo motorista `Objetivo`.
-    * [ ] - Customizar a página Add Motorista.
+    * [X] - Customizar a página Add Motorista.
 [ ] - Criar a página/lógica para Adicionar um novo veiculo `Objetivo`.
-    * [ ] - Customizar a página Add Veiculos.
+    * [X] - Customizar a página Add Veiculos.
 [ ] - Criar a lógica da página Historico de Logs `Objetivo`.
 [ ] - Rever o DB do Projeto `Obrigatório` para mudanças das tabelas do SQLite.
 [AN] - Criar um arquivo .html base para utilizar como pardão `Opcional`.

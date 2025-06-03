@@ -176,3 +176,75 @@ def adicionar_motorista_banco(nome, cpf, cnh, data_nascimento, id_empresa):
     """, (nome, cpf, cnh, data_nascimento, id_empresa))
     conn.close()
     return
+
+####################################################################
+
+# Adicionar um Novo Motorista e Veiculos:
+
+def adicionar_motorista_banco(nome, cpf, cnh, nascimento, status, id_empresa):
+    conn = sqlite3.connect('seu_banco.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO Motoristas (nome, cpf, cnh, data_nascimento, status, empresa_id)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (nome, cpf, cnh, nascimento, status, id_empresa))
+    conn.commit()
+    id_motorista = cursor.lastrowid
+    conn.close()
+    return id_motorista
+
+
+def adicionar_veiculo_banco(placa, modelo, marca, ano, frota, km_atual,
+                            media_km_litro, ultima_manutencao, status,
+                            motorista_id, empresa_id):
+    conn = sqlite3.connect('seu_banco.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO Veiculos (placa, modelo, marca, ano, frota, km_atual,
+        media_km_litro, ultima_manutencao, status, motorista_id, empresa_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (placa, modelo, marca, ano, frota, km_atual,
+          media_km_litro, ultima_manutencao, status, motorista_id, empresa_id))
+    conn.commit()
+    conn.close()
+    
+    
+###########################################################################
+
+############ Relatório #################
+
+def dados_relatorios():
+    con = conectar()
+    cursor = con.cursor()
+
+    # Buscar os últimos dados de telemetria por motorista e veículo
+    cursor.execute("""
+        SELECT 
+            m.id_motorista,
+            m.nome,
+            v.placa,
+            MAX(d.data_chegada) as ultima_data
+        FROM DadosTelemetria d
+        JOIN Motoristas m ON d.id_motorista = m.id_motorista
+        JOIN Veiculos v ON d.id_veiculo = v.id_veiculo
+        GROUP BY m.id_motorista, v.placa
+    """)
+    motoristas = cursor.fetchall()
+    con.close()
+
+    # Montar lista no formato desejado
+    lista_motoristas = []
+    for m in motoristas:
+        try:
+            id_motorista = str(m[0])
+            nome_motorista = m[1]
+            placa = m[2]
+            lista_motoristas.append({
+                "id": id_motorista,
+                "nome": nome_motorista,
+                "placa": placa
+            })
+        except Exception as e:
+            print("Erro ao processar motorista:", e)
+        
+    return lista_motoristas

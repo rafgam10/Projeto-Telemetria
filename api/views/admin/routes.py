@@ -1,7 +1,7 @@
 # admin/routes.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from database.database_handler import conectar, motorista_dados, motorista_dados_unicos, veiculo_dados, veiculo_dados_unicos, dados_relatorios
-from database.admin_database.admin import conectar, adicionar_motorista_banco, motorista_dados_unicos, veiculo_dados_unicos, motorista_dados_unicos_editar
+#from database.database_handler import conectar, motorista_dados, motorista_dados_unicos, veiculo_dados, veiculo_dados_unicos, dados_relatorios
+from database.admin_database.admin import conectar, adicionar_motorista_banco, motorista_dados_unicos, veiculo_dados_unicos, motorista_dados_unicos_editar, adicionar_veiculo_banco, adicionar_motorista_banco, dados_relatorios
 import sqlite3
 from datetime import datetime
 import os
@@ -163,6 +163,30 @@ def editar_veiculos():
         return jsonify({'erro': 'Erro interno'}), 500
 
 
+@admin_bp.route('/deletar_veiculo/<int:id>', methods=['POST'])
+def deletar_veiculo(id):
+    conn = None
+    try:
+        conn = conectar()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM Veiculos WHERE id_veiculo = ?", (id,))
+        veiculo = cursor.fetchone()
+
+        if not veiculo:
+            return jsonify({'erro': 'Veiculo não encontrado.'}), 404
+
+        cursor.execute("DELETE FROM Veiculos WHERE id_veiculo = ?", (id,))
+        conn.commit()
+        return jsonify({'mensagem': 'Veiculo deletado com sucesso!'}), 200
+
+    except sqlite3.Error as e:
+        return jsonify({'erro': f'Erro no banco de dados: {str(e)}'}), 500
+
+    finally:
+        if conn:
+            conn.close()
+
 ##########################################################
 
 @admin_bp.route("/inserirDados", methods=["GET", "POST"])
@@ -208,20 +232,46 @@ def pagina_logs():
 @admin_bp.route('/adicionar_motorista_veiculos', methods=['GET', 'POST'])
 def adicionar_motorista():
     if request.method == 'POST':
-        nome = request.form['nome']
-        cpf = request.form['cpf']
-        cnh = request.form['cnh']
-        nascimento = request.form['data_nascimento']
         id_empresa = session.get('id_empresa')
 
         if not id_empresa:
             flash("Sessão inválida. Faça login novamente.", "erro")
             return redirect(url_for('exibir_login'))
 
-        # Chamar função que adiciona no banco:
-        adicionar_motorista_banco(nome, cpf, cnh, nascimento, id_empresa)
-        return redirect(url_for('admin.listar_motoristas'))
-    
+        # MOTORISTA
+        nome_motorista = request.form['nome_motorista']
+        cpf = request.form['cpf']
+        cnh = request.form['cnh']
+        data_nascimento = request.form['data_nascimento']
+        status_motorista = request.form['status-motorista']
+
+        # VEÍCULO
+        placa = request.form['placa']
+        modelo = request.form['modelo']
+        marca = request.form['marca']
+        ano = request.form['ano']
+        frota = request.form['frota']
+        km_atual = request.form['km_atual']
+        media_km_litro = request.form['media_km_litro']
+        ultima_manutencao = request.form['ultima_manutencao']
+        status_veiculo = request.form['status-veiculo']
+
+        try:
+            # 1. Adiciona motorista no banco e recupera ID
+            id_motorista = adicionar_motorista_banco(nome_motorista, cpf, cnh, data_nascimento, status_motorista, id_empresa)
+
+            # 2. Adiciona veículo vinculado ao motorista
+            adicionar_veiculo_banco(
+                placa, modelo, marca, ano, frota, km_atual, media_km_litro,
+                ultima_manutencao, status_veiculo, id_motorista, id_empresa
+            )
+
+            flash("Motorista e veículo cadastrados com sucesso!", "sucesso")
+            return redirect(url_for('admin.listar_motoristas'))
+
+        except Exception as e:
+            flash(f"Erro ao cadastrar: {str(e)}", "erro")
+
     return render_template('cadastro_motorista_veiculos.html')
 
 
