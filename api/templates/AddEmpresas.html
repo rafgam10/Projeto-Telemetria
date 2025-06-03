@@ -2,63 +2,13 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Empresa</title>
+    <link rel="icon" href="{{ url_for('static', filename='assets/logo.png') }}">
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+    <link href="{{ url_for('static', filename='output.css') }}" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 500px;
-            margin: 80px auto;
-            background-color: #fff;
-            padding: 30px 40px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #333;
-        }
-
-        label {
-            margin-top: 15px;
-            display: block;
-            color: #333;
-            font-weight: bold;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-
-        button {
-            margin-top: 25px;
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            border: none;
-            color: white;
-            font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
         .alert {
             padding: 12px;
             border-radius: 6px;
@@ -67,21 +17,23 @@
         }
 
         .success {
-            background-color: #d4edda;
+            background-color: #a0f4b455;
             color: #155724;
-            border: 1px solid #c3e6cb;
+            border: 1px solid #6aa578;
         }
 
         .danger {
-            background-color: #f8d7da;
+            background-color: #e8868f68;
             color: #721c24;
-            border: 1px solid #f5c6cb;
+            border: 1px solid #be767e;
         }
     </style>
+
 </head>
-<body>
-    <div class="container">
-        <h2>Cadastro de Empresa</h2>
+<body class=" min-h-screen bg-[#0e0e14] flex flex-col items-center justify-center p-4">
+
+    <div class="px-10 py-10 shadow rounded-lg border border-[#1a2236] bg-[#0d121e]">
+        <h2 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-7 text-center">Cadastro de Empresa</h2>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
@@ -91,14 +43,33 @@
           {% endif %}
         {% endwith %}
 
-        <form method="post">
-            <label for="nome_empresa">Nome da Empresa:</label>
-            <input type="text" id="nome_empresa" name="nome_empresa" required>
+        <form class="items-center text-gray-400" method="post">
 
-            <label for="cnpj">CNPJ:</label>
-            <input type="text" id="cnpj" name="cnpj" required>
+            <div class="flex flex-col gap-4">
 
-            <button type="submit">Cadastrar Empresa</button>
+                <div>
+                    <label for="nome_empresa">Nome da Empresa:</label>
+                    <input class="w-full m-1 text-base sm:text-lg pl-4 sm:pl-5 pr-10 sm:pr-12 py-2 sm:py-3 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]"
+                    type="text" id="nome_empresa" name="nome_empresa" required
+                    placeholder="Digite o Nome da Empresa"
+                    >
+                </div>
+    
+                <div>
+                    <label for="cnpj">CNPJ:</label>
+                    <input class="w-full m-1 text-base sm:text-lg pl-4 sm:pl-5 pr-10 sm:pr-12 py-2 sm:py-3 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]"
+                    type="text" id="cnpj" name="cnpj" required
+                    placeholder="Digite o CNPJ"
+                    >
+                </div>
+    
+                <button class="w-full mt-6 bg-[#a8ba44] hover:bg-[#8fa038] text-white font-medium py-2 sm:py-3 px-4 rounded-md transition-colors flex items-center justify-center gap-2 text-base sm:text-lg"
+                type="submit">
+                <i class="ph-duotone ph-buildings sm:text-xl"></i>
+                Cadastrar Empresa
+                </button>
+            </div>
+
         </form>
     </div>
 </body>
