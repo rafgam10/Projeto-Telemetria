@@ -222,6 +222,9 @@ def pagina_relatorios():
     motoristas = dados_relatorios()
     return render_template("relatorioAdmin.html", motoristas=motoristas)
 
+#############################################################
+
+######### Logs #########################
 @admin_bp.route("/logs", methods=["GET", "POST"])
 def pagina_logs():
     return render_template("logsAdmin.html")
@@ -279,11 +282,10 @@ def adicionar_motorista():
 ########################## relatorio ##############################
 
 from flask import jsonify
-from database.database_handler import dados_por_id_motorista
+from database.admin_database.admin import dados_por_id_motorista
 
-@admin_bp.route("/api/motorista-id/<id_motorista>")
+@admin_bp.route("/api/motorista-id/<int:id_motorista>")
 def api_dados_por_id_motorista(id_motorista):
-    id_motorista = id_motorista.upper().strip()
     dados = dados_por_id_motorista(id_motorista)
 
     if not dados:
@@ -295,9 +297,9 @@ def api_dados_por_id_motorista(id_motorista):
 
     for d in dados:
         try:
-            media = float(d["media"])
+            media = float(d["media_km_l"])
             tempo_horas = float(d["total_hrs"]) / 60
-            data = d.get("data_chegada") or d.get("data")
+            data = d["data_chegada"]
 
             if media > 0:
                 consumos.append(round(media, 2))

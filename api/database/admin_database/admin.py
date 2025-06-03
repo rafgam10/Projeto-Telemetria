@@ -249,3 +249,48 @@ def dados_relatorios():
             print("Erro ao processar motorista:", e)
         
     return lista_motoristas
+
+
+
+########## API motorista ID: ###################
+def dados_por_id_motorista(id_motorista):
+    con = conectar()
+    cursor = con.cursor()
+
+    # Buscar nome do motorista
+    cursor.execute("""
+        SELECT nome FROM Motoristas
+        WHERE id_motorista = ?
+    """, (id_motorista,))
+    motorista = cursor.fetchone()
+
+    if not motorista:
+        con.close()
+        return None  # Motorista não encontrado
+
+    nome_motorista = motorista[0]
+
+    # Buscar dados de telemetria
+    cursor.execute("""
+        SELECT data_chegada, media_km_l, total_hrs
+        FROM DadosTelemetria
+        WHERE id_motorista = ?
+        ORDER BY data_chegada ASC
+    """, (id_motorista,))
+    
+    registros = cursor.fetchall()
+    con.close()
+
+    if not registros:
+        return None  # Nenhum dado encontrado
+
+    lista_dados = []
+    for data_chegada, media_km_l, total_hrs in registros:
+        lista_dados.append({
+            "data_chegada": data_chegada,
+            "media_km_l": media_km_l,
+            "total_hrs": total_hrs,
+            "motorista": nome_motorista
+        })
+
+    return lista_dados
