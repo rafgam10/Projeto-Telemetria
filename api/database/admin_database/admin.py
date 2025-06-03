@@ -145,9 +145,10 @@ def veiculo_dados_unicos(id_empresa):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT 
+        SELECT
             v.id_veiculo,
-            v.marca || ' / ' || v.modelo AS caminhao,
+            v.marca,
+            v.modelo,
             v.placa,
             v.frota,
             ROUND(AVG(dt.km_rodado / NULLIF(dt.consumo_diesel, 0)), 1) || ' Km/L' AS media_km_por_litro,
