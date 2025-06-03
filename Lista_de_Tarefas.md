@@ -58,6 +58,13 @@
     * [ ] - Página de Relatório e Estátisticas;
     * [ ] - Página de Logs;
     * [ ] - Colocar os dados do DB no gráficos.
+[ ] - criar rotas de api
+    * [ ] - arrumar rota de motorista (relatorio)
+    * [ ] - rota de consumo mensal de disel, arla; (de cada mês)
+    * [ ] - rota de historico de viagem (por motorista)
+    * [ ] - rota de media de km rodado de cada frota
+    * [ ] - rota de media de km rodado de cada motorista
+
 [ ] - Criar a página/lógica para Adicionar um novo motorista `Objetivo`.
     * [X] - Customizar a página Add Motorista.
 [ ] - Criar a página/lógica para Adicionar um novo veiculo `Objetivo`.
