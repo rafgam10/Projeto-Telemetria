@@ -16,7 +16,7 @@
         <p style="color:green">{{ sucesso }}</p>
     {% endif %}
 
-    <form action="{{ url_for('cadastrar_motorista_veiculo') }}" method="post">
+    <form action="{{ url_for('admin.adicionar_motorista') }}    " method="post">
         <fieldset>
             <legend>Dados da Empresa</legend>
             <label for="id_empresa">Empresa:</label>

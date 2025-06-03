@@ -162,15 +162,8 @@ def editar_veiculos():
         print("Erro ao atualizar veículo:", e)
         return jsonify({'erro': 'Erro interno'}), 500
 
-#############################################################
 
-########### Rota de Adicionar Motorista e Veiculo ###########
-
-@admin_bp.route("/AdicionarMotoristaVeiculo", methods=["GET", "POST"])
-def add_motorista_veiculo():
-    return render_template("cadastro_motorista_veiculos.html")
-
-
+##########################################################
 
 @admin_bp.route("/inserirDados", methods=["GET", "POST"])
 def pagina_inserir_dados():
@@ -230,7 +223,6 @@ def adicionar_motorista():
         return redirect(url_for('admin.listar_motoristas'))
     
     return render_template('cadastro_motorista_veiculos.html')
-
 
 
 
