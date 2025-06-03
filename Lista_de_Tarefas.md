@@ -53,8 +53,8 @@
         * [X] - Editar Gestão Motorista;
         * [X] - Deletar Gestão Motorista;
     * [X] - Página de Gestão Veiculos;
-        * [ ] - Editar Gestão Veiculos;
-        * [ ] - Deletar Gestão Veiculos;
+        * [X] - Editar Gestão Veiculos;
+        * [X] - Deletar Gestão Veiculos;
     * [ ] - Página de Relatório e Estátisticas;
     * [ ] - Página de Logs;
     * [ ] - Colocar os dados do DB no gráficos.
