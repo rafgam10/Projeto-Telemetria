@@ -1,14 +1,11 @@
 # admin/routes.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-#from database.database_handler import conectar, motorista_dados, motorista_dados_unicos, veiculo_dados, veiculo_dados_unicos, dados_relatorios
 from database.admin_database.admin import conectar, adicionar_motorista_banco, motorista_dados_unicos, veiculo_dados_unicos, motorista_dados_unicos_editar, adicionar_veiculo_banco, adicionar_motorista_banco, dados_relatorios
 import sqlite3
 from datetime import datetime
 import os
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
-
-
 
 @admin_bp.route("/", methods=["GET"])
 def pagina_admin():
@@ -204,7 +201,7 @@ def importar_Excel():
         flash('Nenhum arquivo selecionado', 'error')
         return redirect(url_for('admin.pagina_inserir_dados'))
     
-    if not arquivo.filename.lower().endswith(('.xls', '.xlsx', '.xlsm')):
+    if not arquivo.filename.lower().endswith(('.xls', '.xlsx', '.xlsm', '.csv')):
         flash('Formato de arquivo inválido. Envie um arquivo Excel.', 'error')
         return redirect(url_for('admin.pagina_inserir_dados'))
     
