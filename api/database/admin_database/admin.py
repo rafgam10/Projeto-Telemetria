@@ -167,48 +167,70 @@ def veiculo_dados_unicos(id_empresa):
     return resultados
 
 
-# INSERT de Dados do Motorista:
-def adicionar_motorista_banco(nome, cpf, cnh, data_nascimento, id_empresa):
-    conn = conectar()
-    cursor = conn.cursor()
-    cursor.execute("""
-        INSERT INTO Motoristas (nome, cpf, cnh, data_nascimento, id_empresa)
-        VALUES (?, ?, ?, ?, ?)
-    """, (nome, cpf, cnh, data_nascimento, id_empresa))
-    conn.close()
-    return
-
 ####################################################################
 
 # Adicionar um Novo Motorista e Veiculos:
-
 def adicionar_motorista_banco(nome, cpf, cnh, nascimento, status, id_empresa):
-    conn = sqlite3.connect('seu_banco.db')
-    cursor = conn.cursor()
-    cursor.execute("""
-        INSERT INTO Motoristas (nome, cpf, cnh, data_nascimento, status, empresa_id)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (nome, cpf, cnh, nascimento, status, id_empresa))
-    conn.commit()
-    id_motorista = cursor.lastrowid
-    conn.close()
-    return id_motorista
+    conn = conectar()  # Sua função conectar() deve abrir a conexão com timeout configurado
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO Motoristas (nome, cpf, cnh, data_nascimento, status, id_empresa)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (nome, cpf, cnh, nascimento, status, id_empresa))
+        conn.commit()
+        id_motorista = cursor.lastrowid
+        return id_motorista
+    except sqlite3.OperationalError as e:
+        print(f"Erro operacional no adicionar_motorista_banco: {e}")
+        return None
+    finally:
+        conn.close()
 
 
 def adicionar_veiculo_banco(placa, modelo, marca, ano, frota, km_atual,
                             media_km_litro, ultima_manutencao, status,
                             motorista_id, empresa_id):
-    conn = sqlite3.connect('seu_banco.db')
+    conn = conectar()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO Veiculos (placa, modelo, marca, ano, frota, km_atual,
+            media_km_litro, ultima_manutencao, status, motorista_id, id_empresa)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (placa, modelo, marca, ano, frota, km_atual,
+              media_km_litro, ultima_manutencao, status, motorista_id, empresa_id))
+        conn.commit()
+    except sqlite3.OperationalError as e:
+        print(f"Erro operacional no adicionar_veiculo_banco: {e}")
+    finally:
+        conn.close()
+        
+        
+def adicionar_dados_telemetria_banco(id_empresa, id_motorista, id_veiculo,
+                               data_saida, data_chegada,
+                               hodometro_inicial, hodometro_final,
+                               km_rodado, marcha_lenta,
+                               lt_diesel_total, lt_arla_total, lt_por_dia):
+    conn = conectar()
     cursor = conn.cursor()
     cursor.execute("""
-        INSERT INTO Veiculos (placa, modelo, marca, ano, frota, km_atual,
-        media_km_litro, ultima_manutencao, status, motorista_id, empresa_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (placa, modelo, marca, ano, frota, km_atual,
-          media_km_litro, ultima_manutencao, status, motorista_id, empresa_id))
+        INSERT INTO DadosTelemetria (
+            id_empresa, id_motorista, id_veiculo,
+            data_saida, data_chegada,
+            hodometro_inicial, hodometro_final,
+            km_rodado, marcha_lenta,
+            lt_diesel_total, lt_arla_total, lt_por_dia
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        id_empresa, id_motorista, id_veiculo,
+        data_saida, data_chegada,
+        hodometro_inicial, hodometro_final,
+        km_rodado, marcha_lenta,
+        lt_diesel_total, lt_arla_total, lt_por_dia
+    ))
     conn.commit()
     conn.close()
-    
     
 ###########################################################################
 

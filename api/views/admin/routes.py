@@ -1,7 +1,6 @@
 # admin/routes.py
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from database.admin_database.admin import conectar, adicionar_motorista_banco, motorista_dados_unicos, veiculo_dados_unicos, motorista_dados_unicos_editar, dados_relatorios
-from database.admin_database.admin import adicionar_motorista_banco, adicionar_veiculo_banco
+from flask import Blueprint, request, render_template, redirect, url_for, flash, session, jsonify
+from database.admin_database.admin import *
 import sqlite3
 from datetime import datetime
 import os
@@ -234,52 +233,86 @@ def pagina_logs():
 
 ########################## Adicionar Motoristas e Veiculos ##############
 
-@admin_bp.route('/adicionar_motorista_veiculos', methods=['GET', 'POST'])
+# Rota GET - Exibe o formulário com empresa_id da sessão
+@admin_bp.route('/cadastrar', methods=["GET"])
+def mostrar_formulario():
+    id_empresa = session.get("id_empresa")
+    print("Empresa ID recebido 1:", id_empresa)
+    if not id_empresa:
+        flash("Sessão inválida. Faça login novamente.", "erro")
+        return redirect(url_for('exibir_login'))
+
+    return render_template('cadastro_motorista_veiculos.html',
+                           id_empresa=id_empresa)
+
+
+# Rota POST - Processa o formulário de cadastro
+@admin_bp.route('/adicionar_motorista_veiculos', methods=['POST'])
 def adicionar_motorista():
     if request.method == 'POST':
+        
+        # Recebendo o Id Da senssion
         id_empresa = session.get('id_empresa')
-
+        print("Empresa ID recebido 2:", id_empresa)
+        
+        # Validado o Id:
         if not id_empresa:
             flash("Sessão inválida. Faça login novamente.", "erro")
             return redirect(url_for('exibir_login'))
 
         # MOTORISTA
-        nome_motorista = request.form['nome_motorista']
-        cpf = request.form['cpf']
-        cnh = request.form['cnh']
-        data_nascimento = request.form['data_nascimento']
-        status_motorista = request.form['status-motorista']
+        nome_motorista = str(request.form.get('nome_motorista'))
+        cpf = str(request.form.get('cpf'))
+        cnh = str(request.form.get('cnh'))
+        data_nascimento = request.form.get('data_nascimento')
+        status_motorista = str(request.form.get('status-motorista'))
 
         # VEÍCULO
-        placa = request.form['placa']
-        modelo = request.form['modelo']
-        marca = request.form['marca']
-        ano = request.form['ano']
-        frota = request.form['frota']
-        km_atual = request.form['km_atual']
-        media_km_litro = request.form['media_km_litro']
-        ultima_manutencao = request.form['ultima_manutencao']
-        status_veiculo = request.form['status-veiculo']
+        placa = str(request.form.get('placa'))
+        modelo = str(request.form.get('modelo'))
+        marca = str(request.form.get('marca'))
+        ano = int(request.form.get('ano'))
+        frota = str(request.form.get('frota'))
+        km_atual = int(request.form.get('km_atual'))
+        media_km_litro = float(request.form.get('media_km_litro'))
+        ultima_manutencao = request.form.get('ultima_manutencao')
+        status_veiculo = str(request.form.get('status-veiculo'))
+   
+        # Dados de telemetria (parciais)
+        data_saida = request.form.get('data_saida')
+        data_chegada = request.form.get('data_chegada')
+        hodometro_inicial = float(request.form.get('hodometro_inicial'))
+        hodometro_final = float(request.form.get('hodometro_final'))
+        km_rodado = hodometro_final - hodometro_inicial  # ou fornecido diretamente
+        marcha_lenta = request.form.get('marcha_lenta')
+        lt_diesel_total = float(request.form.get('lt_diesel_total'))
+        lt_arla_total = float(request.form.get('lt_arla_total'))
+        lt_por_dia = float(request.form.get('lt_por_dia'))
+        
+        
+        # Após inserir o motorista
+        id_motorista = adicionar_motorista_banco(nome_motorista, cpf, cnh, data_nascimento, status_motorista, id_empresa)
 
-        try:
-            # 1. Adiciona motorista no banco e recupera ID
-            id_motorista = adicionar_motorista_banco(nome_motorista, cpf, cnh, data_nascimento, status_motorista, id_empresa)
+        # Após inserir o veículo
+        id_veiculo = adicionar_veiculo_banco(placa, modelo, marca, ano, frota, km_atual, media_km_litro, ultima_manutencao, id_empresa)
 
-            # 2. Adiciona veículo vinculado ao motorista
-            adicionar_veiculo_banco(
-                placa, modelo, marca, ano, frota, km_atual, media_km_litro,
-                ultima_manutencao, status_veiculo, id_motorista, id_empresa
-            )
 
-            flash("Motorista e veículo cadastrados com sucesso!", "sucesso")
-            return redirect(url_for('admin.listar_motoristas'))
+        # Inserir na tabela DadosTelemetria
+        adicionar_dados_telemetria_banco(
+            id_empresa, id_motorista, id_veiculo,
+            data_saida, data_chegada,
+            hodometro_inicial, hodometro_final,
+            km_rodado, marcha_lenta,
+            lt_diesel_total, lt_arla_total, lt_por_dia
+        )
 
-        except Exception as e:
-            flash(f"Erro ao cadastrar: {str(e)}", "erro")
+        flash("Motorista e veículo cadastrados com sucesso!", "sucesso")
+        return redirect(url_for('admin.pagina_gestao_motoristas'))
+
+        # except Exception as e:
+        #     flash(f"Erro ao cadastrar: {str(e)}", "erro")
 
     return render_template('cadastro_motorista_veiculos.html')
-
-
 
 ########################## relatorio ##############################
 
