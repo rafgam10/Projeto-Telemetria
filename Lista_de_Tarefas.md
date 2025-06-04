@@ -55,16 +55,18 @@
     * [X] - Página de Gestão Veiculos;
         * [X] - Editar Gestão Veiculos;
         * [X] - Deletar Gestão Veiculos;
-    * [ ] - Página de Relatório e Estátisticas;
+    * [X] - Página de Relatório e Estátisticas;
     * [ ] - Página de Logs;
     * [ ] - Colocar os dados do DB no gráficos.
+[ ] - Ajustar o Adicionar Motorista & Veiculo `Objetivo`.
 [ ] - Ajustar a página de importar dados do excel `Objetivo`.
-[ ] - Criar rotas de api `Objetivo  `:
-    * [ ] - arrumar rota de motorista (relatorio)
-    * [ ] - rota de consumo mensal de disel, arla; (de cada mês).
-    * [ ] - rota de historico de viagem (por motorista).
-    * [ ] - rota de media de km rodado de cada frota.
-    * [ ] - rota de media de km rodado de cada motorista.
+[X] - Corrigir as Rotas de API um pasta própria `Objetivo`.
+[X] - Criar rotas de api `Objetivo  `:
+    * [X] - arrumar rota de motorista (relatorio)
+    * [X] - rota de consumo mensal de disel, arla; (de cada mês).
+    * [X] - rota de historico de viagem (por motorista).
+    * [X] - rota de media de km rodado de cada frota.
+    * [X] - rota de media de km rodado de cada motorista.
 [ ] - Criar a página/lógica para Adicionar um novo motorista `Objetivo`.
     * [X] - Customizar a página Add Motorista.
 [ ] - Criar a página/lógica para Adicionar um novo veiculo `Objetivo`.
@@ -77,7 +79,6 @@
 [AN] - Criar os models(SqlAlchemy) do projeto.
 [X] - Criar uma pasta de rotas(routes) é `Opcional`.
 [AN] - Código para mesclar o dados com outro `Análisar - Pensar se vale a pena`.
-[ ] - Corrigir as Rotas de API `Objetivo`.
 [ ] - Fazer testes para todos os tipos de arquivos `excel(xls, xlsx, xlsm, xlsb, csv) - Objetivo` .
 [ ] - Fazer Verificação dos códigos e Fazer boas práticas.
 [X] - Criar a Tela de Sem Conexão no KivyMD.
