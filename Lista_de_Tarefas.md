@@ -58,25 +58,25 @@
     * [ ] - Página de Relatório e Estátisticas;
     * [ ] - Página de Logs;
     * [ ] - Colocar os dados do DB no gráficos.
-[ ] - criar rotas de api
+[ ] - Ajustar a página de importar dados do excel `Objetivo`.
+[ ] - Criar rotas de api `Objetivo  `:
     * [ ] - arrumar rota de motorista (relatorio)
-    * [ ] - rota de consumo mensal de disel, arla; (de cada mês)
-    * [ ] - rota de historico de viagem (por motorista)
-    * [ ] - rota de media de km rodado de cada frota
-    * [ ] - rota de media de km rodado de cada motorista
-
+    * [ ] - rota de consumo mensal de disel, arla; (de cada mês).
+    * [ ] - rota de historico de viagem (por motorista).
+    * [ ] - rota de media de km rodado de cada frota.
+    * [ ] - rota de media de km rodado de cada motorista.
 [ ] - Criar a página/lógica para Adicionar um novo motorista `Objetivo`.
     * [X] - Customizar a página Add Motorista.
 [ ] - Criar a página/lógica para Adicionar um novo veiculo `Objetivo`.
     * [X] - Customizar a página Add Veiculos.
 [ ] - Criar a lógica da página Historico de Logs `Objetivo`.
-[ ] - Rever o DB do Projeto `Obrigatório` para mudanças das tabelas do SQLite.
+[ ] - Rever o DB do Projeto `Obrigatório` para mudanças das tabelas do SQLite `Objetivo`.
 [AN] - Criar um arquivo .html base para utilizar como pardão `Opcional`.
 [OP] - Fazer uma lista de dados utilizados `Opcional`.
 [AN] - Migrar o SQLite para o MySQL e configurar os códigos do Python `Opcional`.
 [AN] - Criar os models(SqlAlchemy) do projeto.
 [X] - Criar uma pasta de rotas(routes) é `Opcional`.
-[ ] - Código para mesclar o dados com outro `Análisar - Pensar se vale a pena`.
+[AN] - Código para mesclar o dados com outro `Análisar - Pensar se vale a pena`.
 [ ] - Corrigir as Rotas de API `Objetivo`.
 [ ] - Fazer testes para todos os tipos de arquivos `excel(xls, xlsx, xlsm, xlsb, csv) - Objetivo` .
 [ ] - Fazer Verificação dos códigos e Fazer boas práticas.
