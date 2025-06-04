@@ -1,6 +1,7 @@
 # admin/routes.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from database.admin_database.admin import conectar, adicionar_motorista_banco, motorista_dados_unicos, veiculo_dados_unicos, motorista_dados_unicos_editar, adicionar_veiculo_banco, adicionar_motorista_banco, dados_relatorios
+from database.admin_database.admin import conectar, adicionar_motorista_banco, motorista_dados_unicos, veiculo_dados_unicos, motorista_dados_unicos_editar, dados_relatorios
+from database.admin_database.admin import adicionar_motorista_banco, adicionar_veiculo_banco
 import sqlite3
 from datetime import datetime
 import os
