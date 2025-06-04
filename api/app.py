@@ -36,11 +36,10 @@ def exibir_login():
             session['placa'] = senha.upper()
             return redirect(url_for('user.pagina_user'))
         
-        elif any(senha.lower() == empresa.get("nome") for empresa in adminDados) or any(senha == empresa.get("cnpj") for empresa in adminDados):
-            empresa = next(e for e in adminDados if senha == e.get("nome"))
+        elif any(senha.lower() == empresa.get("nome").lower() for empresa in adminDados):
+            empresa = next(e for e in adminDados if senha.lower() == e.get("nome").lower())
             session['logado'] = True
-            session['id_empresa'] = empresa['id']  # ← Salva ID da empresa na sessão
-            print(session['id_empresa'])
+            session['id_empresa'] = empresa['id']
             return redirect(url_for('admin.pagina_admin'))
 
         elif senha.lower() == "empresa":
