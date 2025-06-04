@@ -1,6 +1,7 @@
 from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session, make_response
 from database.database_util import obter_dados, obter_placas, obter_empresas
 from database.database_util import add_empresa
+from views.api.routes import api_bp
 from views.admin.routes import admin_bp
 from views.user.routes import user_bp
 import os
@@ -10,33 +11,7 @@ app.secret_key = 'motoristaLegal'
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Colunas padrão
-COLUNAS_DADOS = [...]  # mantém sua lista
-
-def transformar_dados(dados):
-    return [dict(zip(COLUNAS_DADOS, linha)) for linha in dados]
-
-# ================= API ====================
-@app.route("/api/empresas")
-def listar_empresas():
-    empresas = obter_empresas()
-    return make_response(jsonify(empresas), 200)  # ← isso precisa estar aqui
-
-@app.route("/api/placas")
-def listar_placas():
-    placas = obter_placas()
-    return jsonify({"placas": placas}), 200
-
-@app.route("/api/dados")
-def listar_dados_completos():
-    dados = obter_dados()
-    return jsonify(transformar_dados(dados))
-
-@app.route("/api/dados/<placa>")
-def dados_por_placa(placa):
-    dados = transformar_dados(obter_dados())
-    filtrados = [linha for linha in dados if linha["placa"].upper() == placa.upper()]
-    return jsonify(filtrados)
+app.register_blueprint(api_bp)
 
 # ================= PÁGINAS LIVRES ====================
 @app.route("/")
@@ -61,7 +36,7 @@ def exibir_login():
             session['placa'] = senha.upper()
             return redirect(url_for('user.pagina_user'))
         
-        elif any(senha == empresa.get("nome") for empresa in adminDados):
+        elif any(senha.lower() == empresa.get("nome") for empresa in adminDados) or any(senha == empresa.get("cnpj") for empresa in adminDados):
             empresa = next(e for e in adminDados if senha == e.get("nome"))
             session['logado'] = True
             session['id_empresa'] = empresa['id']  # ← Salva ID da empresa na sessão
