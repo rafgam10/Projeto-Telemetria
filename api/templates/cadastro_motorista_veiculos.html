@@ -24,38 +24,38 @@
 
         <form action="{{ url_for('admin.adicionar_motorista') }}" method="post" class="space-y-6">
 
-        <div class="flex flex-col lg:flex-row gap-6">
-            <!-- motorista -->
-            <div class="bg-[#0d121e] p-6 rounded-lg shadow-lg w-full lg:w-1/2">
-                <h2 class="text-xl text-white font-semibold mb-4 flex items-center">
-                    <i class="ph-duotone ph-user text-[#a8ba44] mr-2"></i> Cadastro do Motorista
-                </h2>
-                <div class="grid grid-cols-1 gap-4">
-                    <div>
-                        <label class="text-sm text-gray-400 mb-1 block">Nome do Motorista</label>
-                        <input type="text" name="nome_motorista" required placeholder="Nome do Motorista" class="p-2 bg-[#1a2235] text-white rounded w-full">
-                    </div>
-                    <div>
-                        <label class="text-sm text-gray-400 mb-1 block">CPF</label>
-                        <input type="text" name="cpf" required placeholder="CPF" class="p-2 bg-[#1a2235] text-white rounded w-full">
-                    </div>
-                    <div>
-                        <label class="text-sm text-gray-400 mb-1 block">CNH</label>
-                        <input type="text" name="cnh" required placeholder="CNH" class="p-2 bg-[#1a2235] text-white rounded w-full">
-                    </div>
-                    <div>
-                        <label class="text-sm text-gray-400 mb-1 block">Data de Nascimento</label>
-                        <input type="date" name="data_nascimento" class="p-2 bg-[#1a2235] text-white rounded w-full">
-                    </div>
-                    <div>
-                    <label class="text-sm text-gray-400 mb-1 block">Status</label>
-                        <select name="status-motorista" class="p-2 bg-[#1a2235] text-white rounded w-full">
-                            <option>Ativo</option>
-                            <option>Inativo</option>
-                        </select>
+            <div class="flex flex-col lg:flex-row gap-6">
+                <!-- motorista -->
+                <div class="bg-[#0d121e] p-6 rounded-lg shadow-lg w-full lg:w-1/2">
+                    <h2 class="text-xl text-white font-semibold mb-4 flex items-center">
+                        <i class="ph-duotone ph-user text-[#a8ba44] mr-2"></i> Cadastro do Motorista
+                    </h2>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="text-sm text-gray-400 mb-1 block">Nome do Motorista</label>
+                            <input type="text" name="nome_motorista" required placeholder="Nome do Motorista" class="p-2 bg-[#1a2235] text-white rounded w-full">
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-400 mb-1 block">CPF</label>
+                            <input type="text" name="cpf" required placeholder="CPF" class="p-2 bg-[#1a2235] text-white rounded w-full">
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-400 mb-1 block">CNH</label>
+                            <input type="text" name="cnh" required placeholder="CNH" class="p-2 bg-[#1a2235] text-white rounded w-full">
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-400 mb-1 block">Data de Nascimento</label>
+                            <input type="date" name="data_nascimento" class="p-2 bg-[#1a2235] text-white rounded w-full">
+                        </div>
+                        <div>
+                        <label class="text-sm text-gray-400 mb-1 block">Status</label>
+                            <select name="status-motorista" class="p-2 bg-[#1a2235] text-white rounded w-full">
+                                <option>Ativo</option>
+                                <option>Inativo</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
 
             <!-- veiculo -->
             <div class="bg-[#0d121e] p-6 rounded-lg shadow-lg w-full lg:w-full">
@@ -151,14 +151,14 @@
             </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-4">
-            <button onclick="window.location.href='/admin';" type="button" class="w-full bg-[#218176] text-[#0e0e14] font-semibold py-3 rounded-lg hover:bg-[#2aa798] transition">
-                Cancelar
-            </button>
-            <button type="submit" class="w-full bg-[#a8ba44] text-[#0e0e14] font-semibold py-3 rounded-lg hover:bg-[#c0d050] transition">
-                Cadastrar
-            </button>
-        </div>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button onclick="window.location.href='/admin';" type="button" class="w-full bg-[#218176] text-[#0e0e14] font-semibold py-3 rounded-lg hover:bg-[#2aa798] transition">
+                    Cancelar
+                </button>
+                <button type="submit" class="w-full bg-[#a8ba44] text-[#0e0e14] font-semibold py-3 rounded-lg hover:bg-[#c0d050] transition">
+                    Cadastrar
+                </button>
+            </div>
 
         </form>
     </div>

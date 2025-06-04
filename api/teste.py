@@ -60,7 +60,7 @@ def criar_banco(nome_arquivo='telemetria.db'):
         id_veiculo INTEGER NOT NULL,
         data_saida TEXT NOT NULL,
         data_chegada TEXT NOT NULL,
-        hodometro_inicial REAL,
+        hodometro_inicial REAL, 
         hodometro_final REAL,
         km_rodado REAL,
         km_vazio REAL,
