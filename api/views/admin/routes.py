@@ -34,9 +34,13 @@ def pagina_admin():
     consumo_diesel_mes = (km_mes / diesel_mes) if diesel_mes else 0
     consumo_arla_mes = (km_mes / arla_mes) if arla_mes else 0
 
+    cursor.execute("SELECT id_empresa FROM DadosTelemetria")
+    id_empresa = cursor.fetchone()
+    
     conn.close()
     
     return render_template("HomeAdmin.html",
+        id_empresa = id_empresa,
         total_viagens=total_viagens,
         media_km_motorista=round(media_km_motorista, 2),
         consumo_diesel_mes=round(consumo_diesel_mes, 2),
