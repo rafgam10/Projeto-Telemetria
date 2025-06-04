@@ -30,7 +30,6 @@ def obter_placas():
     
     return [placa[0].upper() for placa in dados_placas]
 
-
 # Função para Obter Dados da Empresas:
 def obter_empresas():
     conn = conectar()
@@ -41,7 +40,32 @@ def obter_empresas():
     return [{"id": linha[0], "nome": linha[1], "cnpj": linha[2]} for linha in dados]
 
 
+###### Relatório #########
 
+def obter_relatorio_motoristas(id_empresa):
+    conn = conectar()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT 
+            m.id_motorista,
+            m.nome,
+            COUNT(dt.id_telemetria) AS total_viagens,
+            ROUND(SUM(dt.km_rodado), 1) AS km_total,
+            ROUND(SUM(dt.consumo_diesel), 2) AS diesel_total,
+            ROUND(SUM(dt.consumo_arla), 2) AS arla_total,
+            MAX(dt.data_saida) AS ultima_viagem
+        FROM Motoristas m
+        LEFT JOIN DadosTelemetria dt ON m.id_motorista = dt.id_motorista
+        WHERE m.id_empresa = ?
+        GROUP BY m.id_motorista, m.nome
+        ORDER BY m.nome
+    """, (id_empresa,))
+
+    dados = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return dados
 
 
 
