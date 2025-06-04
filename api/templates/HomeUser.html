@@ -198,16 +198,34 @@
 
     <!-- script pros grafico -->
     <script>
-        // Configuração do gráfico de barras
+        document.addEventListener("DOMContentLoaded", async () => {
+            const placa = "{{dados.placa}}"; // Placa injetada via Flask
+
+            try {
+                const res = await fetch(`/api/dados/${placa}`);
+                const dadosPlaca = await res.json();
+
+                if (!dadosPlaca.length) throw new Error("Nenhum dado encontrado para esta placa.");
+
+                const { id_motorista, id_empresa, nome } = dadosPlaca[0];
+
+                await atualizarGraficoViagens(id_motorista);
+                await atualizarGraficoComparativo(id_empresa, nome);
+
+            } catch (err) {
+                console.error("Erro ao buscar dados:", err);
+            }
+        });
+
+        // === Gráfico de Histórico de Viagens ===
         const viagensCtx = document.getElementById('viagensChart').getContext('2d');
-        
-        new Chart(viagensCtx, {
+        const viagensChart = new Chart(viagensCtx, {
             type: 'bar',
             data: {
-                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                labels: [],
                 datasets: [{
                     label: 'Km Rodados',
-                    data: [320, 480, 640, 850, 690, 420, 260],
+                    data: [],
                     backgroundColor: '#a8ba44',
                     borderColor: '#2c3326',
                     borderWidth: 1,
@@ -219,9 +237,7 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: false
-                    },
+                    legend: { display: false },
                     tooltip: {
                         backgroundColor: '#1a2235',
                         titleColor: '#a8ba44',
@@ -230,47 +246,67 @@
                         borderWidth: 1,
                         padding: 12,
                         callbacks: {
-                            label: function(context) {
-                                return `${context.parsed.y} km`;
-                            }
+                            label: context => `${context.parsed.y} km`
                         }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        grid: {
-                            color: '#2c3326',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: '#a8ba44'
-                        }
+                        grid: { color: '#2c3326', drawBorder: false },
+                        ticks: { color: '#a8ba44' }
                     },
                     x: {
-                        grid: {
-                            display: false,
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: '#a8ba44'
-                        }
+                        grid: { display: false, drawBorder: false },
+                        ticks: { color: '#a8ba44' }
                     }
                 }
             }
         });
 
-        // Configuração do gráfico de linhas
+        async function atualizarGraficoViagens(idMotorista) {
+            const res = await fetch(`/api/historico_viagens/${idMotorista}`);
+            const viagens = await res.json();
+
+            const hoje = new Date();
+            const ultimos7Dias = Array.from({ length: 7 }, (_, i) => {
+                const d = new Date(hoje);
+                d.setDate(hoje.getDate() - (6 - i));
+                return d.toISOString().split('T')[0];
+            });
+
+            const dadosPorData = {};
+            ultimos7Dias.forEach(data => dadosPorData[data] = 0);
+
+            viagens.forEach(v => {
+                const data = v.data_saida.split('T')[0];
+                if (data in dadosPorData) {
+                    dadosPorData[data] += v.km_rodado;
+                }
+            });
+
+            const labels = ultimos7Dias.map(data => {
+                const d = new Date(data);
+                return d.toLocaleDateString('pt-BR', { weekday: 'short' });
+            });
+
+            const dados = ultimos7Dias.map(data => dadosPorData[data]);
+
+            viagensChart.data.labels = labels;
+            viagensChart.data.datasets[0].data = dados;
+            viagensChart.update();
+        }
+
+        // === Gráfico Comparativo com a Frota ===
         const comparativoCtx = document.getElementById('comparativoChart').getContext('2d');
-        
-        new Chart(comparativoCtx, {
+        const comparativoChart = new Chart(comparativoCtx, {
             type: 'line',
             data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
+                labels: [],
                 datasets: [
                     {
                         label: 'Você',
-                        data: [80, 60, 50, 45, 40, 30, 20],
+                        data: [],
                         borderColor: '#a8ba44',
                         backgroundColor: 'transparent',
                         borderWidth: 2,
@@ -282,7 +318,7 @@
                     },
                     {
                         label: 'Frota',
-                        data: [85, 70, 65, 60, 50, 40, 30],
+                        data: [],
                         borderColor: '#4f8cc9',
                         backgroundColor: 'transparent',
                         borderWidth: 2,
@@ -305,9 +341,7 @@
                             color: '#ffffff',
                             boxWidth: 12,
                             padding: 20,
-                            font: {
-                                size: 12
-                            },
+                            font: { size: 12 },
                             usePointStyle: true,
                             pointStyle: 'line'
                         }
@@ -320,35 +354,47 @@
                         borderWidth: 1,
                         padding: 12,
                         callbacks: {
-                            label: function(context) {
-                                return `${context.dataset.label}: ${context.parsed.y} pts`;
-                            }
+                            label: context => `${context.dataset.label}: ${context.parsed.y} km`
                         }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: false,
-                        grid: {
-                            color: '#2c3326',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: '#a8ba44'
-                        }
+                        grid: { color: '#2c3326', drawBorder: false },
+                        ticks: { color: '#a8ba44' }
                     },
                     x: {
-                        grid: {
-                            color: '#2c3326',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: '#a8ba44'
-                        }
+                        grid: { color: '#2c3326', drawBorder: false },
+                        ticks: { color: '#a8ba44' }
                     }
                 }
             }
         });
+
+        async function atualizarGraficoComparativo(idEmpresa, nomeMotorista) {
+            const [resMotoristas, resFrotas] = await Promise.all([
+                fetch(`/api/media_km_motoristas/${idEmpresa}`),
+                fetch(`/api/media_km_frota/${idEmpresa}`)
+            ]);
+
+            const mediasMotoristas = await resMotoristas.json();
+            const mediasFrota = await resFrotas.json();
+
+            const motorista = mediasMotoristas.find(m => m.nome === nomeMotorista);
+            const mediaMotorista = motorista ? motorista.media_km : 0;
+
+            const labels = mediasFrota.map(f => f.frota);
+            const dadosFrota = mediasFrota.map(f => f.media_km);
+            const dadosMotorista = labels.map(() => mediaMotorista);
+
+            comparativoChart.data.labels = labels;
+            comparativoChart.data.datasets[0].data = dadosMotorista;
+            comparativoChart.data.datasets[1].data = dadosFrota;
+            comparativoChart.update();
+        }
     </script>
+
+    
 </body>
 </html>
