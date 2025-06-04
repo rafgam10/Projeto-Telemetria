@@ -35,7 +35,7 @@ def pagina_admin():
     consumo_arla_mes = (km_mes / arla_mes) if arla_mes else 0
 
     cursor.execute("SELECT id_empresa FROM DadosTelemetria")
-    id_empresa = cursor.fetchone()
+    id_empresa = cursor.fetchone()[0]
     
     conn.close()
     
