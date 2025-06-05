@@ -390,15 +390,25 @@
         tableBody.innerHTML = '';
         
         pageData.forEach(row => {
-    const tr = document.createElement('tr');
-    row.forEach(cell => {
-        const td = document.createElement('td');
-        td.className = 'px-6 py-4 text-sm text-gray-300 whitespace-nowrap';
-        td.textContent = cell !== undefined && cell !== null && cell !== '' ? cell : '-';
-        tr.appendChild(td);
+        const tr = document.createElement('tr');
+        let cells = [];
+
+        if (Array.isArray(row)) {
+            cells = row;
+        } else {
+            // CSV: extrai os valores na ordem dos headers
+            cells = currentHeaders.map(header => row[header]);
+        }
+
+        cells.forEach(cell => {
+            const td = document.createElement('td');
+            td.className = 'px-6 py-4 text-sm text-gray-300 whitespace-nowrap';
+            td.textContent = cell !== undefined && cell !== null && cell !== '' ? cell : '-';
+            tr.appendChild(td);
+        });
+
+        tableBody.appendChild(tr);
     });
-    tableBody.appendChild(tr);
-});
 
         
         rowCount.textContent = `Mostrando ${start + 1}-${Math.min(end, currentData.length)} de ${currentData.length.toLocaleString()}`;
