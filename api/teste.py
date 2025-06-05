@@ -20,7 +20,7 @@ def criar_banco(nome_arquivo='telemetria.db'):
         id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
         id_empresa INTEGER NOT NULL,
         nome TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
+        email TEXT NOT NULL,
         senha_hash TEXT NOT NULL,
         tipo TEXT CHECK(tipo IN ('admin', 'motorista')) NOT NULL,
         FOREIGN KEY (id_empresa) REFERENCES Empresas(id_empresa)
@@ -30,7 +30,7 @@ def criar_banco(nome_arquivo='telemetria.db'):
         id_motorista INTEGER PRIMARY KEY AUTOINCREMENT,
         id_empresa INTEGER NOT NULL,
         nome TEXT NOT NULL,
-        cpf TEXT UNIQUE NOT NULL,
+        cpf TEXT NOT NULL,
         cnh TEXT NOT NULL,
         data_nascimento TEXT,
         avaliacao REAL,
@@ -41,7 +41,7 @@ def criar_banco(nome_arquivo='telemetria.db'):
     CREATE TABLE IF NOT EXISTS Veiculos (
         id_veiculo INTEGER PRIMARY KEY AUTOINCREMENT,
         id_empresa INTEGER NOT NULL,
-        placa TEXT UNIQUE NOT NULL,
+        placa TEXT  NOT NULL,
         modelo TEXT NOT NULL,
         marca TEXT NOT NULL,
         ano INTEGER,
@@ -103,7 +103,7 @@ def criar_banco(nome_arquivo='telemetria.db'):
     print("Banco de dados e tabelas criados com sucesso.")
 
 
-# criar_banco()
+criar_banco()
 
 # Populando Empresas
 faker = Faker("pt_BR")

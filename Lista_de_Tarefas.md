@@ -56,9 +56,10 @@
         * [X] - Editar Gestão Veiculos;
         * [X] - Deletar Gestão Veiculos;
     * [X] - Página de Relatório e Estátisticas;
+    * [ ] - Função Add Empresa no DB;
     * [ ] - Página de Logs;
     * [ ] - Colocar os dados do DB no gráficos.
-[ ] - Ajustar o Adicionar Motorista & Veiculo `Objetivo`.
+[X] - Ajustar o Adicionar Motorista & Veiculo `Objetivo`.
 [ ] - Ajustar a página de importar dados do excel `Objetivo`.
 [X] - Corrigir as Rotas de API um pasta própria `Objetivo`.
 [X] - Criar rotas de api `Objetivo  `:
@@ -67,9 +68,9 @@
     * [X] - rota de historico de viagem (por motorista).
     * [X] - rota de media de km rodado de cada frota.
     * [X] - rota de media de km rodado de cada motorista.
-[ ] - Criar a página/lógica para Adicionar um novo motorista `Objetivo`.
+[X] - Criar a página/lógica para Adicionar um novo motorista `Objetivo`.
     * [X] - Customizar a página Add Motorista.
-[ ] - Criar a página/lógica para Adicionar um novo veiculo `Objetivo`.
+[X] - Criar a página/lógica para Adicionar um novo veiculo `Objetivo`.
     * [X] - Customizar a página Add Veiculos.
 [ ] - Criar a lógica da página Historico de Logs `Objetivo`.
 [ ] - Rever o DB do Projeto `Obrigatório` para mudanças das tabelas do SQLite `Objetivo`.

@@ -271,31 +271,34 @@ def adicionar_motorista():
         placa = str(request.form.get('placa'))
         modelo = str(request.form.get('modelo'))
         marca = str(request.form.get('marca'))
-        ano = int(request.form.get('ano'))
+        ano = int(request.form.get('ano') or 0)
         frota = str(request.form.get('frota'))
-        km_atual = int(request.form.get('km_atual'))
-        media_km_litro = float(request.form.get('media_km_litro'))
+        km_atual = int(request.form.get('km_atual') or 0)
+        media_km_litro = float(request.form.get('media_km_litro') or 0)
         ultima_manutencao = request.form.get('ultima_manutencao')
         status_veiculo = str(request.form.get('status-veiculo'))
-   
-        # Dados de telemetria (parciais)
+
+        # TELEMETRIA
         data_saida = request.form.get('data_saida')
         data_chegada = request.form.get('data_chegada')
-        hodometro_inicial = float(request.form.get('hodometro_inicial'))
-        hodometro_final = float(request.form.get('hodometro_final'))
-        km_rodado = hodometro_final - hodometro_inicial  # ou fornecido diretamente
-        marcha_lenta = request.form.get('marcha_lenta')
-        lt_diesel_total = float(request.form.get('lt_diesel_total'))
-        lt_arla_total = float(request.form.get('lt_arla_total'))
-        lt_por_dia = float(request.form.get('lt_por_dia'))
+        hodometro_inicial = float(request.form.get('hodometro_inicial') or 0)
+        hodometro_final = float(request.form.get('hodometro_final') or 0)
+        km_rodado = hodometro_final - hodometro_inicial
+        marcha_lenta = float(request.form.get('marcha_lenta') or 0)
+        lt_diesel_total = float(request.form.get('lt_diesel_total') or 0)
+        lt_arla_total = float(request.form.get('lt_arla_total') or 0)
+        lt_por_dia = float(request.form.get('lt_por_dia') or 0)
         
         
         # Após inserir o motorista
         id_motorista = adicionar_motorista_banco(nome_motorista, cpf, cnh, data_nascimento, status_motorista, id_empresa)
 
         # Após inserir o veículo
-        id_veiculo = adicionar_veiculo_banco(placa, modelo, marca, ano, frota, km_atual, media_km_litro, ultima_manutencao, id_empresa)
-
+        id_veiculo = adicionar_veiculo_banco(
+            placa, modelo, marca, ano, frota,
+            km_atual, media_km_litro, ultima_manutencao,
+            status_veiculo , id_empresa
+        )
 
         # Inserir na tabela DadosTelemetria
         adicionar_dados_telemetria_banco(

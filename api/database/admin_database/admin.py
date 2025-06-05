@@ -189,22 +189,22 @@ def adicionar_motorista_banco(nome, cpf, cnh, nascimento, status, id_empresa):
 
 
 def adicionar_veiculo_banco(placa, modelo, marca, ano, frota, km_atual,
-                            media_km_litro, ultima_manutencao, status,
-                            motorista_id, empresa_id):
+                            media_km_litro, ultima_manutencao, status_veiculo
+                            , empresa_id):
     conn = conectar()
-    try:
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO Veiculos (placa, modelo, marca, ano, frota, km_atual,
-            media_km_litro, ultima_manutencao, status, motorista_id, id_empresa)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (placa, modelo, marca, ano, frota, km_atual,
-              media_km_litro, ultima_manutencao, status, motorista_id, empresa_id))
-        conn.commit()
-    except sqlite3.OperationalError as e:
-        print(f"Erro operacional no adicionar_veiculo_banco: {e}")
-    finally:
-        conn.close()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO Veiculos (
+            placa, modelo, marca, ano, frota,
+            km_atual, media_km_litro, ultima_manutencao,
+            status, id_empresa
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (placa, modelo, marca, ano, frota, km_atual, media_km_litro, ultima_manutencao, status_veiculo, empresa_id))
+
+    conn.commit()
+    id_veiculo = cursor.lastrowid  # <- IMPORTANTE
+    conn.close()
+    return id_veiculo  # <- CERTIFIQUE-SE DISSO
         
         
 def adicionar_dados_telemetria_banco(id_empresa, id_motorista, id_veiculo,
