@@ -65,10 +65,11 @@ def consumo_mensal(id_empresa):
 @api_bp.route("/historico_viagens/<int:id_motorista>", methods=["GET"])
 def historico_viagens(id_motorista):
     conn = conectar()
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("""
         SELECT 
-            data_saida, origem, destino, km_rodado, consumo_diesel, consumo_arla
+            data_saida, data_chegada, km_rodado, consumo_diesel, consumo_arla
         FROM DadosTelemetria
         WHERE id_motorista = ?
         ORDER BY data_saida DESC
@@ -81,6 +82,7 @@ def historico_viagens(id_motorista):
 @api_bp.route("/media_km_frota/<int:id_empresa>", methods=["GET"])
 def media_km_frota(id_empresa):
     conn = conectar()
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("""
         SELECT 
@@ -99,6 +101,7 @@ def media_km_frota(id_empresa):
 @api_bp.route("/media_km_motoristas/<int:id_empresa>", methods=["GET"])
 def media_km_motoristas(id_empresa):
     conn = conectar()
+    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("""
         SELECT 
