@@ -1,6 +1,6 @@
 # api/routes.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify, make_response
-from database.database_util import obter_dados, obter_placas, obter_empresas, obter_relatorio_motoristas
+from database.database_util import *
 from database.admin_database.admin import conectar, adicionar_motorista_banco, motorista_dados_unicos, veiculo_dados_unicos, motorista_dados_unicos_editar, adicionar_veiculo_banco, adicionar_motorista_banco, dados_relatorios 
 import sqlite3
 from datetime import datetime
@@ -32,8 +32,11 @@ def listar_dados_completos():
 
 @api_bp.route("/dados/<placa>")
 def dados_por_placa(placa):
-    dados = transformar_dados(obter_dados())
-    filtrados = [linha for linha in dados if linha["placa"].upper() == placa.upper()]
+    dados = obter_dados_por_placa(placa=placa)
+    filtrados = [
+        linha for linha in dados
+        if linha.get("placa", "").upper() == placa.upper()
+    ]
     return jsonify(filtrados)
 
 @api_bp.route("/motoristas/<int:id_empresa>", methods=["GET"])

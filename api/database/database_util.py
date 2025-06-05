@@ -12,13 +12,39 @@ def obter_dados():
     conn = conectar()
     cursor = conn.cursor()
     
-    cursor.execute("""
-        SELECT * FROM DadosTelemetria;
-    """)
+    cursor.execute("SELECT * FROM DadosTelemetria;")
     dados = cursor.fetchall()
-    conn.close()
+    print(">>> DADOS BRUTOS:", dados)
     
+    conn.close()
     return dados
+
+# Função para Obter Dados por placa do DB:
+
+def transformar_dados(cursor, dados):
+    colunas = [desc[0] for desc in cursor.description]
+    resultado = []
+    for linha in dados:
+        dicionario = dict(zip(colunas, linha))
+        resultado.append(dicionario)
+    return resultado
+
+def obter_dados_por_placa(placa):
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT DadosTelemetria.*, Veiculos.placa
+        FROM DadosTelemetria
+        JOIN Veiculos ON DadosTelemetria.id_veiculo = Veiculos.id_veiculo
+        WHERE Veiculos.placa = ?;
+    """, (placa.upper(),))
+
+    dados = cursor.fetchall()
+    resultado = transformar_dados(cursor, dados)
+
+    conn.close()
+    return resultado
 
 # Função para Obter Placas:
 def obter_placas():
