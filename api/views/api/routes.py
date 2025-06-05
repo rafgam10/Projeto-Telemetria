@@ -79,39 +79,49 @@ def historico_viagens(id_motorista):
     return jsonify(viagens), 200
 
 
-@api_bp.route("/media_km_frota/<int:id_empresa>", methods=["GET"])
-def media_km_frota(id_empresa):
-    conn = conectar()
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute("""
-        SELECT 
-            v.frota,
-            ROUND(AVG(dt.km_rodado), 1) AS media_km
-        FROM Veiculos v
-        JOIN DadosTelemetria dt ON v.id_veiculo = dt.id_veiculo
-        WHERE dt.id_empresa = ?
-        GROUP BY v.frota
-    """, (id_empresa,))
-    frota_media = [dict(row) for row in cursor.fetchall()]
-    conn.close()
-    return jsonify(frota_media), 200
-
-
 @api_bp.route("/media_km_motoristas/<int:id_empresa>", methods=["GET"])
 def media_km_motoristas(id_empresa):
     conn = conectar()
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
+
     cursor.execute("""
         SELECT 
+            m.id_motorista,
             m.nome,
+            v.frota,
+            STRFTIME('%Y-%m', dt.data_saida) AS mes,
             ROUND(AVG(dt.km_rodado), 1) AS media_km
         FROM Motoristas m
         JOIN DadosTelemetria dt ON m.id_motorista = dt.id_motorista
+        JOIN Veiculos v ON dt.id_veiculo = v.id_veiculo
         WHERE dt.id_empresa = ?
-        GROUP BY m.nome
+        GROUP BY m.nome, v.frota, mes
+        ORDER BY mes ASC
     """, (id_empresa,))
+
     media_motoristas = [dict(row) for row in cursor.fetchall()]
     conn.close()
     return jsonify(media_motoristas), 200
+
+@api_bp.route("/media_km_frota/<int:id_empresa>", methods=["GET"])
+def media_km_frota(id_empresa):
+    conn = conectar()
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT 
+            v.frota,
+            STRFTIME('%Y-%m', dt.data_saida) AS mes,
+            ROUND(AVG(dt.km_rodado), 1) AS media_km
+        FROM Veiculos v
+        JOIN DadosTelemetria dt ON v.id_veiculo = dt.id_veiculo
+        WHERE dt.id_empresa = ?
+        GROUP BY v.frota, mes
+        ORDER BY mes ASC
+    """, (id_empresa,))
+
+    frota_media = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return jsonify(frota_media), 200

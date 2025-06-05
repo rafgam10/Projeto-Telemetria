@@ -172,7 +172,7 @@
                             <!-- Histórico de Viagens -->
                             <div class="w-full md:w-1/2 lg:w-2/3">
                                 <span class="text-sm text-[#a8ba44] mb-2 flex items-center gap-2">
-                                    <i class="ph ph-chart-line-up"></i> Histórico de Viagens (últimos 7 dias)
+                                    <i class="ph ph-chart-line-up"></i> Histórico de Viagens
                                 </span>
                                 <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
                                     <canvas id="viagensChart"></canvas> <!-- parte q puxa o grafico de viagens -->
@@ -199,32 +199,34 @@
     <!-- script pros grafico -->
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
-            const placa = "{{dados.placa}}"; // Placa injetada via Flask
+            const placa = "{{dados.placa}}"; // Flask injeta
 
             try {
                 const res = await fetch(`/api/dados/${placa}`);
                 const dadosPlaca = await res.json();
 
-                if (!dadosPlaca.length) throw new Error("Nenhum dado encontrado para esta placa.");
+                if (!dadosPlaca.length) {
+                    alert("Nenhuma viagem registrada para esta placa.");
+                    return;
+                }
 
-                const { id_motorista, id_empresa, nome } = dadosPlaca[0];
+                const { id_motorista, id_empresa } = dadosPlaca[0];
 
                 await atualizarGraficoViagens(id_motorista);
-                await atualizarGraficoComparativo(id_empresa, nome);
-
+                await atualizarGraficoComparativo(id_empresa, id_motorista);
             } catch (err) {
                 console.error("Erro ao buscar dados:", err);
             }
         });
 
-        // === Gráfico de Histórico de Viagens ===
+        // === Gráfico de Histórico de Viagens (últimas 7 viagens reais) ===
         const viagensCtx = document.getElementById('viagensChart').getContext('2d');
         const viagensChart = new Chart(viagensCtx, {
             type: 'bar',
             data: {
                 labels: [],
                 datasets: [{
-                    label: 'Km Rodados',
+                    label: 'Km Rodados por Viagem',
                     data: [],
                     backgroundColor: '#a8ba44',
                     borderColor: '#2c3326',
@@ -265,39 +267,38 @@
         });
 
         async function atualizarGraficoViagens(idMotorista) {
-            const res = await fetch(`/api/historico_viagens/${idMotorista}`);
-            const viagens = await res.json();
+            try {
+                const res = await fetch(`/api/historico_viagens/${idMotorista}`);
+                let viagens = await res.json();
 
-            const hoje = new Date();
-            const ultimos7Dias = Array.from({ length: 7 }, (_, i) => {
-                const d = new Date(hoje);
-                d.setDate(hoje.getDate() - (6 - i));
-                return d.toISOString().split('T')[0];
-            });
+                console.log("Viagens recebidas:", viagens);
 
-            const dadosPorData = {};
-            ultimos7Dias.forEach(data => dadosPorData[data] = 0);
+                viagens = viagens
+                    .filter(v => v.data_saida && typeof v.km_rodado === 'number' && v.km_rodado >= 0)
+                    .sort((a, b) => new Date(b.data_saida) - new Date(a.data_saida))
+                    .slice(0, 7)
+                    .reverse();
 
-            viagens.forEach(v => {
-                const data = v.data_saida.split('T')[0];
-                if (data in dadosPorData) {
-                    dadosPorData[data] += v.km_rodado;
+                if (viagens.length === 0) {
+                    console.warn("Nenhuma viagem válida encontrada para exibir no gráfico.");
                 }
-            });
 
-            const labels = ultimos7Dias.map(data => {
-                const d = new Date(data);
-                return d.toLocaleDateString('pt-BR', { weekday: 'short' });
-            });
+                const labels = viagens.map(v => {
+                    const data = new Date(v.data_saida);
+                    return data.toLocaleDateString('pt-BR');
+                });
 
-            const dados = ultimos7Dias.map(data => dadosPorData[data]);
+                const dados = viagens.map(v => v.km_rodado);
 
-            viagensChart.data.labels = labels;
-            viagensChart.data.datasets[0].data = dados;
-            viagensChart.update();
+                viagensChart.data.labels = labels;
+                viagensChart.data.datasets[0].data = dados;
+                viagensChart.update();
+            } catch (error) {
+                console.error("Erro ao carregar gráfico de viagens:", error);
+            }
         }
 
-        // === Gráfico Comparativo com a Frota ===
+        // === Gráfico Comparativo com a Frota (por média de km por mês) ===
         const comparativoCtx = document.getElementById('comparativoChart').getContext('2d');
         const comparativoChart = new Chart(comparativoCtx, {
             type: 'line',
@@ -335,6 +336,13 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
+                    title: {
+                        display: true,
+                        text: 'Desempenho Médio por Mês (Você vs. Frota)',
+                        color: '#a8ba44',
+                        padding: { top: 10, bottom: 10 },
+                        font: { size: 14 }
+                    },
                     legend: {
                         position: 'top',
                         labels: {
@@ -354,6 +362,7 @@
                         borderWidth: 1,
                         padding: 12,
                         callbacks: {
+                            title: context => `Mês: ${context[0].label}`,
                             label: context => `${context.dataset.label}: ${context.parsed.y} km`
                         }
                     }
@@ -372,7 +381,7 @@
             }
         });
 
-        async function atualizarGraficoComparativo(idEmpresa, nomeMotorista) {
+        async function atualizarGraficoComparativo(idEmpresa, idMotorista) {
             const [resMotoristas, resFrotas] = await Promise.all([
                 fetch(`/api/media_km_motoristas/${idEmpresa}`),
                 fetch(`/api/media_km_frota/${idEmpresa}`)
@@ -381,19 +390,52 @@
             const mediasMotoristas = await resMotoristas.json();
             const mediasFrota = await resFrotas.json();
 
-            const motorista = mediasMotoristas.find(m => m.nome === nomeMotorista);
-            const mediaMotorista = motorista ? motorista.media_km : 0;
+            const motoristaDados = mediasMotoristas.filter(m =>
+                m.id_motorista == idMotorista
+            );
 
-            const labels = mediasFrota.map(f => f.frota);
-            const dadosFrota = mediasFrota.map(f => f.media_km);
-            const dadosMotorista = labels.map(() => mediaMotorista);
+            if (!motoristaDados.length) {
+                console.warn("Motorista não encontrado nas médias mensais.");
+                return;
+            }
 
-            comparativoChart.data.labels = labels;
+            const frotaMotorista = motoristaDados[0].frota;
+            const dadosFrota = mediasFrota.filter(f => f.frota === frotaMotorista);
+
+            const mesesSet = new Set();
+            motoristaDados.forEach(d => mesesSet.add(d.mes));
+            dadosFrota.forEach(d => mesesSet.add(d.mes));
+            const mesesOrdenados = Array.from(mesesSet).sort();
+
+            const formatarMes = (mes) => {
+                const [ano, mesNum] = mes.split("-");
+                const nomesMeses = [
+                    "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+                    "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+                ];
+                return `${nomesMeses[parseInt(mesNum) - 1]}/${ano}`;
+            };
+            const labelsFormatados = mesesOrdenados.map(formatarMes);
+
+            const dadosMotorista = mesesOrdenados.map(mes => {
+                const dado = motoristaDados.find(d => d.mes === mes);
+                return dado && dado.media_km >= 0 ? dado.media_km : null;
+            });
+
+            const dadosFrotaGrafico = mesesOrdenados.map(mes => {
+                const dado = dadosFrota.find(d => d.mes === mes);
+                return dado && dado.media_km >= 0 ? dado.media_km : null;
+            });
+
+            comparativoChart.data.labels = labelsFormatados;
             comparativoChart.data.datasets[0].data = dadosMotorista;
-            comparativoChart.data.datasets[1].data = dadosFrota;
+            comparativoChart.data.datasets[1].data = dadosFrotaGrafico;
             comparativoChart.update();
         }
     </script>
+
+
+
 
     
 </body>
