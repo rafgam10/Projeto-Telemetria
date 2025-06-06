@@ -54,78 +54,8 @@ def pagina_gestao_motoristas():
     motoristas = motorista_dados_unicos(idEmpresa)
     return render_template("motoristasAdmin.html", motoristas=motoristas)
 
-@admin_bp.route("/editar_motorista", methods=["POST"])
-def editar_motorista():
-    data = request.get_json()
-    
-    id_motorista = data.get("id_motorista")
-    nome = data.get("nome")
-    status = data.get("status")
-    marca_modelo = data.get("caminhao")  # Exemplo: "VOLVO / FH 460"
-    placa = data.get("placa")
-
-    # Divide marca e modelo
-    try:
-        marca, modelo = [x.strip() for x in marca_modelo.split("/", 1)]
-    except ValueError:
-        print("1")
-        return jsonify({"success": False, "message": "Caminhão inválido. Use 'Marca / Modelo'."}), 400
-
-    dados = motorista_dados_unicos_editar(id_motorista)
-    if not dados:
-        print("2")
-        return jsonify({"success": False, "message": "Motorista não encontrado"}), 404
-
-    id_veiculo = dados["id_veiculo"]
-    
-    conn = conectar()
-    cursor = conn.cursor()
-
-    # Atualiza Motorista
-    cursor.execute("""
-        UPDATE Motoristas
-        SET nome = ?, status = ?
-        WHERE id_motorista = ?
-    """, (nome, status, id_motorista))
-
-    # Atualiza Veículo
-    cursor.execute("""
-        UPDATE Veiculos
-        SET marca = ?, modelo = ?, placa = ?
-        WHERE id_veiculo = ?
-    """, (marca, modelo, placa, id_veiculo))
-
-    conn.commit()
-    conn.close()
-
-    return jsonify({"success": True}), 200
-
-@admin_bp.route('/deletar_motorista/<int:id>', methods=['DELETE'])
-def deletar_motorista(id):
-    try:
-        conn = conectar()
-        cursor = conn.cursor()
-
-        # Verifica se o motorista existe
-        cursor.execute("SELECT * FROM Motoristas WHERE id_motorista = ?", (id,))
-        motorista = cursor.fetchone()
-
-        if not motorista:
-            return jsonify({'erro': 'Motorista não encontrado.'}), 404
-
-        # Deleta motorista
-        cursor.execute("DELETE FROM Motoristas WHERE id_motorista = ?", (id,))
-        conn.commit()
-        return jsonify({'mensagem': 'Motorista deletado com sucesso!'}), 200
-
-    except sqlite3.Error as e:
-        return jsonify({'erro': f'Erro no banco de dados: {str(e)}'}), 500
-
-    finally:
-        conn.close()
         
 ################################################################
-
 
 ########## Gereciamento de Veiculos ##################################
 @admin_bp.route("/gestaoVeiculos", methods=["GET", "POST"])
@@ -134,59 +64,6 @@ def pagina_gestao_veiculos():
     veiculos = veiculo_dados_unicos(idEmpresa)
     return render_template("veiculosAdmin.html", veiculos=veiculos)
 
-@admin_bp.route("/editar_veiculos", methods=["POST"])
-def editar_veiculos():
-    data = request.get_json()
-    
-    id_veiculo = data.get("id_veiculo")  # <-- melhor usar ID fixo
-    frota = data.get("frota")
-    modelo = data.get("modelo")
-    marca = data.get("marca")
-    placa = data.get("placa")
-    status = data.get("status")
-
-    try:
-        conn = conectar()
-        cursor = conn.cursor()
-        
-        cursor.execute("""
-            UPDATE Veiculos
-            SET marca = ?, modelo = ?, placa = ?, frota = ?, status = ?
-            WHERE id_veiculo = ?
-        """, (marca, modelo, placa, frota, status, id_veiculo))
-
-        conn.commit()
-        conn.close()
-
-        return jsonify({'mensagem': 'Veículo atualizado com sucesso'}), 200
-    except Exception as e:
-        print("Erro ao atualizar veículo:", e)
-        return jsonify({'erro': 'Erro interno'}), 500
-
-
-@admin_bp.route('/deletar_veiculo/<int:id>', methods=['POST'])
-def deletar_veiculo(id):
-    conn = None
-    try:
-        conn = conectar()
-        cursor = conn.cursor()
-
-        cursor.execute("SELECT * FROM Veiculos WHERE id_veiculo = ?", (id,))
-        veiculo = cursor.fetchone()
-
-        if not veiculo:
-            return jsonify({'erro': 'Veiculo não encontrado.'}), 404
-
-        cursor.execute("DELETE FROM Veiculos WHERE id_veiculo = ?", (id,))
-        conn.commit()
-        return jsonify({'mensagem': 'Veiculo deletado com sucesso!'}), 200
-
-    except sqlite3.Error as e:
-        return jsonify({'erro': f'Erro no banco de dados: {str(e)}'}), 500
-
-    finally:
-        if conn:
-            conn.close()
 
 ##########################################################
 
@@ -226,96 +103,10 @@ def pagina_relatorios():
 #############################################################
 
 ######### Logs #########################
-@admin_bp.route("/logs", methods=["GET", "POST"])
+@admin_bp.route("/metas", methods=["GET", "POST"])
 def pagina_logs():
     return render_template("logsAdmin.html")
 
-
-########################## Adicionar Motoristas e Veiculos ##############
-
-# Rota GET - Exibe o formulário com empresa_id da sessão
-@admin_bp.route('/cadastrar', methods=["GET"])
-def mostrar_formulario():
-    id_empresa = session.get("id_empresa")
-    print("Empresa ID recebido 1:", id_empresa)
-    if not id_empresa:
-        flash("Sessão inválida. Faça login novamente.", "erro")
-        return redirect(url_for('exibir_login'))
-
-    return render_template('cadastro_motorista_veiculos.html',
-                           id_empresa=id_empresa)
-
-
-# Rota POST - Processa o formulário de cadastro
-@admin_bp.route('/adicionar_motorista_veiculos', methods=['POST'])
-def adicionar_motorista():
-    if request.method == 'POST':
-        
-        # Recebendo o Id Da senssion
-        id_empresa = session.get('id_empresa')
-        print("Empresa ID recebido 2:", id_empresa)
-        
-        # Validado o Id:
-        if not id_empresa:
-            flash("Sessão inválida. Faça login novamente.", "erro")
-            return redirect(url_for('exibir_login'))
-
-        # MOTORISTA
-        nome_motorista = str(request.form.get('nome_motorista'))
-        cpf = str(request.form.get('cpf'))
-        cnh = str(request.form.get('cnh'))
-        data_nascimento = request.form.get('data_nascimento')
-        status_motorista = str(request.form.get('status-motorista'))
-
-        # VEÍCULO
-        placa = str(request.form.get('placa'))
-        modelo = str(request.form.get('modelo'))
-        marca = str(request.form.get('marca'))
-        ano = int(request.form.get('ano') or 0)
-        frota = str(request.form.get('frota'))
-        km_atual = int(request.form.get('km_atual') or 0)
-        media_km_litro = float(request.form.get('media_km_litro') or 0)
-        ultima_manutencao = request.form.get('ultima_manutencao')
-        status_veiculo = str(request.form.get('status-veiculo'))
-
-        # TELEMETRIA
-        data_saida = request.form.get('data_saida')
-        data_chegada = request.form.get('data_chegada')
-        hodometro_inicial = float(request.form.get('hodometro_inicial') or 0)
-        hodometro_final = float(request.form.get('hodometro_final') or 0)
-        km_rodado = hodometro_final - hodometro_inicial
-        marcha_lenta = float(request.form.get('marcha_lenta') or 0)
-        lt_diesel_total = float(request.form.get('lt_diesel_total') or 0)
-        lt_arla_total = float(request.form.get('lt_arla_total') or 0)
-        lt_por_dia = float(request.form.get('lt_por_dia') or 0)
-        
-        
-        # Após inserir o motorista
-        id_motorista = adicionar_motorista_banco(nome_motorista, cpf, cnh, data_nascimento, status_motorista, id_empresa)
-
-        # Após inserir o veículo
-        id_veiculo = adicionar_veiculo_banco(
-            placa, modelo, marca, ano, frota,
-            km_atual, media_km_litro, ultima_manutencao,
-            status_veiculo , id_empresa
-        )
-
-        # Inserir na tabela DadosTelemetria
-        adicionar_dados_telemetria_banco(
-            id_empresa, id_motorista, id_veiculo,
-            data_saida, data_chegada,
-            hodometro_inicial, hodometro_final,
-            km_rodado, marcha_lenta,
-            lt_diesel_total, lt_arla_total, lt_por_dia
-        )
-
-        flash("Motorista e veículo cadastrados com sucesso!", "sucesso")
-        return redirect(url_for('admin.pagina_gestao_motoristas'))
-
-        # except Exception as e:
-        #     flash(f"Erro ao cadastrar: {str(e)}", "erro")
-
-    return render_template('cadastro_motorista_veiculos.html')
 
 ########################## relatorio ##############################
 

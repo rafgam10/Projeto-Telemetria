@@ -1,6 +1,6 @@
 from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session, make_response
-from database.database_util import obter_dados, obter_placas, obter_empresas
-from database.database_util import add_empresa
+from database.database_config import *
+from database.database_config import add_empresa
 from views.api.routes import api_bp
 from views.admin.routes import admin_bp
 from views.user.routes import user_bp
