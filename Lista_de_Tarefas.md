@@ -72,7 +72,7 @@
     * [X] - Customizar a página Add Motorista.
 [X] - Criar a página/lógica para Adicionar um novo veiculo `Objetivo`.
     * [X] - Customizar a página Add Veiculos.
-[ ] - Salvar corretamente os dados no db ao criar novo motorista/veiculo/viagem
+[ ] - Salvar corretamente os dados no db ao criar novo motorista/veiculo/viagem ``
 [ ] - Criar a lógica da página Historico de Logs `Objetivo`.
 [ ] - Rever o DB do Projeto `Obrigatório` para mudanças das tabelas do SQLite `Objetivo`.
 [AN] - Criar um arquivo .html base para utilizar como pardão `Opcional`.
@@ -88,3 +88,5 @@
 [X] - Finalizar as rotas da API para os dados.
 [AN] - Fazer o Apk. `Opcional`
 [AN] - Fazer o Teste no Celular. `Opcional`
+
+
