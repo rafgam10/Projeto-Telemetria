@@ -79,9 +79,9 @@
                         </button>
                     </li>
                     <li>
-                        <button onclick="window.location.href='/admin/logs';" id="adm-logs" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
-                            <i class="ph ph-clipboard-text mr-3"></i>
-                            Logs de Auditoria
+                        <button onclick="window.location.href='/admin/metas';" id="adm-metas" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-chart-line-up mr-3"></i>
+                            Metas de Consumo
                         </button>
                     </li>
                 </ul>
@@ -107,16 +107,7 @@
                         <input id="pesquisa-veiculo" type="text" placeholder="Buscar veículos..." class="w-full pl-10 pr-4 py-2 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
                     </div>
                     <div class="flex gap-3 w-full sm:w-auto">
-                        <select id="filtro-status" class="bg-[#1a2236] border border-[#2d3748] text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
-                            <option>Qualquer status</option>
-                            <option>Disponível</option>
-                            <option>Indisponível</option>
-                            <option>Em Manutenção</option>
-                        </select>
-                        <button onclick="window.location.href='cadastrar';" class="flex items-center gap-2 bg-[#a8ba44] hover:bg-[#8fa038] text-white px-4 py-2 rounded-md transition-colors">
-                            <i class="ph ph-plus"></i>
-                            <span>Adicionar</span>
-                        </button>
+
                     </div>
                 </div>
             </div>
@@ -161,128 +152,21 @@
                                         <p class="text-sm font-medium">{{ veiculo.km_atual }} Km</p>
                                     </div>
                                     <div>
-                                        <p class="text-xs text-[#a8ba44]"><i class="ph-duotone ph-calendar mr-1"></i> Última Manutenção</p>
+                                        <p class="text-xs text-[#a8ba44]"><i class="ph-duotone ph-calendar mr-1"></i> OUTRA COISA - VERIFICAR DEPOIS</p>
                                         <p class="text-sm font-medium">{{ veiculo.ultima_manutencao }}</p>
                                     </div>
-                                </div>
-
-                                <!-- Status -->
-                                <div class="flex items-center">
-                                    {% if veiculo.status == 'Disponível' %}
-                                    <span class="status-veiculo px-2 py-1 text-xs rounded-full bg-green-900 text-green-200">Disponível</span>
-                                    {% elif veiculo.status == 'Indisponível' %}
-                                    <span class="status-veiculo px-2 py-1 text-xs rounded-full bg-red-900 text-red-200">Indisponível</span>
-                                    {% else %}
-                                    <span class="status-veiculo px-2 py-1 text-xs rounded-full bg-blue-900 text-blue-200">Em Manutenção</span>
-                                    {% endif %}
                                 </div>
                             </div>
 
                             <!-- Rodapé do card -->
-                            <div class="justify-between rounded-b px-4 border-t border-[#1a2236] bg-[#1a2236] flex flex-row-reverse items-center">
-                                
-                                <div class="flex space-x-2">
-                                    <button class="editar-info text-blue-400 hover:text-blue-300 p-1" title="Editar">
-                                        <i class="ph ph-pencil-simple"></i>
-                                    </button>
-                                    <button onclick="deletarVeiculo({{ veiculo.id_veiculo }})" class="deletar-info text-red-400 hover:text-red-300 p-1" title="Excluir">
-                                        <i class="ph ph-trash"></i>
-                                    </button>
+                            <div class="rounded-b px-2 pb-1 pt-0.5 border-t border-[#1a2236] bg-[#1a2236] flex justify-between items-center">
+                                <div class="text-xs text-gray-400">
+                                    {{veiculo.id_veiculo}}
                                 </div>
-                                
-                                <div class="id-veiculo text-xs text-gray-600">{{veiculo.id_veiculo}}</div>
-                            </div>  
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
-
-
-                <div id="visualizar" class="hidden fixed inset-0 bg-[#0d132294] bg-opacity-20 z-50 items-center justify-center">
-                    <div class="bg-[#0d121e] border border-[#1a2236] rounded-lg max-w-6xl max-h-[80vh] m-7 flex flex-col">
-                        
-                        <!-- Cabeçalho -->
-                        <div class="p-4 border-b border-[#1a2236] flex justify-between items-center">
-                            <h3 class="text-lg font-medium text-white">
-                                <i class="ph ph-pencil-line text-[#a8ba44] mr-2"></i>
-                                Editar Veículo: 
-                                <span id="file-name" class="font-normal text-gray-300"></span>
-                            </h3>
-                        </div>
-
-                        <!-- Corpo do modal -->
-                        <div class="flex-1 overflow-auto p-4 text-white">
-                            <ul class="grid grid-cols-1 gap-4">
-
-                                <!-- Campo id -->
-                                <li class="bg-[#151f2e] px-6 py-3 rounded-lg border border-[#1a2236] hover:bg-[#1e293b] transition-colors">
-                                    <div>
-                                        <p class="text-lg font-medium text-[#a8ba44] mb-1">Id</p>
-                                        <input id="editar-id" type="text" class="w-full p-2 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
-                                    </div>
-                                </li>
-                                <!-- Campo Frota -->
-                                <li class="bg-[#151f2e] px-6 py-3 rounded-lg border border-[#1a2236] hover:bg-[#1e293b] transition-colors">
-                                    <div>
-                                        <p class="text-lg font-medium text-[#a8ba44] mb-1">Frota</p>
-                                        <input id="editar-frota" type="text" class="w-full p-2 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
-                                    </div>
-                                </li>
-
-                                <!-- Campo Modelo -->
-                                <li class="bg-[#151f2e] px-6 py-3 rounded-lg border border-[#1a2236] hover:bg-[#1e293b] transition-colors">
-                                    <div>
-                                        <p class="text-lg font-medium text-[#a8ba44] mb-1">Modelo do veículo</p>
-                                        <input id="editar-modelo" type="text" class="w-full p-2 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
-                                    </div>
-                                </li>
-
-                                <!-- Campo Marca -->
-                                <li class="bg-[#151f2e] px-6 py-3 rounded-lg border border-[#1a2236] hover:bg-[#1e293b] transition-colors">
-                                    <div>
-                                        <p class="text-lg font-medium text-[#a8ba44] mb-1">Marca do veículo</p>
-                                        <input id="editar-marca" type="text" class="w-full p-2 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
-                                    </div>
-                                </li>
-
-                                <!-- Campo Placa -->
-                                <li class="bg-[#151f2e] px-6 py-3 rounded-lg border border-[#1a2236] hover:bg-[#1e293b] transition-colors">
-                                    <div>
-                                        <p class="text-lg font-medium text-[#a8ba44] mb-1">Placa</p>
-                                        <input id="editar-placa" type="text" class="w-full p-2 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
-                                    </div>
-                                </li>
-
-                                <!-- Campo Status -->
-                                <li class="bg-[#151f2e] px-6 py-3 rounded-lg border border-[#1a2236] hover:bg-[#1e293b] transition-colors">
-                                    <div>
-                                        <p class="text-lg font-medium text-[#a8ba44] mb-1">Status</p>
-                                        <select id="editar-status" class="w-full bg-[#1a2236] border border-[#2d3748] text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#a8ba44]">
-                                            <option>Disponível</option>
-                                            <option>Indisponível</option>
-                                            <option>Em Manutenção</option>
-                                        </select>
-                                    </div>
-                                </li>
-
-                            </ul>
-                        </div>  
-
-                        <!-- Rodapé -->
-                        <div class="p-4 border-t border-[#1a2236] flex justify-end gap-2">
-                            <button id="cancelar" class="flex items-center gap-2 bg-[#1a2236] hover:bg-[#2d3748] text-white px-4 py-2 rounded-md transition-colors">
-                                <i class="ph ph-x"></i>
-                                Cancelar
-                            </button>
-                            <button type="submit" id="save-btn" class="flex items-center gap-2 bg-[#a8ba44] hover:bg-[#8fa038] text-white px-4 py-2 rounded-md transition-colors">
-                                <i class="ph ph-check"></i>
-                                Salvar Edição
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
-
-                
 
             </main>
         </div>
@@ -290,104 +174,23 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Sidebar toggle
+        // Sidebar toggle
     document.getElementById('sidebarToggle')?.addEventListener('click', function () {
         const sidebar = document.getElementById('sidebar');
         sidebar.classList.toggle('hidden');
     });
 
-    const visualizar = document.getElementById('visualizar');
-
-    function mostrarInfo(veiculo) {
-        document.getElementById('editar-id').value = veiculo.id_veiculo;
-        document.getElementById('editar-frota').value = veiculo.frota;
-        document.getElementById('editar-modelo').value = veiculo.modelo;
-        document.getElementById('editar-marca').value = veiculo.marca;
-        document.getElementById('editar-placa').value = veiculo.placa;
-        document.getElementById('editar-status').value = veiculo.status;
-
-        visualizar.classList.remove('hidden');
-        visualizar.classList.add('flex');
-        document.body.style.overflow = 'hidden';
-    }
-
-    document.querySelectorAll('.editar-info').forEach(botaoEditar => {
-        botaoEditar.addEventListener('click', function () {
-            const card = this.closest('.card-veiculo');
-            const veiculo = {
-                id_veiculo: card.querySelector('.id-veiculo').textContent,
-                frota: card.querySelector('.frota').textContent,
-                modelo: card.querySelector('.modelo').textContent,
-                marca: card.querySelector('.marca').textContent,
-                placa: card.querySelector('.placa').textContent,
-                status: card.querySelector('.status-veiculo').textContent.trim()
-            };
-            mostrarInfo(veiculo);
-        });
-    });
-
-    // Cancelar edição
-    document.getElementById('cancelar')?.addEventListener('click', () => {
-        visualizar.classList.remove('flex');
-        visualizar.classList.add('hidden');
-        document.body.style.overflow = '';
-    });
-
-    // Salvar edição
-    document.getElementById('save-btn')?.addEventListener('click', function () {
-        const dadosVeiculo = {
-            id_veiculo: document.getElementById('editar-id').value,
-            frota: document.getElementById('editar-frota').value,
-            modelo: document.getElementById('editar-modelo').value,
-            marca: document.getElementById('editar-marca').value,
-            placa: document.getElementById('editar-placa').value,
-            status: document.getElementById('editar-status').value
-        };
-
-        fetch('/admin/editar_veiculos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dadosVeiculo)
-        })
-        .then(res => {
-            if (res.ok) {
-                alert("Veículo atualizado com sucesso!");
-                location.reload();
-            } else {
-                alert("Erro ao atualizar veículo.");
-            }
-        })
-        .catch(err => {
-            console.error("Erro ao enviar dados:", err);
-            alert("Erro na requisição.");
-        });
-    });
-
-    // Filtro de busca
     const textoInput = document.getElementById("pesquisa-veiculo");
-    const filtroInput = document.getElementById("filtro-status");
     const cards = document.querySelectorAll('.card-veiculo');
 
     function filtroBusca() {
         const textoPesquisa = textoInput.value.toLowerCase();
-        const filtroStatus = filtroInput.value;
-
         cards.forEach(card => {
             const placa = card.querySelector('.placa').textContent.toLowerCase();
-            const status = card.querySelector('.status-veiculo').textContent.trim();
-
-            const conferirStatus =
-                filtroStatus === 'Qualquer status' ||
-                (filtroStatus === 'Disponível' && status === 'Disponível') ||
-                (filtroStatus === 'Indisponível' && status === 'Indisponível') ||
-                (filtroStatus === 'Em Manutenção' && status === 'Em Manutenção');
-
-            card.style.display = (placa.includes(textoPesquisa) && conferirStatus) ? 'block' : 'none';
+            card.style.display = (placa.includes(textoPesquisa)) ? 'block' : 'none';
         });
     }
-
     textoInput?.addEventListener('input', filtroBusca);
-    filtroInput?.addEventListener('change', filtroBusca);
 });
 </script>
 </body>
