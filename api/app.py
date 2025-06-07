@@ -65,23 +65,38 @@ def logout():
 @app.before_request
 def verificar_autenticacao_global():
     caminhos_livres = [
-        'exibir_login', 
-        'listar_placas', 
-        'listar_dados_completos', 
-        'dados_por_placa', 
-        "listar_empresas", 
+        #Login
+        'exibir_login',
+        
+        #Template e Static
         'static',
-        'cadastra_empresa'  # ← Adicione esta linha
+        'cadastra_empresa',
+        
+        #API
+        'api.listar_placas',
+        'api.listar_dados_completos',
+        'api.dados_por_placa',
+        'api.listar_empresas',
+        'api.distancia_semanal',
+        'api.media_semanal_frota',
+        'api.soma_km_semanal',  
+        'api.motorista_info',
+        'api.veiculo_info'
     ]
-    endpoint = request.endpoint
+
+    endpoint = request.endpoint or (request.url_rule and request.url_rule.endpoint)
+
+    print("🔍 Endpoint acessado:", endpoint)
+
     if (
         endpoint in caminhos_livres
-        or (endpoint and endpoint.startswith("api"))
         or request.path.startswith("/static")
     ):
         return
 
     if not session.get("logado"):
+        if request.accept_mimetypes.accept_json:
+            return jsonify({"erro": "Não autenticado"}), 401
         return redirect(url_for("exibir_login"))
 
 @app.route("/empresasCadastro", methods=["GET", "POST"])
