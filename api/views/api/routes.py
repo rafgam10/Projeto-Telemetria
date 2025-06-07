@@ -194,19 +194,19 @@ def motorista_info(motorista_id):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("""
+    cursor.execute(f"""
         SELECT 
             m.id,
             m.nome,
             m.distancia_total,
-            TIME_FORMAT(m.marcha_lenta_total, '%%H:%%i:%%s') AS marcha_lenta_total,
+            TIME_FORMAT(m.marcha_lenta_total, '%H:%i:%s') AS marcha_lenta_total,
             m.consumo_total,
             m.consumo_medio,
             v.nome AS veiculo
         FROM Motoristas m
         LEFT JOIN Veiculos v ON m.veiculo_id = v.id
-        WHERE m.id = %s
-    """, (motorista_id,))
+        WHERE m.id = {motorista_id}
+    """, ())
 
     
     dados = cursor.fetchone()
@@ -218,23 +218,23 @@ def veiculo_info(veiculo_id):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("""
+    cursor.execute(f"""
         SELECT 
             v.id,
             v.nome,
-            v.data_inicial,
-            v.data_final,
+            DATE_FORMAT(v.data_inicial, '%d/%m/%Y') AS data_inicial,
+            DATE_FORMAT(v.data_final, '%d/%m/%Y') AS data_final,
             v.distancia_viagem,
             v.velocidade_maxima,
             v.velocidade_media,
             v.litros_consumidos,
             v.consumo_medio,
-            TIME_FORMAT(v.tempo_marcha_lenta, '%%H:%%i:%%s') AS tempo_marcha_lenta,
+            TIME_FORMAT(v.tempo_marcha_lenta, '%H:%i:%s') AS tempo_marcha_lenta,
             e.nome AS empresa
         FROM Veiculos v
         LEFT JOIN Empresas e ON v.empresa_id = e.id
-        WHERE v.id = %s
-    """, (veiculo_id,))
+        WHERE v.id = {veiculo_id}
+    """, ())
     
     dados = cursor.fetchone()
     conn.close()
