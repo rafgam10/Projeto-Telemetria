@@ -22,6 +22,16 @@ def obter_dados():
     conn.close()
     return dados
 
+
+def obter_motorista():
+    conn = conectar()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM Motoristas;")
+    dados = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return dados
+    
     
 # Obter dados gerais da tabela Veiculos (exemplo):
 def obter_veiculos():
