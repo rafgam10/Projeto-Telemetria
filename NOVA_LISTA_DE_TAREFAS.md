@@ -18,6 +18,12 @@
 	* [ ] - de informações do usuário - ???
 	* [X] - de informações do veículo - `views/api/routes.py -> veiculo_info`
 
+- [ ] - AJUSTAR LOGIN DE USUÁRIO.
+
+- [ ] - REVER ROTAS DE API (tem algumas que tão no sqlite ainda e algumas que não vao ser usadas)
+- [ ] - REFAZER BANCO DE DADOS NOVAMENTE COM RELAÇÃO DE MOTORISTA COM VEICULO E AVALIAÇÃO
+- [ ] - FAZER NOVO GRAFICO DE CONUMO SEMANAL (GRAFICO HOME ADMIN)
+
 - [ ] - Escrever descrições das rotas por Postman `Uso do Rafael`;
 
 - [ ] - sistema de rankeamento

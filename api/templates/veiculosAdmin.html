@@ -138,22 +138,22 @@
                                         <p class="frota text-sm font-medium">{{ veiculo.frota }}</p>
                                     </div>
                                     <div>
-                                        <p class="text-xs text-[#a8ba44]"><i class="ph-duotone ph-gas-pump mr-1"></i> Média Km/L</p>
+                                        <p class="text-xs text-[#a8ba44]"><i class="ph-duotone ph-gas-pump mr-1"></i>Litros consumidos</p>
                                         <p class="text-sm font-medium">
-                                            {% if veiculo.media_km_por_litro %}
-                                                {{ veiculo.media_km_por_litro }}
+                                            {% if veiculo.litros_consumidos %}
+                                                {{ veiculo.litros_consumidos }} L
                                             {% else %}
                                                 — Km/L
                                             {% endif %}
                                         </p>
                                     </div>
                                     <div>
-                                        <p class="text-xs text-[#a8ba44]"><i class="ph-duotone ph-gauge mr-1"></i> Km Atual</p>
-                                        <p class="text-sm font-medium">{{ veiculo.km_atual }} Km</p>
+                                        <p class="text-xs text-[#a8ba44]"><i class="ph-duotone ph-gauge mr-1"></i> Distância percorrida</p>
+                                        <p class="text-sm font-medium">{{ veiculo.distancia_viagem }} Km</p>
                                     </div>
                                     <div>
-                                        <p class="text-xs text-[#a8ba44]"><i class="ph-duotone ph-calendar mr-1"></i> OUTRA COISA - VERIFICAR DEPOIS</p>
-                                        <p class="text-sm font-medium">{{ veiculo.ultima_manutencao }}</p>
+                                        <p class="text-xs text-[#a8ba44]"><i class="ph-duotone ph-calendar mr-1"></i>Última atualização</p>
+                                        <p class="text-sm font-medium">{{ veiculo.data_final }}</p>
                                     </div>
                                 </div>
                             </div>

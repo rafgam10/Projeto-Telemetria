@@ -61,6 +61,7 @@ def motorista_dados_unicos(id_empresa):
 
     cursor.execute("""
         SELECT
+            M.data_final,
             M.id AS id_motorista,
             M.nome AS nome_motorista,
             M.distancia_total,
@@ -83,11 +84,15 @@ def veiculo_dados_unicos(id_empresa):
 
     cursor.execute("""
         SELECT 
+            V.frota,
+            V.marca,
+            V.modelo,
             V.id AS id_veiculo,
             V.placa,
             DATE_FORMAT(MAX(V.data_final), '%%d/%%m/%%Y') AS ultima_manutencao,
-            V.consumo_medio AS media_km_por_litro,
-            V.distancia_viagem AS km_atual
+            V.litros_consumidos,
+            V.data_final,
+            V.distancia_viagem
         FROM Veiculos V
         WHERE V.empresa_id = %s
         GROUP BY V.id
