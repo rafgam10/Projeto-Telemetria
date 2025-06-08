@@ -9,7 +9,7 @@ def obter_motoristas_completo():
         SELECT 
             M.id AS id_motorista,
             M.nome AS nome_motorista,
-            V.nome AS veiculo_nome,
+            V.placa AS veiculo_placa,
             M.distancia_total,
             M.marcha_lenta_total,
             M.consumo_total,
@@ -22,7 +22,6 @@ def obter_motoristas_completo():
     resultados = cursor.fetchall()
     conn.close()
 
-    # Convertendo marcha lenta para "XhYmin"
     for item in resultados:
         if item["marcha_lenta_total"]:
             tempo = str(item["marcha_lenta_total"])  # formato HH:MM:SS
@@ -32,6 +31,7 @@ def obter_motoristas_completo():
             item["marcha_lenta_formatada"] = "0h00min"
 
     return resultados
+
 
 def motorista_dados_unicos(id_empresa):
     conn = conectar()
@@ -55,25 +55,27 @@ def motorista_dados_unicos(id_empresa):
     conn.close()
     return dados
 
-def motorista_dados_unicos_editar(id_motorista):
+def motorista_dados_unicos(id_empresa):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute(f"""
-        SELECT 
+    cursor.execute("""
+        SELECT
             M.id AS id_motorista,
-            M.nome,
-            V.id AS id_veiculo,
-            V.nome AS veiculo_nome
+            M.nome AS nome_motorista,
+            M.distancia_total,
+            TIME_FORMAT(M.marcha_lenta_total, '%%H:%%i:%%s') AS marcha_lenta_total,
+            M.consumo_total,
+            M.consumo_medio
         FROM Motoristas M
-        LEFT JOIN Veiculos V ON M.veiculo_id = V.id
-        WHERE M.id = {id_motorista}
-        LIMIT 1
-    """, ())
+        JOIN Veiculos V ON M.veiculo_id = V.id
+        WHERE V.empresa_id = %s
+    """, (id_empresa,))
 
-    row = cursor.fetchone()
+    dados = cursor.fetchall()
+    cursor.close()
     conn.close()
-    return row
+    return dados
 
 def veiculo_dados_unicos(id_empresa):
     conn = conectar()
@@ -82,19 +84,20 @@ def veiculo_dados_unicos(id_empresa):
     cursor.execute("""
         SELECT 
             V.id AS id_veiculo,
-            V.nome,
+            V.placa,
             DATE_FORMAT(MAX(V.data_final), '%%d/%%m/%%Y') AS ultima_manutencao,
             V.consumo_medio AS media_km_por_litro,
             V.distancia_viagem AS km_atual
         FROM Veiculos V
         WHERE V.empresa_id = %s
         GROUP BY V.id
-        ORDER BY V.nome
+        ORDER BY V.placa
     """, (id_empresa,))
 
     resultados = cursor.fetchall()
     conn.close()
     return resultados
+
 
 def dados_relatorios():
     conn = conectar()
@@ -104,23 +107,18 @@ def dados_relatorios():
         SELECT 
             M.id AS id_motorista,
             M.nome AS nome_motorista,
-            V.nome AS placa,
+            V.placa AS placa,
             MAX(V.data_final) AS ultima_data
         FROM Motoristas M
         JOIN Veiculos V ON M.veiculo_id = V.id
-        GROUP BY M.id, V.nome
+        GROUP BY M.id, M.nome, V.placa
     """)
 
     motoristas = cursor.fetchall()
+    cursor.close()
     conn.close()
+    return motoristas
 
-    return [
-        {
-            "id": str(m["id_motorista"]),
-            "nome": m["nome_motorista"],
-            "placa": m["placa"]
-        } for m in motoristas
-    ]
 
 def dados_por_id_motorista(id_motorista):
     conn = conectar()
@@ -153,7 +151,7 @@ def dados_por_id_motorista(id_motorista):
 
     return [
         {
-            "data_chegada": r["data_chegada"],
+            "data_final": r["data_chegada"],
             "media_km_l": r["media_km_l"],
             "total_hrs": r["total_hrs"],
             "motorista": motorista["nome"]

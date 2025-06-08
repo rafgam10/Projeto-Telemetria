@@ -1,7 +1,7 @@
 # api/routes.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify, make_response
 from database.database_config import *
-from database.admin_database.admin import conectar, motorista_dados_unicos, veiculo_dados_unicos, motorista_dados_unicos_editar, dados_relatorios 
+from database.admin_database.admin import conectar, motorista_dados_unicos, veiculo_dados_unicos, dados_relatorios 
 from datetime import datetime
 import os
 
@@ -152,17 +152,18 @@ def media_semanal_frota(empresa_id):
 
     cursor.execute("""
         SELECT 
-            nome AS frota,
-            WEEK(data_inicial) AS semana,
-            YEAR(data_inicial) AS ano,
-            ROUND(AVG(distancia_viagem), 2) AS media_km
-        FROM Veiculos
-        WHERE empresa_id = %s
-        GROUP BY nome, ano, semana
-        ORDER BY nome, ano, semana
+            v.frota,
+            WEEK(v.data_inicial) AS semana,
+            YEAR(v.data_inicial) AS ano,
+            ROUND(AVG(v.distancia_viagem), 2) AS media_km
+        FROM Veiculos v
+        WHERE v.empresa_id = %s
+        GROUP BY v.frota, ano, semana
+        ORDER BY v.frota, ano, semana
     """, (empresa_id,))
     
     dados = cursor.fetchall()
+    cursor.close()
     conn.close()
     return jsonify(dados), 200
 
@@ -190,26 +191,25 @@ def soma_km_semanal(empresa_id):
 
 @api_bp.route("/motorista_info/<int:motorista_id>", methods=["GET"], endpoint='motorista_info')
 def motorista_info(motorista_id):
-    print("motorista_id recebido:", motorista_id)
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute(f"""
+    cursor.execute("""
         SELECT 
             m.id,
             m.nome,
             m.distancia_total,
-            TIME_FORMAT(m.marcha_lenta_total, '%H:%i:%s') AS marcha_lenta_total,
+            TIME_FORMAT(m.marcha_lenta_total, '%%H:%%i:%%s') AS marcha_lenta_total,
             m.consumo_total,
             m.consumo_medio,
-            v.nome AS veiculo
+            v.placa AS veiculo
         FROM Motoristas m
         LEFT JOIN Veiculos v ON m.veiculo_id = v.id
-        WHERE m.id = {motorista_id}
-    """, ())
+        WHERE m.id = %s
+    """, (motorista_id,))
 
-    
     dados = cursor.fetchone()
+    cursor.close()
     conn.close()
     return jsonify(dados), 200
 
@@ -218,25 +218,29 @@ def veiculo_info(veiculo_id):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute(f"""
+    cursor.execute("""
         SELECT 
             v.id,
-            v.nome,
-            DATE_FORMAT(v.data_inicial, '%d/%m/%Y') AS data_inicial,
-            DATE_FORMAT(v.data_final, '%d/%m/%Y') AS data_final,
+            v.placa,
+            v.frota,
+            v.marca,
+            v.modelo,
+            DATE_FORMAT(v.data_inicial, '%%d/%%m/%%Y') AS data_inicial,
+            DATE_FORMAT(v.data_final, '%%d/%%m/%%Y') AS data_final,
             v.distancia_viagem,
             v.velocidade_maxima,
             v.velocidade_media,
             v.litros_consumidos,
             v.consumo_medio,
-            TIME_FORMAT(v.tempo_marcha_lenta, '%H:%i:%s') AS tempo_marcha_lenta,
+            TIME_FORMAT(v.tempo_marcha_lenta, '%%H:%%i:%%s') AS tempo_marcha_lenta,
             e.nome AS empresa
         FROM Veiculos v
         LEFT JOIN Empresas e ON v.empresa_id = e.id
-        WHERE v.id = {veiculo_id}
-    """, ())
+        WHERE v.id = %s
+    """, (veiculo_id,))
     
     dados = cursor.fetchone()
+    cursor.close()
     conn.close()
     return jsonify(dados), 200
 
@@ -250,16 +254,17 @@ def consumo_semanal_diesel(motorista_id, ano, mes):
 
     cursor.execute("""
         SELECT 
-            WEEK(data, 1) AS semana_do_ano,
+            WEEK(data_registro, 1) AS semana_do_ano,
             SUM(consumo_diesel) AS total_diesel
         FROM DadosTelemetria
-        WHERE motorista_id = %s
-          AND YEAR(data) = %s
-          AND MONTH(data) = %s
-        GROUP BY WEEK(data, 1)
+        WHERE id_motorista = %s
+          AND YEAR(data_registro) = %s
+          AND MONTH(data_registro) = %s
+        GROUP BY WEEK(data_registro, 1)
         ORDER BY semana_do_ano
     """, (motorista_id, ano, mes))
 
     resultados = cursor.fetchall()
+    cursor.close()
     conn.close()
     return jsonify(resultados), 200
