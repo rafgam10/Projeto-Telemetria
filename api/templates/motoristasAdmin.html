@@ -118,16 +118,16 @@
                                     </div>
                                     <div class="flex-1 space-y-3">
                                         <div>
-                                            <p class="text-sm text-[#a8ba44]"><i class="ph-duotone ph-calendar"></i> Última atualização</p>
-                                            <p class="text-sm">{{ motorista.data_final }}</p>
-                                            <p class="text-xs text-gray-400">{{ motorista.distancia_total }} Km</p>
+                                            <p class="text-sm text-[#a8ba44]"><i class="ph-duotone ph-calendar"></i>Data de Medição</p>
+                                            <p class="text-sm"><span class="text-xs text-gray-400">Inicial:</span> {{ motorista.data_inicial }}</p>
+                                            <p class="text-sm"><span class="text-xs text-gray-400">Final:</span> {{ motorista.data_final}}</p>
                                         </div>
                                     </div>
                                     
                                     <div class="flex-1 space-y-3">
                                         <div>
                                             <p class="text-sm text-[#a8ba44]"><i class="ph-duotone ph-gas-pump"></i> Consumo Médio</p>
-                                            <p class="text-sm">{{ motorista.consumo_medio | int }} Km/L</p>
+                                            <p class="text-sm">{{ motorista.consumo_medio }} Km/L</p>
                                         </div>
                                     </div>
                                     <div class="flex-1 space-y-3">
@@ -144,11 +144,7 @@
 
                             <div class="rounded-b px-2 py-1  border-t border-[#1a2236] bg-[#1a2236] flex justify-between items-center">
                                 <div class="text-xs text-gray-400">
-                                    {{ motorista.id_motorista }}
-                                </div>
-
-                                <div class="text-xs text-gray-400">
-                                    {{motorista.data_Registro}}
+                                    {{ motorista.empresa }}
                                 </div>
                                 
                             </div>

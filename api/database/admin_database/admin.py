@@ -32,29 +32,6 @@ def obter_motoristas_completo():
 
     return resultados
 
-
-def motorista_dados_unicos(id_empresa):
-    conn = conectar()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute(f"""
-        SELECT
-            M.id AS id_motorista,
-            M.nome AS nome_motorista,
-            M.distancia_total,
-            TIME_FORMAT(M.marcha_lenta_total, '%H:%i:%s') AS marcha_lenta_total,
-            M.consumo_total,
-            M.consumo_medio
-        FROM Motoristas M
-        WHERE M.veiculo_id IN (
-            SELECT id FROM Veiculos WHERE empresa_id = {id_empresa}
-        )
-    """, ())
-
-    dados = cursor.fetchall()
-    conn.close()
-    return dados
-
 def motorista_dados_unicos(id_empresa):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
@@ -62,14 +39,22 @@ def motorista_dados_unicos(id_empresa):
     cursor.execute("""
         SELECT
             M.data_final,
+            M.data_inicial,
             M.id AS id_motorista,
             M.nome AS nome_motorista,
             M.distancia_total,
             TIME_FORMAT(M.marcha_lenta_total, '%%H:%%i:%%s') AS marcha_lenta_total,
             M.consumo_total,
-            M.consumo_medio
+            M.consumo_medio,
+            M.avaliacao,
+            V.placa AS placa,
+            V.marca,
+            V.modelo,
+            CONCAT(V.marca, ' ', V.modelo) AS caminhao,
+            E.nome AS empresa
         FROM Motoristas M
         JOIN Veiculos V ON M.veiculo_id = V.id
+        JOIN Empresas E ON V.empresa_id = E.id
         WHERE V.empresa_id = %s
     """, (id_empresa,))
 
@@ -77,6 +62,7 @@ def motorista_dados_unicos(id_empresa):
     cursor.close()
     conn.close()
     return dados
+
 
 def veiculo_dados_unicos(id_empresa):
     conn = conectar()
@@ -92,8 +78,10 @@ def veiculo_dados_unicos(id_empresa):
             DATE_FORMAT(MAX(V.data_final), '%%d/%%m/%%Y') AS ultima_manutencao,
             V.litros_consumidos,
             V.data_final,
-            V.distancia_viagem
+            V.distancia_viagem,
+            E.nome AS empresa
         FROM Veiculos V
+        JOIN Empresas E ON V.empresa_id = E.id
         WHERE V.empresa_id = %s
         GROUP BY V.id
         ORDER BY V.placa
@@ -104,7 +92,8 @@ def veiculo_dados_unicos(id_empresa):
     return resultados
 
 
-def dados_relatorios():
+
+def dados_relatorios(id_empresa):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
@@ -116,13 +105,15 @@ def dados_relatorios():
             MAX(V.data_final) AS ultima_data
         FROM Motoristas M
         JOIN Veiculos V ON M.veiculo_id = V.id
+        WHERE V.empresa_id = %s
         GROUP BY M.id, M.nome, V.placa
-    """)
+    """, (id_empresa,))
 
     motoristas = cursor.fetchall()
     cursor.close()
     conn.close()
     return motoristas
+
 
 
 def dados_por_id_motorista(id_motorista):
@@ -162,3 +153,22 @@ def dados_por_id_motorista(id_motorista):
             "motorista": motorista["nome"]
         } for r in registros
     ]
+
+def motoristas_unicos_por_empresa(id_empresa):
+    conn = conectar()
+    cursor = conn.cursor(dictionary=True)
+    
+    cursor.execute("""
+        SELECT 
+            MIN(id) as id_motorista,
+            nome AS nome_motorista
+        FROM Motoristas
+        WHERE empresa_id = %s
+        GROUP BY nome
+        ORDER BY nome
+    """, (id_empresa,))
+    
+    motoristas = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return motoristas

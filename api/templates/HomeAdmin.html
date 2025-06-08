@@ -92,7 +92,7 @@
                                     </p>
                                 </div>
                                 <div class="h-64 sm:h-80">
-                                    <canvas id="consumoChart"></canvas>
+                                    <canvas id="consumoChart" class="w-full h-full"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -173,96 +173,102 @@
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('hidden');
         });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+    const ctx = document.getElementById('consumoChart').getContext('2d');
 
+    try {
+        const response = await fetch("/api/consumo_semanal_empresa/{{ id_empresa }}");
+        const data = await response.json();
 
-        
+        const semanas = data.map(item => item.semana);
+        const consumos = data.map(item => parseFloat(item.consumo_medio)); 
 
-        document.addEventListener('DOMContentLoaded', function () {
-        const ctx = document.getElementById('consumoChart').getContext('2d');
-        
-
-        
-        const idEmpresa = "{{ id_empresa }}";
-
-        fetch(`/api/consumo_mensal/${idEmpresa}`)
-            .then(response => response.json())
-            .then(data => {
-                const meses = data.map(entry => {
-                    const [ano, mes] = entry.mes.split('-');
-                    return new Date(ano, mes - 1).toLocaleString('pt-BR', { month: 'short' });
-                });
-                const dieselData = data.map(entry => entry.diesel);
-                const arlaData = data.map(entry => entry.arla);
-
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: meses,
-                        datasets: [
-                            {
-                                label: 'Diesel (L)',
-                                data: dieselData,
-                                borderColor: '#4463ba',
-                                backgroundColor: 'rgba(68, 99, 186, 0.1)',
-                                tension: 0.3,
-                                fill: true,
-                                borderWidth: 2
-                            },
-                            {
-                                label: 'Arla (L)',
-                                data: arlaData,
-                                borderColor: '#a8ba44',
-                                backgroundColor: 'rgba(168, 186, 68, 0.1)',
-                                tension: 0.3,
-                                fill: true,
-                                borderWidth: 2
-                            }
-                        ]
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: semanas,
+                datasets: [{
+                    label: 'Consumo médio (km/L)',
+                    data: consumos,
+                    fill: true,
+                    backgroundColor: 'rgba(186, 68, 99, 0.15)', // rosa clarinho transparente
+                    borderColor: '#ba4463',                     // rosa original das linhas
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#ba4463',
+                    pointHoverBackgroundColor: '#1a2236',
+                    cubicInterpolationMode: 'monotone'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: { top: 20, bottom: 10 }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'km por Litro',
+                            font: { size: 14, weight: 'bold' },
+                            color: '#ecdbf5'  // texto claro para contrastar com fundo escuro
+                        },
+                        ticks: {
+                            font: { size: 12 },
+                            color: '#d1c4e9'  // lilás claro para os números
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.12)',  // grade bem clarinha para fundo escuro
+                            borderColor: 'rgba(255,255,255,0.2)'
+                        }
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    color: '#fff',
-                                    font: {
-                                        size: 12
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                mode: 'index',
-                                intersect: false,
-                                backgroundColor: '#1a2236',
-                                titleColor: '#fff',
-                                bodyColor: '#e0e0e0',
-                                borderColor: '#2d3748',
-                                borderWidth: 1
-                            }
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Semana',
+                            font: { size: 14, weight: 'bold' },
+                            color: '#ecdbf5'
                         },
-                        scales: {
-                            x: {
-                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                                ticks: { color: '#a0aec0' }
-                            },
-                            y: {
-                                grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                                ticks: { color: '#a0aec0' },
-                                beginAtZero: true
-                            }
+                        ticks: {
+                            font: { size: 12 },
+                            color: '#d1c4e9'
                         },
-                        interaction: {
-                            mode: 'nearest',
-                            axis: 'x',
-                            intersect: false
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.12)',
+                            borderColor: 'rgba(255,255,255,0.2)'
                         }
                     }
-                });
-            })
-            .catch(error => console.error('Erro ao carregar dados de consumo:', error));
-    });
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: { font: { size: 14 }, color: '#ecdbf5' }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: '#1a2236',
+                        titleFont: { size: 14, weight: 'bold', color: '#ecf0f1' },
+                        bodyFont: { size: 12, color: '#ecf0f1' },
+                        cornerRadius: 6,
+                        padding: 10
+                    }
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error("Erro ao carregar dados do gráfico:", error);
+    }
+});
+
     </script>
+
 </body>
 </html>

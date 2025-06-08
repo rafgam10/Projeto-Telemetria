@@ -1,14 +1,14 @@
 
 - [X] - mudar nome da rota de logs para "metas";
-- [ ] - Alterar o nome do arquivo html "logs" para o novo "metas";
+- [X] - Alterar o nome do arquivo html "logs" para o novo "metas";
 
-- [ ] - trocar todos o L/100km por Km/Litro
+- [-] - trocar todos o L/100km por Km/Litro `(trocado alguns)`
 
 - [ ] - rotas para adm:
-	* [-] - de consumo semanal de diesel (soma de consumo de todas as semanas do mês) - `views/api/routas.py -> consumo_semanal_diesel` - `Não foi testada` 
+	* [x] - de consumo semanal de diesel - `(modifiquei e testei)`
 	* [X] - de motorista retorna todas as info de motorista - `views/api/routas.py -> motorista_info`
 	* [X] - de veiculo retorna todas as info de veiculo - `views/api/routes.py -> veiculo_info`
-	* [ ] - de relatorio e estatistica, vê isso ai direito. `AN`
+	* [X] - de relatorio e estatistica, vê isso ai direito. `Feito e testado`
 	* [ ] - de metas de consumo dps. `AN - OBJ`
 
 - [ ] - rotas para user:
@@ -20,9 +20,9 @@
 
 - [ ] - AJUSTAR LOGIN DE USUÁRIO.
 
-- [ ] - REVER ROTAS DE API (tem algumas que tão no sqlite ainda e algumas que não vao ser usadas)
-- [ ] - REFAZER BANCO DE DADOS NOVAMENTE COM RELAÇÃO DE MOTORISTA COM VEICULO E AVALIAÇÃO
-- [ ] - FAZER NOVO GRAFICO DE CONUMO SEMANAL (GRAFICO HOME ADMIN)
+- [-] - REVER ROTAS DE API (tem algumas que tão no sqlite ainda e algumas que não vao ser usadas) `arrumei algumas, mas ainda tem oq arrumar`
+- [X] - REFAZER BANCO DE DADOS NOVAMENTE COM AVALIAÇÃO
+- [X] - FAZER NOVO GRAFICO DE CONUMO SEMANAL (GRAFICO HOME ADMIN)
 
 - [ ] - Escrever descrições das rotas por Postman `Uso do Rafael`;
 

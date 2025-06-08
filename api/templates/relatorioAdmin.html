@@ -12,6 +12,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link href="{{ url_for('static', filename='output.css') }}" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- CSS do Select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         @media print {
             .forcar-cor {
@@ -95,107 +100,94 @@
             </header>
             
             <main class="flex-1 overflow-y-auto p-4">
-    <!-- CSS do Select2 -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Lista de relatórios em coluna única -->
+<!-- Lista de relatórios -->
         <div class="space-y-6">
+
             <!-- Seletor de Motorista -->
             <div class="bg-[#0d121e] p-4 rounded-lg border border-[#1a2236]">
                 <h2 class="text-lg font-semibold mb-3 text-white">Selecione o Motorista</h2>
 
-                <select id="selectMotorista">
+                <select id="selectMotorista" class="w-full">
                     <option value="" selected disabled>Busque por nome ou placa...</option>
                     {% for m in motoristas %}
-                        <option value="{{ m.id }}">{{ m.id }} - {{ m.nome }}</option>
+                        <option value="{{ m.id_motorista }}">{{ m.nome_motorista }}</option>
                     {% endfor %}
                 </select>
-
             </div>
 
-            <!-- Relatório de Consumo (sem seleção) -->
-            <div class="text-gray-300 bg-[#0d121e] rounded-lg border h-max border-[#1a2236] hidden" id="semSelecao">    
-                <div class="p-4">
-                    <div class="text-center py-45 text-gray-400">
-                        <i class="ph ph-magnifying-glass text-4xl mb-3"></i>
-                        <p class="text-lg">Selecione um motorista para visualizar o relatório</p>
-                    </div>
+            <!-- Mensagem inicial -->
+            <div class="text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236]" id="semSelecao">
+                <div class="p-4 text-center text-gray-400">
+                    <i class="ph ph-magnifying-glass text-4xl mb-3"></i>
+                    <p class="text-lg">Selecione um motorista para visualizar o relatório</p>
                 </div>
             </div>
 
-            <div id="areaRelatorioPDF">
+            <div id="areaRelatorioPDF" class="space-y-6 hidden">
 
-                <!-- Relatório de Consumo (com seleção) -->
+                <!-- Relatório de Consumo -->
                 <div class="text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236]" id="relatorioSelecionado">
                     <div class="p-4 border-b border-[#1a2236]">
                         <h3 class="text-lg font-bold text-white flex items-center gap-2">
                             <i class="ph ph-gas-pump text-[#a8ba44]"></i>
                             Relatório de Consumo de Combustível
                         </h3>
-                        <p class="text-sm text-gray-400" id="infoMotoristaSelecionado">ABC1234 - João Motorista da Silva</p>
+                        <p class="text-sm text-gray-400 motorista-nome">Selecionado...</p>
                     </div>
-                    
                     <div class="p-4">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
                                 <p class="text-sm text-[#a8ba44]">Média de Consumo</p>
-                                <p class="text-2xl font-bold">2.8 km/L</p>
+                                <p class="text-2xl font-bold">–</p>
                             </div>
                             <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
                                 <p class="text-sm text-[#a8ba44]">Melhor Consumo</p>
-                                <p class="text-2xl font-bold">3.2 km/L</p>
+                                <p class="text-2xl font-bold">–</p>
                             </div>
                             <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
                                 <p class="text-sm text-[#a8ba44]">Pior Consumo</p>
-                                <p class="text-2xl font-bold">2.3 km/L</p>
+                                <p class="text-2xl font-bold">–</p>
                             </div>
                         </div>
-                        
-                        <div id="areagrafico" class="bg-[#1a2236] rounded border border-[#2d3748] p-4 h-[300px]">
+                        <div id="consumoChartDiv" class="bg-[#1a2236] rounded border border-[#2d3748] p-4 h-[300px]">
                             <canvas id="consumoChart" class="w-full h-full"></canvas>
                         </div>
-                        
                     </div>
-                    
                 </div>
-    
-                <!-- Análise de Tempo Médio -->
-                <div class="text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236]" id="analiseTempo">
+
+                <!-- Quilometragem Semanal -->
+                <div class="text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236]" id="graficoDistancia">
                     <div class="p-4 border-b border-[#1a2236]">
                         <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="ph ph-clock text-[#a8ba44]"></i>
-                            Análise de Tempo Médio de Viagem
+                            <i class="ph ph-road-horizon text-[#a8ba44]"></i>
+                            Quilometragem Semanal
                         </h3>
-                        <p class="text-sm text-gray-400" id="infoTempoMotorista">ABC1234 - João Motorista da Silva</p>
+                        <p class="text-sm text-gray-400 motorista-nome">Selecionado...</p>
                     </div>
-                    
                     <div class="p-4">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                             <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
-                                <p class="text-sm text-[#a8ba44]">Tempo Médio</p>
-                                <p class="text-2xl font-bold">4h 22m</p>
+                                <p class="text-sm text-[#a8ba44]">Média de Km por Semana</p>
+                                <p class="text-2xl font-bold">–</p>
                             </div>
                             <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
-                                <p class="text-sm text-[#a8ba44]">Viagem mais longa</p>
-                                <p class="text-2xl font-bold">6h 45m</p>
+                                <p class="text-sm text-[#a8ba44]">Semana com Maior Km</p>
+                                <p class="text-2xl font-bold">–</p>
                             </div>
                             <div class="bg-[#1a2236] p-4 rounded border border-[#2d3748]">
-                                <p class="text-sm text-[#a8ba44]">Viagem mais curta</p>
-                                <p class="text-2xl font-bold">2h 15m</p>
+                                <p class="text-sm text-[#a8ba44]">Semana com Menor Km</p>
+                                <p class="text-2xl font-bold">–</p>
                             </div>
                         </div>
-                        
-                        <div id="areagrafico2" class="bg-[#1a2236] rounded border border-[#2d3748] p-4 h-[300px]">
-                            <canvas id="tempoChart" class="w-full h-full"></canvas>
+                        <div id="distanciaChartDiv" class="bg-[#1a2236] rounded border border-[#2d3748] p-4 h-[300px]">
+                            <canvas id="distanciaChart" class="w-full h-full"></canvas>
                         </div>
-    
                     </div>
-                    
-                    
                 </div>
+
+
             </div>
+        </div>
 
 
             <!-- Exportação -->

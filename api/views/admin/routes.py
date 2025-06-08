@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash, session, jsonify
 from database.admin_database.admin import (
-    conectar, motorista_dados_unicos, veiculo_dados_unicos, dados_relatorios, dados_por_id_motorista
+    conectar, motorista_dados_unicos, veiculo_dados_unicos, motoristas_unicos_por_empresa, dados_relatorios, dados_por_id_motorista
 )
 from datetime import datetime
 import os
@@ -97,8 +97,10 @@ def importar_Excel():
 # ========== Relatórios ==========
 @admin_bp.route("/relatorios", methods=["GET", "POST"])
 def pagina_relatorios():
-    motoristas = dados_relatorios()
+    id_empresa = session.get("id_empresa")
+    motoristas = motoristas_unicos_por_empresa(id_empresa)
     return render_template("relatorioAdmin.html", motoristas=motoristas)
+
 
 # ========== Metas ==========
 @admin_bp.route("/metas", methods=["GET", "POST"])
@@ -106,33 +108,61 @@ def pagina_metas():
     return render_template("metasAdmin.html")
 
 # ========== API para dados por motorista ==========
+
 @admin_bp.route("/api/motorista-id/<int:id_motorista>")
 def api_dados_por_id_motorista(id_motorista):
-    dados = dados_por_id_motorista(id_motorista)
+    conn = conectar()
+    cursor = conn.cursor(dictionary=True)
 
-    if not dados:
+    # 1. Buscar o nome do motorista pelo ID
+    cursor.execute("SELECT nome FROM Motoristas WHERE id = %s", (id_motorista,))
+    motorista = cursor.fetchone()
+
+    if not motorista:
+        conn.close()
+        return jsonify({"erro": "Motorista não encontrado"}), 404
+
+    nome_motorista = motorista["nome"]
+
+    # 2. Buscar todos os registros com o mesmo nome
+    cursor.execute("""
+        SELECT 
+            data_final,
+            consumo_medio,
+            distancia_total
+        FROM Motoristas
+        WHERE nome = %s
+        ORDER BY data_final ASC
+    """, (nome_motorista,))
+    
+    registros = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    if not registros:
         return jsonify({"erro": "Nenhum dado encontrado"}), 404
 
-    consumos = []
-    tempos = []
     labels = []
+    consumos = []
+    distancias = []
 
-    for d in dados:
+    for r in registros:
         try:
-            media = float(d["media_km_l"])
-            tempo_horas = float(d["total_hrs"]) / 60
-            data = d["data_final"]
-
-            if media > 0:
-                consumos.append(round(media, 2))
-                tempos.append(round(tempo_horas, 2))
-                labels.append(data)
-        except:
+            labels.append(r["data_final"].strftime("%Y-%m-%d"))
+            consumos.append(float(r["consumo_medio"]))
+            distancias.append(float(r["distancia_total"]))
+        except Exception:
             continue
 
+    if not consumos:
+        return jsonify({"erro": "Registros inválidos"}), 400
+
     return jsonify({
-        "motorista": dados[0]["motorista"],
+        "motorista": nome_motorista,
         "labels": labels,
         "consumos": consumos,
-        "tempos": tempos
+        "distancias": distancias,
+        "media_consumo": round(sum(consumos) / len(consumos), 2),
+        "melhor_consumo": max(consumos),
+        "pior_consumo": min(consumos)
     })

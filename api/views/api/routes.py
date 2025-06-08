@@ -202,6 +202,7 @@ def motorista_info(motorista_id):
             TIME_FORMAT(m.marcha_lenta_total, '%%H:%%i:%%s') AS marcha_lenta_total,
             m.consumo_total,
             m.consumo_medio,
+            m.avaliacao,
             v.placa AS veiculo
         FROM Motoristas m
         LEFT JOIN Veiculos v ON m.veiculo_id = v.id
@@ -244,27 +245,40 @@ def veiculo_info(veiculo_id):
     conn.close()
     return jsonify(dados), 200
 
-
-# NÃO TESTADA:
-
-@api_bp.route("/consumo_semanal_diesel/<int:motorista_id>/<int:ano>/<int:mes>")
-def consumo_semanal_diesel(motorista_id, ano, mes):
+@api_bp.route("/consumo_semanal_empresa/<int:id_empresa>")
+def consumo_semanal_empresa(id_empresa):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("""
-        SELECT 
-            WEEK(data_registro, 1) AS semana_do_ano,
-            SUM(consumo_diesel) AS total_diesel
-        FROM DadosTelemetria
-        WHERE id_motorista = %s
-          AND YEAR(data_registro) = %s
-          AND MONTH(data_registro) = %s
-        GROUP BY WEEK(data_registro, 1)
-        ORDER BY semana_do_ano
-    """, (motorista_id, ano, mes))
+    try:
+        cursor.execute("""
+            SELECT
+                data_inicial,
+                data_final,
+                ROUND(AVG(consumo_medio), 2) AS consumo_medio
+            FROM Motoristas
+            WHERE empresa_id = %s
+            GROUP BY data_inicial, data_final
+            ORDER BY data_final DESC
+            LIMIT 4
+        """, (id_empresa,))
 
-    resultados = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(resultados), 200
+        dados = cursor.fetchall()
+        dados.reverse()  # ordem cronológica (da mais antiga para a mais recente)
+
+        for item in dados:
+            data_i = item['data_inicial'].strftime('%d/%m/%Y')
+            data_f = item['data_final'].strftime('%d/%m/%Y')
+            item['semana'] = f"{data_i} - {data_f}"
+            del item['data_inicial']
+            del item['data_final']
+
+        return jsonify(dados)
+
+    except Exception as e:
+        print(f"Erro ao buscar consumo semanal: {str(e)}")
+        return jsonify([])
+
+    finally:
+        cursor.close()
+        conn.close()

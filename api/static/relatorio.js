@@ -1,199 +1,183 @@
-// Variáveis globais dos gráficos
-let consumoChart;
-let tempoChart;
+let consumoChart, distanciaChart;
 
-$(document).ready(function () {
-    // Inicia select2
+$(document).ready(() => {
     $('#selectMotorista').select2({
-        placeholder: "Busque por nome ou placa...",
+        placeholder: "Busque por nome ou placa..."
+    });
+
+    $('#selectMotorista').on('change', async function () {
+        const id = $(this).val();
+        const nome = $(this).find('option:selected').text();
+
+        if (!id) {
+            $('#semSelecao').show();
+            $('#areaRelatorioPDF').addClass('hidden');
+            return;
+        }
+
+        try {
+            const res = await fetch(`/admin/api/motorista-id/${id}`);
+            const dados = await res.json();
+
+            if (dados.erro) {
+                alert(dados.erro);
+                return;
+            }
+
+            $('#semSelecao').hide();
+            $('#areaRelatorioPDF').removeClass('hidden');
+
+            $('.motorista-nome').text(nome);
+
+            atualizarGraficoConsumo(dados.labels, dados.consumos, dados);
+            atualizarGraficoDistancia(dados.labels, dados.distancias);
+        } catch (e) {
+            console.error("Erro ao buscar dados do motorista:", e);
+        }
     });
 
     inicializarGraficos();
-
-    // Esconde relatórios até selecionar motorista
-    $('#relatorioSelecionado, #analiseTempo, #exportacaoRelatorios').hide();
-    $('#semSelecao').show();
-
-    // Evento de mudança do select
-    $('#selectMotorista').on('change', function () {
-        const idMotorista = $(this).val();
-        const nomeCompleto = $(this).find('option:selected').text();
-
-        if (idMotorista) {
-            $('#semSelecao').hide();
-            $('#relatorioSelecionado, #analiseTempo, #exportacaoRelatorios').show();
-
-            fetch(`/admin/api/motorista-id/${encodeURIComponent(idMotorista)}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.erro) {
-                        alert(data.erro);
-                        return;
-                    }
-
-                    $('#infoMotoristaSelecionado, #infoTempoMotorista, #infoExportMotorista').text(nomeCompleto);
-
-                    atualizarGraficoConsumo(data.labels, data.consumos);
-                    atualizarGraficoTempo(data.labels, data.tempos);
-                });
-        } else {
-            $('#semSelecao').show();
-            $('#relatorioSelecionado, #analiseTempo, #exportacaoRelatorios').hide();
-        }
-    });
 });
 
-// ---------- FUNÇÕES PRINCIPAIS ----------
-
 function inicializarGraficos() {
-    const consumoCtx = document.getElementById('consumoChart').getContext('2d');
+    const consumoCtx = document.getElementById("consumoChart").getContext("2d");
+    const distanciaCtx = document.getElementById("distanciaChart").getContext("2d");
+
     consumoChart = new Chart(consumoCtx, {
         type: 'line',
         data: {
             labels: [],
             datasets: [{
-                label: 'Consumo (km/L)',
+                label: 'Consumo médio (km/L)',
                 data: [],
-                borderColor: '#a8ba44',
-                backgroundColor: 'rgba(168, 186, 68, 0.1)',
-                borderWidth: 2,
-                tension: 0.3,
-                fill: true
+                borderColor: '#38bdf8',
+                backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                tension: 0.4,
+                fill: true,
+                borderWidth: 2
             }]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: { color: '#e2e8f0' }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: '#2d3748' }
-                },
-                x: {
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: '#2d3748' }
-                }
-            }
-        }
+        options: gerarOpcoes("Consumo médio (km/L)")
     });
 
-    const tempoCtx = document.getElementById('tempoChart').getContext('2d');
-    tempoChart = new Chart(tempoCtx, {
+    distanciaChart = new Chart(distanciaCtx, {
         type: 'bar',
         data: {
             labels: [],
             datasets: [{
-                label: 'Horas de Viagem',
+                label: 'Quilometragem semanal (km)',
                 data: [],
-                backgroundColor: 'rgba(168, 186, 68, 0.7)',
-                borderColor: '#a8ba44',
+                backgroundColor: '#818cf8',
+                borderColor: '#6366f1',
                 borderWidth: 1
             }]
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: { color: '#e2e8f0' }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        color: '#94a3b8',
-                        callback: value => formatarTempo(value)
-                    },
-                    grid: { color: '#2d3748' }
-                },
-                x: {
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: '#2d3748' }
-                }
-            }
-        }
+        options: gerarOpcoes("Quilometragem semanal (km)")
     });
 }
 
-function atualizarGraficoConsumo(labels, dados) {
-    const media = mediaArray(dados);
-    const melhor = Math.max(...dados).toFixed(2);
-    const pior = Math.min(...dados).toFixed(2);
+function gerarOpcoes(titulo) {
+    return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { labels: { color: '#e2e8f0' } },
+            tooltip: {
+                callbacks: {
+                    label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}`
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: { color: '#cbd5e1' },
+                grid: { color: '#334155' }
+            },
+            y: {
+                beginAtZero: true,
+                ticks: { color: '#cbd5e1' },
+                grid: { color: '#334155' }
+            }
+        }
+    };
+}
 
-    document.querySelector("#relatorioSelecionado .grid div:nth-child(1) p.text-2xl").textContent = `${media} km/L`;
-    document.querySelector("#relatorioSelecionado .grid div:nth-child(2) p.text-2xl").textContent = `${melhor} km/L`;
-    document.querySelector("#relatorioSelecionado .grid div:nth-child(3) p.text-2xl").textContent = `${pior} km/L`;
-
+function atualizarGraficoConsumo(labels, dados, resumo) {
     consumoChart.data.labels = labels;
     consumoChart.data.datasets[0].data = dados;
     consumoChart.update();
+
+    atualizarCard("#relatorioSelecionado", [
+        resumo.media_consumo.toFixed(2),
+        resumo.melhor_consumo.toFixed(2),
+        resumo.pior_consumo.toFixed(2)
+    ], "km/L");
 }
 
-function atualizarGraficoTempo(labels, dados) {
-    const media = mediaArray(dados);
-    const maior = Math.max(...dados);
-    const menor = Math.min(...dados);
+function atualizarGraficoDistancia(labels, dados) {
+    distanciaChart.data.labels = labels;
+    distanciaChart.data.datasets[0].data = dados;
+    distanciaChart.update();
 
-    document.querySelector("#analiseTempo .grid div:nth-child(1) p.text-2xl").textContent = formatarTempo(media);
-    document.querySelector("#analiseTempo .grid div:nth-child(2) p.text-2xl").textContent = formatarTempo(maior);
-    document.querySelector("#analiseTempo .grid div:nth-child(3) p.text-2xl").textContent = formatarTempo(menor);
+    const media = mediaArray(dados).toFixed(1);
+    const max = Math.max(...dados).toFixed(1);
+    const min = Math.min(...dados).toFixed(1);
 
-    tempoChart.data.labels = labels;
-    tempoChart.data.datasets[0].data = dados;
-    tempoChart.update();
+    atualizarCard("#graficoDistancia", [media, max, min], "km");
 }
 
-// ---------- UTILITÁRIOS ----------
+function atualizarCard(selector, valores, unidade = "") {
+    const cards = document.querySelectorAll(`${selector} .grid div p.text-2xl`);
+    if (cards.length >= 3) {
+        cards[0].textContent = `${valores[0]} ${unidade}`;
+        cards[1].textContent = `${valores[1]} ${unidade}`;
+        cards[2].textContent = `${valores[2]} ${unidade}`;
+    }
+}
 
 function mediaArray(arr) {
-    if (!arr.length) return 0;
-    return (arr.reduce((a, b) => a + b, 0) / arr.length);
+    return arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
 }
 
-function formatarTempo(decimalHoras) {
-    const horas = Math.floor(decimalHoras);
-    const minutos = Math.round((decimalHoras - horas) * 60);
-    return `${horas}h ${minutos.toString().padStart(2, '0')}m`;
-}
+
+
+
 
 // ---------- EXPORTAÇÃO PDF ----------
 
 document.getElementById("btnExportarPDF").addEventListener("click", async function () {
     const area = document.getElementById("areaRelatorioPDF");
-    const consumoChart = document.getElementById("consumoChart");
-    const areagrafico = document.getElementById("areagrafico");
-    const areagrafico2 = document.getElementById("areagrafico2");
 
-    consumoChart.style.maxWidth = "794px";
-    areagrafico.style.height = "200px";
-    areagrafico2.style.height = "200px";
-    consumoChart.style.height = "100%";
-    area.style.boxSizing = "border-box";
+    // Define altura fixa nos gráficos
+    const consumoChartCanvasDiv = document.getElementById("consumoChartDiv");
+    const distanciaChartCanvasDiv = document.getElementById("distanciaChartDiv");
+    const consumoChartCanvas = document.getElementById("consumoChart");
+    const distanciaChartCanvas = document.getElementById("distanciaChart");
 
-    // Corrige cores oklch incompatíveis
-    Array.from(area.querySelectorAll("*")).forEach(el => {
+    consumoChartCanvasDiv.style.width = "100%";
+    consumoChartCanvasDiv.style.height = "170px";
+
+    distanciaChartCanvasDiv.style.width = "100%";
+    distanciaChartCanvasDiv.style.height = "170px";
+
+    consumoChartCanvas.style.width = "100%";
+    consumoChartCanvas.style.height = "auto";
+
+    distanciaChartCanvas.style.width = "100%";
+    distanciaChartCanvas.style.height = "auto";
+
+    // Corrige cores incompatíveis
+    area.querySelectorAll("*").forEach(el => {
         const style = getComputedStyle(el);
         if (style.backgroundColor.includes("oklch")) el.style.backgroundColor = "#1a2236";
         if (style.color.includes("oklch")) el.style.color = "#ffffff";
-    });
-
-    area.querySelectorAll("canvas").forEach(canvas => {
-        canvas.style.maxWidth = "100%";
-        canvas.style.height = "auto";
     });
 
     const opt = {
         margin: 5,
         filename: 'relatorio_motorista.pdf',
         image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: { scale: 1.5, useCORS: true },
+        html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
@@ -204,42 +188,41 @@ document.getElementById("btnExportarPDF").addEventListener("click", async functi
         console.error(error);
     }
 
-    consumoChart.style.maxWidth = "100%";
-    areagrafico.style.height = "300px";
-    areagrafico2.style.height = "300px";
+    // Restaurar se necessário (opcional)
+    consumoChartCanvas.style.height = "";
+    distanciaChartCanvas.style.height = "";
+    consumoChartCanvasDiv.style.height = "";
+    distanciaChartCanvasDiv.style.height = "";
 });
 
-// ---------- EXPORTAÇÃO EXCEL ----------
 
+// ---------- EXPORTAÇÃO EXCEL ----------
 document.getElementById("btnExportarExcel").addEventListener("click", function () {
     const nomePlaca = document.getElementById("infoExportMotorista").textContent;
-
     const [placa, ...nomeArr] = nomePlaca.split(" - ");
     const nomeMotorista = nomeArr.join(" - ").trim();
 
     const datas = consumoChart.data.labels;
     const consumos = consumoChart.data.datasets[0].data;
-    const tempos = tempoChart.data.datasets[0].data;
+    const distancias = distanciaChart.data.datasets[0].data;
 
-    const sheetData = [["Motorista", "Placa", "Data", "Consumo (km/L)", "Tempo (h)"]];
+    const sheetData = [["Motorista", "Placa", "Data", "Consumo (km/L)", "Quilometragem (km)"]];
     for (let i = 0; i < datas.length; i++) {
         sheetData.push([
             nomeMotorista,
             placa,
             datas[i],
             consumos[i] ?? "",
-            tempos[i] ?? ""
+            distancias[i] ?? ""
         ]);
     }
 
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.aoa_to_sheet(sheetData);
+
     ws['!cols'] = [
-        { wch: 40 },
-        { wch: 15 },
-        { wch: 20 },
-        { wch: 20 },
-        { wch: 20 }
+        { wch: 40 }, { wch: 15 }, { wch: 20 },
+        { wch: 20 }, { wch: 20 }
     ];
 
     const headerStyle = {
