@@ -37,32 +37,29 @@ def motorista_dados_unicos(id_empresa):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("""
-        SELECT 
+    cursor.execute(f"""
+        SELECT
             M.id AS id_motorista,
             M.nome AS nome_motorista,
-            V.nome AS veiculo_nome,
-            DATE_FORMAT(MAX(V.data_final), '%%d/%%m/%%Y') AS ultima_viagem_data,
-            V.distancia_viagem AS km_ultima_viagem,
-            V.consumo_medio AS consumo_medio,
+            M.distancia_total,
+            TIME_FORMAT(M.marcha_lenta_total, '%H:%i:%s') AS marcha_lenta_total,
             M.consumo_total,
-            M.status
+            M.consumo_medio
         FROM Motoristas M
-        LEFT JOIN Veiculos V ON M.veiculo_id = V.id
-        WHERE V.empresa_id = %s
-        GROUP BY M.id
-        ORDER BY M.nome
-    """, (id_empresa,))
+        WHERE M.veiculo_id IN (
+            SELECT id FROM Veiculos WHERE empresa_id = {id_empresa}
+        )
+    """, ())
 
-    resultados = cursor.fetchall()
+    dados = cursor.fetchall()
     conn.close()
-    return resultados
+    return dados
 
 def motorista_dados_unicos_editar(id_motorista):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("""
+    cursor.execute(f"""
         SELECT 
             M.id AS id_motorista,
             M.nome,
@@ -70,9 +67,9 @@ def motorista_dados_unicos_editar(id_motorista):
             V.nome AS veiculo_nome
         FROM Motoristas M
         LEFT JOIN Veiculos V ON M.veiculo_id = V.id
-        WHERE M.id = %s
+        WHERE M.id = {id_motorista}
         LIMIT 1
-    """, (id_motorista,))
+    """, ())
 
     row = cursor.fetchone()
     conn.close()

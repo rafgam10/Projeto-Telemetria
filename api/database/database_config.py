@@ -30,7 +30,7 @@ def obter_motorista():
     dados = cursor.fetchall()
     cursor.close()
     conn.close()
-    return dados
+    return dados    
     
     
 # Obter dados gerais da tabela Veiculos (exemplo):
