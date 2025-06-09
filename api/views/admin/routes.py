@@ -108,7 +108,6 @@ def pagina_metas():
     return render_template("metasAdmin.html")
 
 # ========== API para dados por motorista ==========
-
 @admin_bp.route("/api/motorista-id/<int:id_motorista>")
 def api_dados_por_id_motorista(id_motorista):
     conn = conectar()
@@ -127,12 +126,14 @@ def api_dados_por_id_motorista(id_motorista):
     # 2. Buscar todos os registros com o mesmo nome
     cursor.execute("""
         SELECT 
-            data_final,
-            consumo_medio,
-            distancia_total
-        FROM Motoristas
-        WHERE nome = %s
-        ORDER BY data_final ASC
+            M.data_final,
+            M.consumo_medio,
+            M.distancia_total,
+            V.placa
+        FROM Motoristas M
+        JOIN Veiculos V ON M.veiculo_id = V.id
+        WHERE M.nome = %s
+        ORDER BY M.data_final ASC
     """, (nome_motorista,))
     
     registros = cursor.fetchall()
@@ -145,6 +146,7 @@ def api_dados_por_id_motorista(id_motorista):
     labels = []
     consumos = []
     distancias = []
+    placa = registros[-1]["placa"]  # Última placa usada (mais recente)
 
     for r in registros:
         try:
@@ -159,6 +161,7 @@ def api_dados_por_id_motorista(id_motorista):
 
     return jsonify({
         "motorista": nome_motorista,
+        "placa": placa,
         "labels": labels,
         "consumos": consumos,
         "distancias": distancias,

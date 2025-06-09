@@ -28,6 +28,7 @@ $(document).ready(() => {
             $('#areaRelatorioPDF').removeClass('hidden');
 
             $('.motorista-nome').text(nome);
+            $('.motorista-nome-ult').text(dados.placa +" - "+nome);
 
             atualizarGraficoConsumo(dados.labels, dados.consumos, dados);
             atualizarGraficoDistancia(dados.labels, dados.distancias);

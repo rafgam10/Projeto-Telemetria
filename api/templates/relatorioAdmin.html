@@ -110,7 +110,7 @@
                 <select id="selectMotorista" class="w-full">
                     <option value="" selected disabled>Busque por nome ou placa...</option>
                     {% for m in motoristas %}
-                        <option value="{{ m.id_motorista }}">{{ m.nome_motorista }}</option>
+                        <option value="{{ m.id_motorista }}">{{ m.nome_motorista }} </option>
                     {% endfor %}
                 </select>
             </div>
@@ -197,7 +197,7 @@
                         <i class="ph ph-download-simple text-[#a8ba44]"></i>
                         Exportação de Relatórios
                     </h3>
-                    <p class="text-sm text-gray-400" id="infoExportMotorista">ABC1234 - João Motorista da Silva</p>
+                    <p id="infoExportMotorista" class="text-sm text-gray-400 motorista-nome-ult">Selecionado...</p>
                 </div>
                 
                 <div class="p-4">

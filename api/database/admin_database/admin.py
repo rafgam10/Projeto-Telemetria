@@ -78,6 +78,7 @@ def veiculo_dados_unicos(id_empresa):
             DATE_FORMAT(MAX(V.data_final), '%%d/%%m/%%Y') AS ultima_manutencao,
             V.litros_consumidos,
             V.data_final,
+            V.data_inicial,
             V.distancia_viagem,
             E.nome AS empresa
         FROM Veiculos V
@@ -157,18 +158,25 @@ def dados_por_id_motorista(id_motorista):
 def motoristas_unicos_por_empresa(id_empresa):
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
-    
+
     cursor.execute("""
         SELECT 
-            MIN(id) as id_motorista,
-            nome AS nome_motorista
-        FROM Motoristas
-        WHERE empresa_id = %s
-        GROUP BY nome
-        ORDER BY nome
+            M.id AS id_motorista,
+            M.nome AS nome_motorista,
+            V.placa
+        FROM Motoristas M
+        JOIN Veiculos V ON M.veiculo_id = V.id
+        WHERE M.empresa_id = %s
+        AND M.id = (
+            SELECT MIN(M2.id)
+            FROM Motoristas M2
+            WHERE M2.nome = M.nome AND M2.empresa_id = M.empresa_id
+        )
+        ORDER BY M.nome
     """, (id_empresa,))
-    
+
     motoristas = cursor.fetchall()
     cursor.close()
     conn.close()
     return motoristas
+
