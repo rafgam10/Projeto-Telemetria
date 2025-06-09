@@ -2,7 +2,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify, make_response
 from database.database_config import *
 from database.admin_database.admin import conectar, motorista_dados_unicos, veiculo_dados_unicos, dados_relatorios 
-from datetime import datetime
+from datetime import date, datetime, timedelta
 import os
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
@@ -22,7 +22,7 @@ def listar_empresas():
 @api_bp.route("/placas")
 def listar_placas():
     placas = obter_placas()
-    return jsonify({"placas": placas}), 200
+    return make_response(jsonify({"placas": placas}), 200)
 
 @api_bp.route("/dados")
 def listar_dados_completos():
@@ -32,11 +32,24 @@ def listar_dados_completos():
 @api_bp.route("/dados/<placa>")
 def dados_por_placa(placa):
     dados = obter_dados_por_placa(placa=placa)
-    filtrados = [
-        linha for linha in dados
-        if linha.get("placa", "").upper() == placa.upper()
-    ]
-    return jsonify(filtrados)
+    filtrados = []
+
+    for linha in dados:
+        nova_linha = linha.copy()
+
+        # Converte timedelta para string legível
+        if isinstance(nova_linha.get("tempo_marcha_lenta"), timedelta):
+            nova_linha["tempo_marcha_lenta"] = str(nova_linha["tempo_marcha_lenta"])
+
+        # Converte datas (date ou datetime) para string 'YYYY-MM-DD'
+        for campo in ["data_inicial", "data_final"]:
+            valor = nova_linha.get(campo)
+            if isinstance(valor, (date, datetime)):
+                nova_linha[campo] = valor.strftime("%d/%m/%Y")
+
+        filtrados.append(nova_linha)
+
+    return make_response(jsonify(filtrados), 200)
 
 @api_bp.route("/motoristas/<int:id_empresa>", methods=["GET"])
 def relatorio_motoristas(id_empresa):
@@ -116,154 +129,75 @@ def media_km_frota(id_empresa):
 
 @api_bp.route("/distancia_semanal/<int:empresa_id>", methods=["GET"], endpoint="distancia_semanal")
 def distancia_semanal(empresa_id):
-    try:
-        conn = conectar()
-        cursor = conn.cursor(dictionary=True)
-
-        cursor.execute("""
-            SELECT 
-                WEEK(data_inicial) AS semana,
-                YEAR(data_inicial) AS ano,
-                SUM(distancia_viagem) AS total_km
-            FROM Veiculos
-            WHERE empresa_id = %s AND data_inicial IS NOT NULL
-            GROUP BY ano, semana
-            ORDER BY ano, semana
-        """, (empresa_id,))
-        
-        dados = cursor.fetchall()
+    try:    
+        dados = distancia_semanal_func(empresa_id)
 
         if not dados:
-            return jsonify({"mensagem": "Nenhum dado encontrado para essa empresa"}), 404
-        
-        return jsonify(dados), 200
+            return make_response(jsonify({"mensagem": "Nenhum dado encontrado para essa empresa"}), 404)
+            
+        return make_response(jsonify(dados), 200)
 
     except Exception as e:
-        return jsonify({"erro": str(e)}), 500
+        return make_response(jsonify({"erro": str(e)}), 500)
 
-    finally:
-        if conn:
-            conn.close()
 
 @api_bp.route("/media_semanal_frota/<int:empresa_id>", methods=["GET"], endpoint='media_semanal_frota')
 def media_semanal_frota(empresa_id):
-    conn = conectar()
-    cursor = conn.cursor(dictionary=True)
+    try:
+        dados = media_semanal_frota_func(empresa_id)
+        
+        if not dados:
+            return make_response(jsonify({"mensagem": "Nenhum dado encontrado para essa empresa"}), 404)
+        
+        return make_response(jsonify(dados), 200)
 
-    cursor.execute("""
-        SELECT 
-            v.frota,
-            WEEK(v.data_inicial) AS semana,
-            YEAR(v.data_inicial) AS ano,
-            ROUND(AVG(v.distancia_viagem), 2) AS media_km
-        FROM Veiculos v
-        WHERE v.empresa_id = %s
-        GROUP BY v.frota, ano, semana
-        ORDER BY v.frota, ano, semana
-    """, (empresa_id,))
-    
-    dados = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(dados), 200
-
+    except Exception as e:
+        return make_response(jsonify({"erro": str(e)}), 500)
 
 @api_bp.route("/soma_km_semanal/<int:empresa_id>", methods=["GET"], endpoint='soma_km_semanal')
 def soma_km_semanal(empresa_id):
-    conn = conectar()
-    cursor = conn.cursor(dictionary=True)
+    try: 
+        dados = soma_km_semanal_func(empresa_id)
 
-    cursor.execute("""
-        SELECT 
-            MONTH(data_inicial) AS mes,
-            YEAR(data_inicial) AS ano,
-            WEEK(data_inicial) AS semana,
-            SUM(distancia_viagem) AS total_km
-        FROM Veiculos
-        WHERE empresa_id = %s
-        GROUP BY ano, mes, semana
-        ORDER BY ano, mes, semana
-    """, (empresa_id,))
+        if not dados:
+            return make_response(jsonify({"mensagem": "Nenhum dado encontrado para essa empresa"}), 404)
+
+        return make_response(jsonify(dados), 200)
     
-    dados = cursor.fetchall()
-    conn.close()
-    return jsonify(dados), 200
+    except Exception as e:
+        return make_response(jsonify({"erro": str(e)}), 500)
 
 @api_bp.route("/motorista_info/<int:motorista_id>", methods=["GET"], endpoint='motorista_info')
 def motorista_info(motorista_id):
-    conn = conectar()
-    cursor = conn.cursor(dictionary=True)
+    try:
+        dados = motorista_info_func(motorista_id)
 
-    cursor.execute("""
-        SELECT 
-            m.id,
-            m.nome,
-            m.distancia_total,
-            TIME_FORMAT(m.marcha_lenta_total, '%%H:%%i:%%s') AS marcha_lenta_total,
-            m.consumo_total,
-            m.consumo_medio,
-            m.avaliacao,
-            v.placa AS veiculo
-        FROM Motoristas m
-        LEFT JOIN Veiculos v ON m.veiculo_id = v.id
-        WHERE m.id = %s
-    """, (motorista_id,))
+        if not dados:
+            return make_response(jsonify({"mensagem": "Nenhum dado encontrado para essa empresa"}), 404)
 
-    dados = cursor.fetchone()
-    cursor.close()
-    conn.close()
-    return jsonify(dados), 200
+        return make_response(jsonify(dados), 200)
+    
+    except Exception as e:
+        return make_response(jsonify({"erro": str(e)}), 500)
 
 @api_bp.route("/veiculo_info/<int:veiculo_id>", methods=["GET"], endpoint='veiculo_info')
 def veiculo_info(veiculo_id):
-    conn = conectar()
-    cursor = conn.cursor(dictionary=True)
+    try:
+        dados = veiculo_info_func(veiculo_id)
 
-    cursor.execute("""
-        SELECT 
-            v.id,
-            v.placa,
-            v.frota,
-            v.marca,
-            v.modelo,
-            DATE_FORMAT(v.data_inicial, '%%d/%%m/%%Y') AS data_inicial,
-            DATE_FORMAT(v.data_final, '%%d/%%m/%%Y') AS data_final,
-            v.distancia_viagem,
-            v.velocidade_maxima,
-            v.velocidade_media,
-            v.litros_consumidos,
-            v.consumo_medio,
-            TIME_FORMAT(v.tempo_marcha_lenta, '%%H:%%i:%%s') AS tempo_marcha_lenta,
-            e.nome AS empresa
-        FROM Veiculos v
-        LEFT JOIN Empresas e ON v.empresa_id = e.id
-        WHERE v.id = %s
-    """, (veiculo_id,))
+        if not dados:
+                return make_response(jsonify({"mensagem": "Nenhum dado encontrado para essa empresa"}), 404)
+
+        return make_response(jsonify(dados), 200)
     
-    dados = cursor.fetchone()
-    cursor.close()
-    conn.close()
-    return jsonify(dados), 200
+    except Exception as e:
+        return make_response(jsonify({"erro": str(e)}), 500)
 
 @api_bp.route("/consumo_semanal_empresa/<int:id_empresa>")
 def consumo_semanal_empresa(id_empresa):
-    conn = conectar()
-    cursor = conn.cursor(dictionary=True)
 
     try:
-        cursor.execute("""
-            SELECT
-                data_inicial,
-                data_final,
-                ROUND(AVG(consumo_medio), 2) AS consumo_medio
-            FROM Motoristas
-            WHERE empresa_id = %s
-            GROUP BY data_inicial, data_final
-            ORDER BY data_final DESC
-            LIMIT 4
-        """, (id_empresa,))
-
-        dados = cursor.fetchall()
+        dados = consumo_semanal_empresa_func(id_empresa)
         dados.reverse()  # ordem cronológica (da mais antiga para a mais recente)
 
         for item in dados:
@@ -273,12 +207,12 @@ def consumo_semanal_empresa(id_empresa):
             del item['data_inicial']
             del item['data_final']
 
-        return jsonify(dados)
+        if not dados:
+                return make_response(jsonify({"mensagem": "Nenhum dado encontrado para essa empresa"}), 404)
+
+        return make_response(jsonify(dados), 200)
 
     except Exception as e:
         print(f"Erro ao buscar consumo semanal: {str(e)}")
-        return jsonify([])
+        return make_response(jsonify([]), 404)
 
-    finally:
-        cursor.close()
-        conn.close()

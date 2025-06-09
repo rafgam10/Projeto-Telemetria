@@ -81,7 +81,8 @@ def verificar_autenticacao_global():
         'api.media_semanal_frota',
         'api.soma_km_semanal',  
         'api.motorista_info',
-        'api.veiculo_info'
+        'api.veiculo_info',
+        'api.consumo_semanal_empresa'
     ]
 
     endpoint = request.endpoint or (request.url_rule and request.url_rule.endpoint)

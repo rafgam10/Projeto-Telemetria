@@ -1,7 +1,7 @@
 # user/routes.py
 from flask import Blueprint, render_template, session, redirect, url_for
 from database.database_handler import user_dados
-from database.user_database.user import user_dados, historico_user
+from database.user_database.user import *
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
 
@@ -24,11 +24,11 @@ def pagina_perfil():
         return redirect(url_for("exibir_login"))
 
     dados = user_dados(placa)
-    historicos = historico_user(placa)
-    if not dados or not historicos:
+    perfil = perfil_user(placa)
+    if not dados or not perfil:
         return render_template("perfil.html", dados=[])
 
-    return render_template("perfil.html", dados=dados, historicos=historicos)
+    return render_template("perfil.html", dados=dados, perfil=perfil)
 
 @user_bp.route("/config", methods=["GET", "POST"])
 def pagina_config():
