@@ -20,15 +20,18 @@
 
 - [X] - AJUSTAR LOGIN DE USUÁRIO.
 
-- [-] - REVER ROTAS DE API (tem algumas que tão no sqlite ainda e algumas que não vao ser usadas) `arrumei algumas, mas ainda tem oq arrumar`
+- [X] - REVER ROTAS DE API (tem algumas que tão no sqlite ainda e algumas que não vao ser usadas) `arrumei algumas, mas ainda tem oq arrumar`
 - [X] - REFAZER BANCO DE DADOS NOVAMENTE COM AVALIAÇÃO
 - [X] - FAZER NOVO GRAFICO DE COSUMO SEMANAL (GRAFICO HOME ADMIN)
-
-- [ ] - Escrever descrições das rotas por Postman `Uso do Rafael`;
+- [ ] - Revisar as Rotas de API e do Projeto todo, para verificação.
 
 - [ ] - sistema de rankeamento
 
-- [ ] - aceitar importações de dois arquivos exel separados (motorista e vículo)
+- [X] - aceitar importações de dois arquivos exel separados (motorista e vículo):
+	* [X] - Mandar o arquivo excel primeiro na pasta uploads.
+	* [X] - Extrair dados pela pastas uploads e mandar para o DB.
+	* [X] - Deletar o arquivo excel na pasta uploads.
+	* [X] - Fazer a verificação.
 
 - [ ] - gerar apk webview
 
