@@ -8,8 +8,13 @@ import os
 
 app = Flask(__name__)
 app.secret_key = 'motoristaLegal'
+
 UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'xlsx', 'csv'}
+TAMANHO_PERMITIDO = 16 * 1000 * 1000
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = TAMANHO_PERMITIDO
 
 app.register_blueprint(api_bp)
 
