@@ -2,6 +2,7 @@ from flask import Blueprint, request, render_template, redirect, url_for, flash,
 from database.admin_database.admin import (
     conectar, motorista_dados_unicos, veiculo_dados_unicos, motoristas_unicos_por_empresa, dados_relatorios, dados_por_id_motorista
 )
+from excel_importer.excel_json import importar_dados_excel_mysql
 from datetime import datetime
 import os
 
@@ -73,8 +74,8 @@ def pagina_inserir_dados():
 @admin_bp.route("/importar-excel", methods=["POST"])
 def importar_Excel():
     if 'arquivo_excel' not in request.files:
-        flash('Nenhum arquivo enviado', 'error')
-        return redirect(url_for('admin.pagina_inserir_dados'))
+            flash('Nenhum arquivo enviado', 'error')
+            return redirect(url_for('admin.pagina_inserir_dados'))
 
     arquivo = request.files['arquivo_excel']
     if arquivo.filename == '':
@@ -88,7 +89,14 @@ def importar_Excel():
     try:
         caminho = os.path.join("uploads", arquivo.filename)
         arquivo.save(caminho)
-        flash('Arquivo importado com sucesso!', 'success')
+
+        empresa_id = session.get('id_empresa') or 1  # Substituir por valor real em produção
+        registros = importar_dados_excel_mysql(caminho, empresa_id)
+
+        # Remover o arquivo após a importação
+        os.remove(caminho)
+
+        flash(f'{registros} registros importados com sucesso!', 'success')
     except Exception as e:
         flash(f'Erro ao importar arquivo: {str(e)}', 'error')
 
