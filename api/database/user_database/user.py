@@ -1,43 +1,45 @@
 from database.database_config import conectar
 
 # Função para coleta todos os dados do User (Utilizados):
-def user_dados(placa_ou_frota):
+def user_dados(placa):
     with conectar() as conn:
         cursor = conn.cursor(dictionary=True)
 
         cursor.execute("""
             SELECT 
-                M.nome AS nome_motorista,
-                CONCAT(V.frota, ' / ', V.placa) AS frota_placa,
-                ROUND(V.velocidade_media, 2) AS velocidade_media,
-                V.velocidade_maxima,
-                ROUND(V.consumo_medio, 2) AS consumo_medio,
-                V.litros_consumidos,
-                V.distancia_viagem,
-                SEC_TO_TIME(TIME_TO_SEC(V.tempo_marcha_lenta)) AS tempo_marcha_lenta
-            FROM Veiculos V
-            LEFT JOIN Motoristas M ON M.veiculo_id = V.id
-            WHERE V.placa LIKE %s OR V.frota LIKE %s
+                M.nome,
+                M.id,
+                M.distancia_total,
+                M.consumo_total,
+                M.consumo_medio,
+                M.avaliacao,
+                V.placa,
+                V.frota,
+                CONCAT(V.modelo, ' / ', V.marca) AS caminhao
+            FROM Motoristas M
+            LEFT JOIN Veiculos V ON M.veiculo_id = V.id
+            WHERE V.placa LIKE %s
+            ORDER BY M.data_final DESC
             LIMIT 1
-        """, (f"%{placa_ou_frota.upper()}%", f"%{placa_ou_frota.upper()}%"))
+        """, (f"%{placa.upper()}%",))
 
         resultado = cursor.fetchone()
 
         if resultado:
-            tempo_marcha = resultado["tempo_marcha_lenta"]
-            h, m, _ = str(tempo_marcha).split(":")
             return {
-                "motorista": resultado["nome_motorista"],
-                "frota": resultado["frota_placa"],
-                "velocidade_media": f"{resultado['velocidade_media']} Km/h",
-                "velocidade_maxima": f"{resultado['velocidade_maxima']} Km/h",
-                "consumo_medio": f"{resultado['consumo_medio']} L/100Km",
-                "litros_consumidos": f"{resultado['litros_consumidos']} L",
-                "distancia_viagem": f"{resultado['distancia_viagem']} Km",
-                "marcha_lenta": f"{int(h)}h{int(m):02d}min"
+                "motorista": resultado["nome"],
+                "idMotorista": resultado["id"],
+                "distancia_total": f"{resultado['distancia_total']} Km",
+                "consumo_total": f"{resultado['consumo_total']} L",
+                "consumo_medio": f"{resultado['consumo_medio']} Km/L",
+                "avaliacao": f"{resultado['avaliacao']}",
+                "placa": resultado["placa"],
+                "frota": resultado["frota"],
+                "caminhao": resultado["caminhao"]
             }
         else:
-            return None 
+            return None
+
 
 
 def perfil_user(placa_ou_frota):

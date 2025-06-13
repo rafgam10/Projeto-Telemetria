@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,33 +13,37 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
+
 <body class="bg-[#0e0e14]">
-    
+
     <!-- navbar legal -->
     <header class="fixed top-0 left-0 right-0 z-50 w-full flex
     flex-col sm:flex-row items-center justify-between bg-[#0d121e]
     border-b border-[#0e1424] px-4 sm:px-8 lg:px-60 py-4 shadow-sm">
-        
+
         <!-- logo -->
         <div class="flex items-center space-x-2">
             <img src="../static/assets/logo.png" alt="logo" class="h-8 sm:h-11 w-auto" />
             <span class="text-xl sm:text-2xl font-semibold text-white">Motorista</span>
             <span class="text-xl sm:text-2xl font-semibold text-[#a8ba44]">Legal</span>
         </div>
-    
+
         <!-- botoes da navbar -->
         <div class="flex space-x-2 sm:space-x-4 pb-1 pt-2">
 
             <button onclick="window.location.href='/user';" id="home" class="text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-house text-2xl sm:text-3xl bg-[#2c3326] p-1 rounded-lg"></i>
             </button>
-            <button onclick="window.location.href='/user/perfil';" id="perfil" class="text-gray-600 hover:text-[#a8ba44]  transition-colors">
+            <button onclick="window.location.href='/user/perfil';" id="perfil"
+                class="text-gray-600 hover:text-[#a8ba44]  transition-colors">
                 <i class="ph-duotone ph-identification-card text-2xl sm:text-3xl"></i>
             </button>
-            <button onclick="window.location.href='/user/suporte';" id="suporte" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
+            <button onclick="window.location.href='/user/suporte';" id="suporte"
+                class="text-gray-600 hover:text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-question text-2xl sm:text-3xl"></i>
             </button>
-            <button onclick="window.location.href='/login';" id="voltar" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
+            <button onclick="window.location.href='/login';" id="voltar"
+                class="text-gray-600 hover:text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-sign-out text-2xl sm:text-3xl"></i>
             </button>
         </div>
@@ -47,145 +52,135 @@
 
     <!-- conteudo da página -->
     <main class="pt-24 sm:pt-18">
-        
-        
-        
-            <div class="flex flex-col md:flex-row p-4 gap-4 md:gap-8">
-                <!-- cards de resumo -->
-                <div class="w-full md:w-1/3 bg-[#0d121e] rounded-lg p-4">
-                    <div class="flex row-auto">
-                        <i class="ph-duotone ph-chart-line-up text-2xl px-2 self-center text-white font-semibold mb-4"></i>
-                        <h2 class="text-white text-lg font-semibold mb-4">Resumo do Desempenho</h2>
+
+
+
+        <div class="flex flex-col md:flex-row p-4 gap-4 md:gap-8">
+            <!-- cards de resumo -->
+            <div class="w-full md:w-1/3 bg-[#0d121e] rounded-lg p-4">
+                <div class="flex row-auto">
+                    <i class="ph-duotone ph-chart-line-up text-2xl px-2 self-center text-white font-semibold mb-4"></i>
+                    <h2 class="text-white text-lg font-semibold mb-4">Resumo do Desempenho</h2>
+                </div>
+
+                <!-- as coisa q tem dentro -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
+
+
+                    <div
+                        class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
+                        <i
+                            class="ph-duotone ph-gas-pump text-3xl self-center text-gray-400 pl-3 group-hover:text-[#a8ba44]"></i>
+                        <div class="p-3 flex flex-col">
+                            <p class="text-gray-400 text-sm flex items-center gap-2">
+                                Consumo Diesel
+                            </p>
+                            <p class="text-white text-xl font-bold mt-1">
+                                {{dados.consumo_total}}</p>
+                        </div>
                     </div>
-                    
-                    <!-- as coisa q tem dentro -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
-                        <!-- cada um desse é um card de resumo
-                        o de velocidade media: -->
-                        <div class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
-                            <i class="ph-duotone ph-truck text-3xl self-center text-gray-400 pl-3 group-hover:text-[#a8ba44]"></i>
-                            <div class="p-3 flex flex-col">
-                                <p class="text-gray-400 text-sm flex items-center gap-2">
-                                    Velocidade média
-                                </p>
-                                <p class="text-white text-xl font-bold mt-1">
-                                    {{dados.velocidade_media}}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
-                            <i class="ph-duotone ph-gauge text-3xl self-center text-gray-400 pl-3 group-hover:text-[#a8ba44]"></i>
-                            <div class="p-3 flex flex-col">
-                                <p class="text-gray-400 text-sm flex items-center gap-2">
-                                    Velocidade Máxima
-                                </p>
-                                <p class="text-white text-xl font-bold mt-1">
-                                    {{dados.velocidade_maxima}}</p>
-                            </div>
-                        </div>
-                        
-                        <div class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
-                            <i class="ph-duotone ph-gas-pump text-3xl self-center text-gray-400 pl-3 group-hover:text-[#a8ba44]"></i>
-                            <div class="p-3 flex flex-col">
-                                <p class="text-gray-400 text-sm flex items-center gap-2">
-                                    Consumo Diesel
-                                </p>
-                                <p class="text-white text-xl font-bold mt-1">
-                                    {{dados.consumo_diesel}}</p>
-                            </div>
-                        </div>
 
-                        <div class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
-                            <i class="ph-duotone ph-hourglass-low text-3xl self-center text-gray-400 pl-3 group-hover:text-[#a8ba44]"></i>
-                            <div class="p-3 flex flex-col">
-                                <p class="text-gray-400 text-sm flex items-center gap-2">
-                                    Marcha lenta
-                                </p>
-                                <p class="text-white text-xl font-bold mt-1">
-                                    2h15min</p>
-                            </div>
-                        </div>
-
-                        <div class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
-                            <i class="ph-duotone ph-road-horizon text-3xl self-center text-gray-400 pl-3 group-hover:text-[#a8ba44]"></i>
-                            <div class="p-3 flex flex-col">
-                                <p class="text-gray-400 text-sm flex items-center gap-2">
-                                    Km rodado
-                                </p>
-                                <p class="text-white text-xl font-bold mt-1">
-                                    {{dados.km_rodado}}</p>
-                            </div>
+                    <div
+                        class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
+                        <i
+                            class="ph-duotone ph-road-horizon text-3xl self-center text-gray-400 pl-3 group-hover:text-[#a8ba44]"></i>
+                        <div class="p-3 flex flex-col">
+                            <p class="text-gray-400 text-sm flex items-center gap-2">
+                                Km rodado
+                            </p>
+                            <p class="text-white text-xl font-bold mt-1">
+                                {{dados.distancia_total}}</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- parte da direita dos indicadores visuais -->
-
-                <div class="w-full md:w-2/3 bg-[#0d121e] rounded-lg p-4">
-                    <div class="flex row-auto">
-                        <i class="ph-duotone ph-chart-bar text-2xl px-2 self-center text-white font-semibold mb-4"></i>
-                        <h2 class="text-white text-lg font-semibold mb-4">Indicadores Visuais</h2>
+                <div class="mt-6 bg-[#1a2235] rounded-lg p-4">
+                    <div class="flex items-center mb-2">
+                        <i class="ph-duotone ph-lightbulb text-2xl text-[#5dafff] mr-2"></i>
+                        <h3 class="text-white text-md font-semibold">Dica do Dia</h3>
                     </div>
+                    <p class="text-gray-300 text-sm leading-snug">
+                        Para economizar combustível, evite acelerações e frenagens bruscas. Mantenha uma velocidade
+                        constante sempre que possível!
+                    </p>
+                </div>
 
-                    <div class="flex flex-col">
-                        <div class="flex flex-col md:flex-row gap-4 mb-4">
-                            <div class="w-full md:w-1/2 lg:w-1/3 flex justify-center">
-                                <div class="flex flex-col self-center">
-                                    <!-- nota de desempenho-->
-                                    <span class="text-sm text-[#a8ba44] mb-2 flex items-center self-center gap-2">
-                                        <i class="ph ph-star"></i> Nota de Desempenho
-                                    </span>
-                                    <div class="relative w-55 h-55 bg-[#1a2235] rounded-full border-4
-                                    border-[#2c3326] flex flex-col items-center justify-center p-4">
-                                    <div class="absolute top-0 left-0 w-full h-full rounded-full" style="background: 
-                                    conic-gradient(#a8ba44 88%, #2c3326 0);"> 
+
+                <div class="mt-6 bg-[#1a2235] rounded-lg p-3">
+                    <div class=" w-full flex justify-center">
+                        <div class="flex flex-col self-center">
+                            <!-- nota de desempenho-->
+                            <span class="text-sm text-[#a8ba44] mb-2 flex items-center self-center gap-2">
+                                <i class="ph ph-star"></i> Nota de Desempenho
+                            </span>
+                            <div class="relative w-55 h-55 bg-[#1a2235] rounded-full border-4
+                                                border-[#2c3326] flex flex-col items-center justify-center p-4">
+                                <div class="absolute top-0 left-0 w-full h-full rounded-full"
+                                    style="background: 
+                                                conic-gradient(#a8ba44 {{ (dados.avaliacao|float * 20)|round(0) }}%, #2c3326 0);">
                                     <!-- acima o tamanho do circulo com base na porcentagem
-                                    no exemplo 88% só alterar a porcentagem pra mudar isso -->
-                                            <div class="absolute inset-2 bg-[#1a2235] rounded-full"></div>
-                                        </div>
-                        
-                                        <!-- Parte de dentro -->
-                                        <div class="relative z-10 text-center">
-                                            <span class="text-sm text-[#a8ba44] block">Nota</span>
-                                            <!-- mudar esse 88 também com base na porcentagem ali-->
-                                            <span class="text-4xl font-bold text-white block">88</span>
-                                            <span class="text-xs text-gray-400 block">de 100</span>
-                                        </div>
-                                    </div>
+                                                no exemplo 88% só alterar a porcentagem pra mudar isso -->
+                                    <div class="absolute inset-2 bg-[#1a2235] rounded-full"></div>
                                 </div>
-                            </div>
 
-                            <!-- Histórico de Viagens -->
-                            <div class="w-full md:w-1/2 lg:w-2/3">
-                                <span class="text-sm text-[#a8ba44] mb-2 flex items-center gap-2">
-                                    <i class="ph ph-tire"></i> Km rodado de cada semana
-                                </span>
-                                <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
-                                    <canvas id="viagensChart"></canvas> <!-- parte q puxa o grafico de viagens -->
+                                <!-- Parte de dentro -->
+                                <div class="relative z-10 text-center">
+                                    <span class="text-sm text-[#a8ba44] block">Nota</span>
+                                    <!-- mudar esse 88 também com base na porcentagem ali-->
+                                    <span class="text-4xl font-bold text-white block">{{ (dados.avaliacao|float *
+                                        20)|round(0) }}%</span>
+                                    <span class="text-xs text-gray-400 block">de 100</span>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- comparativo -->
-                        <div class="flex flex-col">
-                            <span class="text-sm text-[#a8ba44] m-2 "><i class="ph-duotone ph-chart-bar-horizontal"></i> Comparativo de  Km rodado com a Média da Frota</span>
-                            <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
-                                <canvas id="comparativoChart"></canvas> <!-- parte q puxa o grafico comparativo -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        
-        
+
+            <!-- parte da direita dos indicadores visuais -->
+
+            <div class="w-full md:w-2/3 bg-[#0d121e] rounded-lg p-4">
+                <div class="flex row-auto">
+                    <i class="ph-duotone ph-chart-bar text-2xl px-2 self-center text-white font-semibold mb-4"></i>
+                    <h2 class="text-white text-lg font-semibold mb-4">Indicadores Visuais</h2>
+                </div>
+
+                <div class="flex flex-col">
+                    <div class="flex flex-col md:flex-row gap-4 mb-4">
+
+
+                        <!-- Histórico de Viagens -->
+                        <div class="w-full">
+                            <span class="text-sm text-[#a8ba44] mb-2 flex items-center gap-2">
+                                <i class="ph ph-tire"></i> Km rodado de cada semana
+                            </span>
+                            <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
+                                <canvas id="viagensChart"></canvas> <!-- parte q puxa o grafico de viagens -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- comparativo -->
+                    <div class="flex flex-col">
+                        <span class="text-sm text-[#a8ba44] m-2 "><i class="ph-duotone ph-chart-bar-horizontal"></i>
+                            Comparativo de Km rodado com a Média da Frota</span>
+                        <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
+                            <canvas id="comparativoChart"></canvas> <!-- parte q puxa o grafico comparativo -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
     </main>
 
 
 
-    <!-- script pros grafico -->
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
-            const placa = "{{dados.placa}}"; // Flask injeta
+            const placa = "{{dados.placa}}";
+            const id_motorista = "{{dados.idMotorista}}";
 
             try {
                 const res = await fetch(`/api/dados/${placa}`);
@@ -196,23 +191,23 @@
                     return;
                 }
 
-                const { id_motorista, id_empresa } = dadosPlaca[0];
+
 
                 await atualizarGraficoViagens(id_motorista);
-                await atualizarGraficoComparativo(id_empresa, id_motorista);
+                await atualizarGraficoComparativo(id_motorista);
             } catch (err) {
                 console.error("Erro ao buscar dados:", err);
             }
         });
 
-        // === Gráfico de Histórico de Viagens (últimas 7 viagens reais) ===
+        // === GRÁFICO 1: Histórico de Distância Semanal ===
         const viagensCtx = document.getElementById('viagensChart').getContext('2d');
         const viagensChart = new Chart(viagensCtx, {
             type: 'bar',
             data: {
                 labels: [],
                 datasets: [{
-                    label: 'Km Rodados por Viagem',
+                    label: 'Km Rodados na Semana',
                     data: [],
                     backgroundColor: '#a8ba44',
                     borderColor: '#2c3326',
@@ -252,39 +247,37 @@
             }
         });
 
+        function formatarSemana(semana) {
+            // Recebe string no formato "dd/mm/yyyy - dd/mm/yyyy"
+            const partes = semana.split(" - ");
+            const ini = partes[0].slice(0, 5); // "dd/mm"
+            const fim = partes[1].slice(0, 5); // "dd/mm"
+            return `${ini} - ${fim}`;
+        }
+
         async function atualizarGraficoViagens(idMotorista) {
             try {
-                const res = await fetch(`/api/historico_viagens/${idMotorista}`);
-                let viagens = await res.json();
+                const res = await fetch(`/api/distancia_semanal/${idMotorista}`);
+                let semanas = await res.json();
 
-                console.log("Viagens recebidas:", viagens);
+                semanas = semanas
+                    .slice(-4) // pegar as últimas 4 semanas (supondo que vem em ordem crescente)
 
-                viagens = viagens
-                    .filter(v => v.data_saida && typeof v.km_rodado === 'number' && v.km_rodado >= 0)
-                    .sort((a, b) => new Date(b.data_saida) - new Date(a.data_saida))
-                    .slice(0, 7)
-                    .reverse();
+                const labels = semanas.map(s => formatarSemana(s.semana));
 
-                if (viagens.length === 0) {
-                    console.warn("Nenhuma viagem válida encontrada para exibir no gráfico.");
-                }
-
-                const labels = viagens.map(v => {
-                    const data = new Date(v.data_saida);
-                    return data.toLocaleDateString('pt-BR');
-                });
-
-                const dados = viagens.map(v => v.km_rodado);
+                const dados = semanas.map(s => parseFloat(s.distancia_total));
 
                 viagensChart.data.labels = labels;
                 viagensChart.data.datasets[0].data = dados;
                 viagensChart.update();
             } catch (error) {
-                console.error("Erro ao carregar gráfico de viagens:", error);
+                console.error("Erro ao carregar gráfico de viagens semanais:", error);
             }
         }
 
-        // === Gráfico Comparativo com a Frota (por média de km por mês) ===
+
+
+        // === GRÁFICO 2: Comparativo com Frota ===
         const comparativoCtx = document.getElementById('comparativoChart').getContext('2d');
         const comparativoChart = new Chart(comparativoCtx, {
             type: 'line',
@@ -341,7 +334,7 @@
                         borderWidth: 1,
                         padding: 12,
                         callbacks: {
-                            title: context => `Mês: ${context[0].label}`,
+                            title: context => `Semana: ${context[0].label}`,
                             label: context => `${context.dataset.label}: ${context.parsed.y} km`
                         }
                     }
@@ -359,63 +352,46 @@
                 }
             }
         });
+        async function atualizarGraficoComparativo(idMotorista) {
+            try {
+                const [motoristaRes, frotaRes] = await Promise.all([
+                    fetch(`/api/distancia_semanal/${idMotorista}`),
+                    fetch(`/api/media_semanal_frota/${idMotorista}`)
+                ]);
 
-        async function atualizarGraficoComparativo(idEmpresa, idMotorista) {
-            const [resMotoristas, resFrotas] = await Promise.all([
-                fetch(`/api/media_km_motoristas/${idEmpresa}`),
-                fetch(`/api/media_km_frota/${idEmpresa}`)
-            ]);
+                let motoristaSemanas = await motoristaRes.json();
+                let frotaSemanas = await frotaRes.json();
 
-            const mediasMotoristas = await resMotoristas.json();
-            const mediasFrota = await resFrotas.json();
+                // Pega só os últimos 4 registros
+                motoristaSemanas = motoristaSemanas.slice(-4);
+                frotaSemanas = frotaSemanas.slice(-4);
 
-            const motoristaDados = mediasMotoristas.filter(m =>
-                m.id_motorista == idMotorista
-            );
+                // Aplica o formato dia/mês nas labels
+                const labels = motoristaSemanas.map(s => formatarSemana(s.semana));
 
-            if (!motoristaDados.length) {
-                console.warn("Motorista não encontrado nas médias mensais.");
-                return;
+                const motoristaDistancias = motoristaSemanas.map(s => parseFloat(s.distancia_total));
+
+                // Mapear as médias da frota pelo campo semana (string)
+                const frotaMap = new Map(frotaSemanas.map(s => [s.semana, parseFloat(s.distancia_total)]));
+
+                const frotaDistancias = motoristaSemanas.map(s => frotaMap.get(s.semana) ?? null);
+
+                comparativoChart.data.labels = labels;
+                comparativoChart.data.datasets[0].data = motoristaDistancias;
+                comparativoChart.data.datasets[1].data = frotaDistancias;
+                comparativoChart.update();
+            } catch (error) {
+                console.error("Erro ao carregar gráfico comparativo:", error);
             }
-
-            const frotaMotorista = motoristaDados[0].frota;
-            const dadosFrota = mediasFrota.filter(f => f.frota === frotaMotorista);
-
-            const mesesSet = new Set();
-            motoristaDados.forEach(d => mesesSet.add(d.mes));
-            dadosFrota.forEach(d => mesesSet.add(d.mes));
-            const mesesOrdenados = Array.from(mesesSet).sort();
-
-            const formatarMes = (mes) => {
-                const [ano, mesNum] = mes.split("-");
-                const nomesMeses = [
-                    "janeiro", "fevereiro", "março", "abril", "maio", "junho",
-                    "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
-                ];
-                return `${nomesMeses[parseInt(mesNum) - 1]}/${ano}`;
-            };
-            const labelsFormatados = mesesOrdenados.map(formatarMes);
-
-            const dadosMotorista = mesesOrdenados.map(mes => {
-                const dado = motoristaDados.find(d => d.mes === mes);
-                return dado && dado.media_km >= 0 ? dado.media_km : null;
-            });
-
-            const dadosFrotaGrafico = mesesOrdenados.map(mes => {
-                const dado = dadosFrota.find(d => d.mes === mes);
-                return dado && dado.media_km >= 0 ? dado.media_km : null;
-            });
-
-            comparativoChart.data.labels = labelsFormatados;
-            comparativoChart.data.datasets[0].data = dadosMotorista;
-            comparativoChart.data.datasets[1].data = dadosFrotaGrafico;
-            comparativoChart.update();
         }
+
     </script>
 
 
 
 
-    
+
+
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 import mysql.connector
 from datetime import datetime
+from datetime import timedelta
 
 # Função para conectar ao banco
 def conectar():
@@ -99,41 +100,101 @@ def add_empresa(nome, cnpj):
 
 
 # Coletada dados distancia_semanal:
-def distancia_semanal_func(empresa_id):
-        with conectar() as conn:
-            cursor = conn.cursor(dictionary=True)
 
-            cursor.execute("""
-                SELECT 
-                    WEEK(data_inicial) AS semana,
-                    YEAR(data_inicial) AS ano,
-                    SUM(distancia_viagem) AS total_km
-                FROM Veiculos
-                WHERE empresa_id = %s AND data_inicial IS NOT NULL
-                GROUP BY ano, semana
-                ORDER BY ano, semana
-            """, (empresa_id,))
-            
-            return cursor.fetchall()
 
-# Coleta de dados media_semanal_frota:
-def media_semanal_frota_func(empresa_id):
+from datetime import timedelta
+from mysql.connector import connect
+
+def distancia_semanal_func(motorista_id):
     with conectar() as conn:
         cursor = conn.cursor(dictionary=True)
 
+        # Pega o nome do motorista
+        cursor.execute("SELECT nome FROM Motoristas WHERE id = %s", (motorista_id,))
+        motorista = cursor.fetchone()
+
+        if not motorista:
+            return []
+
+        nome = motorista['nome']
+
+        # Pega os 4 últimos registros desse nome, ordenados pela data_final
         cursor.execute("""
             SELECT 
-                v.frota,
-                WEEK(v.data_inicial) AS semana,
-                YEAR(v.data_inicial) AS ano,
-                ROUND(AVG(v.distancia_viagem), 2) AS media_km
-            FROM Veiculos v
-            WHERE v.empresa_id = %s
-            GROUP BY v.frota, ano, semana
-            ORDER BY v.frota, ano, semana
-        """, (empresa_id,))
-        
-        return cursor.fetchall()
+                data_final,
+                data_inicial,
+                data_final,
+                distancia_total
+            FROM Motoristas
+            WHERE nome = %s AND data_final IS NOT NULL
+            ORDER BY data_final DESC
+            LIMIT 4
+        """, (nome,))
+
+        resultados = cursor.fetchall()
+
+        dados_formatados = []
+        for row in resultados:
+            fim = row['data_final']
+            inicio = row['data_inicial']
+            dados_formatados.append({
+                "distancia_total": f"{row['distancia_total']:.2f}",
+                "semana": f"{inicio.strftime('%d/%m/%Y')} - {fim.strftime('%d/%m/%Y')}"
+            })
+
+        return dados_formatados
+
+
+
+
+
+def media_semanal_frota_func(motorista_id):
+    with conectar() as conn:
+        cursor = conn.cursor(dictionary=True)
+
+        # Descobre a frota do motorista
+        cursor.execute("""
+            SELECT v.frota
+            FROM Motoristas m
+            JOIN Veiculos v ON m.veiculo_id = v.id
+            WHERE m.id = %s AND v.frota IS NOT NULL
+            LIMIT 1
+        """, (motorista_id,))
+        frota_result = cursor.fetchone()
+
+        if not frota_result:
+            return []
+
+        frota = frota_result['frota']
+
+        # Consulta as 4 semanas mais recentes da frota com média da distância
+        cursor.execute("""
+            SELECT 
+                m.data_inicial,
+                m.data_final,
+                ROUND(AVG(m.distancia_total), 2) AS media_km
+            FROM Motoristas m
+            JOIN Veiculos v ON m.veiculo_id = v.id
+            WHERE v.frota = %s AND m.data_inicial IS NOT NULL AND m.data_final IS NOT NULL
+            GROUP BY m.data_inicial, m.data_final
+            ORDER BY m.data_final DESC
+            LIMIT 4
+        """, (frota,))
+
+        resultados = cursor.fetchall()
+
+        # Formata a resposta
+        dados_formatados = []
+        for row in resultados:
+            semana_formatada = f"{row['data_inicial'].strftime('%d/%m/%Y')} - {row['data_final'].strftime('%d/%m/%Y')}"
+            dados_formatados.append({
+                "distancia_total": f"{row['media_km']:.2f}",
+                "semana": semana_formatada
+            })
+
+        return dados_formatados
+
+
     
 def soma_km_semanal_func(empresa_id):
     with conectar() as conn:
@@ -221,3 +282,18 @@ def consumo_semanal_empresa_func(id_empresa):
 
         return cursor.fetchall()
     
+def buscar_id_motorista_por_placa(placa):
+    with conectar() as conn: 
+        cursor = conn.cursor(dictionary=True)
+
+    consulta = """
+        SELECT m.id AS id_motorista
+        FROM veiculos v
+        JOIN motoristas m ON v.id_motorista = m.id
+        WHERE v.placa = %s
+        LIMIT 1
+    """
+    cursor.execute(consulta, (placa,))
+    resultado = cursor.fetchone()
+
+    return resultado["id_motorista"] if resultado else None

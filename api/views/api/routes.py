@@ -127,24 +127,21 @@ def media_km_frota(id_empresa):
 ####################################
 # E TESTANDA:
 
-@api_bp.route("/distancia_semanal/<int:empresa_id>", methods=["GET"], endpoint="distancia_semanal")
-def distancia_semanal(empresa_id):
+@api_bp.route("/distancia_semanal/<int:motorista_id>", methods=["GET"], endpoint="distancia_semanal")
+def distancia_semanal(motorista_id):
     try:    
-        dados = distancia_semanal_func(empresa_id)
-
+        dados = distancia_semanal_func(motorista_id)
         if not dados:
-            return make_response(jsonify({"mensagem": "Nenhum dado encontrado para essa empresa"}), 404)
-            
+            return make_response(jsonify({"mensagem": "Nenhum dado encontrado para esse motorista"}), 404)
         return make_response(jsonify(dados), 200)
-
     except Exception as e:
         return make_response(jsonify({"erro": str(e)}), 500)
 
 
-@api_bp.route("/media_semanal_frota/<int:empresa_id>", methods=["GET"], endpoint='media_semanal_frota')
-def media_semanal_frota(empresa_id):
+@api_bp.route("/media_semanal_frota/<int:motorista_id>", methods=["GET"], endpoint='media_semanal_frota')
+def media_semanal_frota(motorista_id):
     try:
-        dados = media_semanal_frota_func(empresa_id)
+        dados = media_semanal_frota_func(motorista_id)
         
         if not dados:
             return make_response(jsonify({"mensagem": "Nenhum dado encontrado para essa empresa"}), 404)
