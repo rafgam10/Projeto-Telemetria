@@ -113,7 +113,52 @@ def pagina_relatorios():
 # ========== Metas ==========
 @admin_bp.route("/metas", methods=["GET", "POST"])
 def pagina_metas():
-    return render_template("metasAdmin.html")
+    id_empresa = session.get("id_empresa")
+    conn = conectar()
+    cursor = conn.cursor(dictionary=True)
+
+    if request.method == "POST":
+        print("🟡 POST recebido em /admin/metas")
+        for key, value in request.form.items():
+            print(f"🔹 Campo recebido: {key} = {value}")
+            if key.startswith("meta_"):
+                try:
+                    marca_modelo = key.replace("meta_", "")
+                    partes = marca_modelo.split("_")
+                    marca = partes[0]
+                    modelo = "_".join(partes[1:])
+                    nova_meta = float(value)
+
+                    print(f"🛠️ Atualizando meta: marca='{marca}', modelo='{modelo}', nova_meta={nova_meta}")
+
+                    cursor.execute("""
+                        UPDATE MetasConsumo
+                        SET meta_km_por_litro = %s
+                        WHERE empresa_id = %s AND marca = %s AND modelo = %s
+                    """, (nova_meta, id_empresa, marca.replace("_", " "), modelo.replace("_", " ")))
+
+                    print("✅ SQL executado com sucesso.")
+                except Exception as e:
+                    print(f"❌ Erro ao atualizar meta para {key}: {e}")
+
+        conn.commit()
+        flash("Metas atualizadas com sucesso!", "success")
+        return redirect(url_for("admin.pagina_metas"))
+
+
+    # Busca inicial para exibir metas
+    cursor.execute("""
+        SELECT marca, modelo, meta_km_por_litro
+        FROM MetasConsumo
+        WHERE empresa_id = %s
+        ORDER BY marca, modelo
+    """, (id_empresa,))
+    veiculos = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return render_template("metasAdmin.html", veiculos=veiculos)
+
 
 # ========== API para dados por motorista ==========
 @admin_bp.route("/api/motorista-id/<int:id_motorista>")

@@ -58,10 +58,6 @@
         <div class="flex flex-col md:flex-row p-4 gap-4 md:gap-8">
             <!-- cards de resumo -->
             <div class="w-full md:w-1/3 bg-[#0d121e] rounded-lg p-4">
-                <div class="flex row-auto">
-                    <i class="ph-duotone ph-chart-line-up text-2xl px-2 self-center text-white font-semibold mb-4"></i>
-                    <h2 class="text-white text-lg font-semibold mb-4">Resumo do Desempenho</h2>
-                </div>
 
                 <!-- as coisa q tem dentro -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
@@ -106,31 +102,39 @@
                 </div>
 
 
-                <div class="mt-6 bg-[#1a2235] rounded-lg p-3">
-                    <div class=" w-full flex justify-center">
-                        <div class="flex flex-col self-center">
-                            <!-- nota de desempenho-->
-                            <span class="text-sm text-[#a8ba44] mb-2 flex items-center self-center gap-2">
-                                <i class="ph ph-star"></i> Nota de Desempenho
-                            </span>
-                            <div class="relative w-55 h-55 bg-[#1a2235] rounded-full border-4
-                                                border-[#2c3326] flex flex-col items-center justify-center p-4">
-                                <div class="absolute top-0 left-0 w-full h-full rounded-full"
-                                    style="background: 
-                                                conic-gradient(#a8ba44 {{ (dados.avaliacao|float * 20)|round(0) }}%, #2c3326 0);">
-                                    <!-- acima o tamanho do circulo com base na porcentagem
-                                                no exemplo 88% só alterar a porcentagem pra mudar isso -->
-                                    <div class="absolute inset-2 bg-[#1a2235] rounded-full"></div>
-                                </div>
+                <div class="mt-6 bg-[#1a2235] rounded-lg p-4">
+                    <div class="w-full">
+                        <!-- Título -->
+                        <span class="text-sm text-[#a8ba44] mb-3 flex items-center gap-2">
+                            <i class="ph ph-star"></i> Nota de Desempenho
+                        </span>
 
-                                <!-- Parte de dentro -->
-                                <div class="relative z-10 text-center">
-                                    <span class="text-sm text-[#a8ba44] block">Nota</span>
-                                    <!-- mudar esse 88 também com base na porcentagem ali-->
-                                    <span class="text-4xl font-bold text-white block">{{ (dados.avaliacao|float *
-                                        20)|round(0) }}%</span>
-                                    <span class="text-xs text-gray-400 block">de 100</span>
-                                </div>
+                        <!-- Barra de Progresso -->
+                        <div class="space-y-2">
+                            <!-- Valor da Nota -->
+                            <div class="flex justify-between items-center">
+                                <span class="text-3xl font-bold text-white">
+                                    {{ (dados.avaliacao|float * 20)|round(0) }}<span
+                                        class="text-[#a8ba44] text-xl">%</span>
+                                </span>
+                                <span class="text-sm text-gray-400">de 100</span>
+                            </div>
+
+                            <!-- Barra -->
+                            <div class="w-full bg-[#2c3326] rounded-full h-3">
+                                <div class="bg-[#a8ba44] h-3 rounded-full"
+                                    style="width: {{ (dados.avaliacao|float * 20)|round(0) }}%"></div>
+                            </div>
+
+                            <!-- Escala -->
+                            <div class="flex justify-between text-xs text-gray-500 px-1">
+                                <span>0</span>
+                                <span>100</span>
+                            </div>
+
+                            <!-- Label inferior -->
+                            <div class="text-center text-xs text-gray-400 mt-1">
+                                Sua performance atual
                             </div>
                         </div>
                     </div>
@@ -140,35 +144,71 @@
             <!-- parte da direita dos indicadores visuais -->
 
             <div class="w-full md:w-2/3 bg-[#0d121e] rounded-lg p-4">
-                <div class="flex row-auto">
-                    <i class="ph-duotone ph-chart-bar text-2xl px-2 self-center text-white font-semibold mb-4"></i>
-                    <h2 class="text-white text-lg font-semibold mb-4">Indicadores Visuais</h2>
-                </div>
-
                 <div class="flex flex-col">
                     <div class="flex flex-col md:flex-row gap-4 mb-4">
-
-
-                        <!-- Histórico de Viagens -->
+                        <!-- Média de Consumo -->
                         <div class="w-full">
-                            <span class="text-sm text-[#a8ba44] mb-2 flex items-center gap-2">
-                                <i class="ph ph-tire"></i> Km rodado de cada semana
+                            <span class="text-xl font-bold text-[#a8ba44] mb-2 flex items-center gap-2">
+                                <i class="ph ph-chart-pie-slice"></i> Média de Consumo
                             </span>
-                            <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
-                                <canvas id="viagensChart"></canvas> <!-- parte q puxa o grafico de viagens -->
+                            <div class="bg-[#1a2235] p-9 rounded-lg ">
+                                <div class="flex flex-col md:flex-row items-center gap-8">
+                                    <!-- Valor da Média (Grande) -->
+                                    <div class="text-center md:text-left">
+                                        <div class="text-gray-400 text-lg">Sua média</div>
+                                        <div class="text-4xl font-bold text-white">{{dados.consumo_medio}}<span
+                                                class="text-[#a8ba44] text-2xl">km/l</span></div>
+                                    </div>
+
+                                    <!-- Barra de Progresso e Meta -->
+                                    {% set meta = dados.meta_consumo | float %}
+                                    {% set atual = dados.consumo_medio | float %}
+                                    {% set percentual_bruto = (atual / meta * 100) if meta > 0 else 0 %}
+                                    {% set percentual = percentual_bruto if percentual_bruto < 100 else 100 %} <div
+                                        class="flex-1 w-full">
+                                        <div class="flex justify-between text-lg mb-2">
+                                            <span class="text-gray-400">Meta: {{ meta }} km/l</span>
+                                            <span class="text-[#a8ba44]">{{ percentual_bruto | round(0) }}%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-700 rounded-full h-3">
+                                            <div class="bg-[#a8ba44] h-3 rounded-full"
+                                                style="width: {{ percentual | round(0) }}%"></div>
+                                        </div>
+                                        <div class="flex justify-between mt-1 text-xs text-gray-500">
+                                            <span>0</span>
+                                            <span>{{ meta }}</span>
+                                        </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
-                    <!-- comparativo -->
-                    <div class="flex flex-col">
-                        <span class="text-sm text-[#a8ba44] m-2 "><i class="ph-duotone ph-chart-bar-horizontal"></i>
-                            Comparativo de Km rodado com a Média da Frota</span>
+                </div>
+                <div class="flex flex-col lg:flex-row gap-4 mb-4">
+
+
+                    <!-- Histórico de Viagens -->
+                    <div class="w-full lg:w-1/2">
+                        <span class="text-xl font-bold text-[#a8ba44] mb-2 flex items-center gap-2">
+                            <i class="ph ph-tire"></i> Km rodado de cada semana
+                        </span>
+                        <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
+                            <canvas id="viagensChart"></canvas> <!-- parte q puxa o grafico de viagens -->
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-1/2">
+                        <span class="text-xl font-bold text-[#a8ba44] mb-2 flex items-center gap-2">
+                            <i class="ph-duotone ph-chart-bar-horizontal"></i>
+                            Comparativo com a Média da Frota</span>
+                        </span>
                         <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
                             <canvas id="comparativoChart"></canvas> <!-- parte q puxa o grafico comparativo -->
                         </div>
                     </div>
+
                 </div>
             </div>
+        </div>
         </div>
 
 

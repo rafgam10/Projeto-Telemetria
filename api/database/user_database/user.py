@@ -15,9 +15,17 @@ def user_dados(placa):
                 M.avaliacao,
                 V.placa,
                 V.frota,
-                CONCAT(V.modelo, ' / ', V.marca) AS caminhao
+                V.marca,
+                V.modelo,
+                V.empresa_id,
+                CONCAT(V.modelo, ' / ', V.marca) AS caminhao,
+                MC.meta_km_por_litro
             FROM Motoristas M
             LEFT JOIN Veiculos V ON M.veiculo_id = V.id
+            LEFT JOIN MetasConsumo MC 
+                ON V.empresa_id = MC.empresa_id 
+               AND V.marca = MC.marca 
+               AND V.modelo = MC.modelo
             WHERE V.placa LIKE %s
             ORDER BY M.data_final DESC
             LIMIT 1
@@ -31,11 +39,12 @@ def user_dados(placa):
                 "idMotorista": resultado["id"],
                 "distancia_total": f"{resultado['distancia_total']} Km",
                 "consumo_total": f"{resultado['consumo_total']} L",
-                "consumo_medio": f"{resultado['consumo_medio']} Km/L",
+                "consumo_medio": f"{resultado['consumo_medio']}",
                 "avaliacao": f"{resultado['avaliacao']}",
                 "placa": resultado["placa"],
                 "frota": resultado["frota"],
-                "caminhao": resultado["caminhao"]
+                "caminhao": resultado["caminhao"],
+                "meta_consumo": f"{resultado['meta_km_por_litro']}" if resultado["meta_km_por_litro"] is not None else "N/A"
             }
         else:
             return None
