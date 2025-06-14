@@ -35,3 +35,6 @@
 	* [X] - Fazer a verificação.
 
 - [ ] - gerar apk webview
+
+`Task Final:`
+# - [ ] - Limpar o repo do GitHub.
