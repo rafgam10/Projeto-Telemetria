@@ -2,14 +2,15 @@
 - [X] - mudar nome da rota de logs para "metas";
 - [X] - Alterar o nome do arquivo html "logs" para o novo "metas";
 
-- [-] - trocar todos o L/100km por Km/Litro `(trocado alguns)`
+- [X] - trocar todos o L/100km por Km/Litro `(trocado alguns)`
 
 - [ ] - rotas para adm:
 	* [x] - de consumo semanal de diesel - `(modifiquei e testei)`
 	* [X] - de motorista retorna todas as info de motorista - `views/api/routas.py -> motorista_info`
 	* [X] - de veiculo retorna todas as info de veiculo - `views/api/routes.py -> veiculo_info`
 	* [X] - de relatorio e estatistica, vê isso ai direito. `Feito e testado`
-	* [ ] - de metas de consumo dps. `AN - OBJ`
+	* [X] - de metas de consumo dps. `AN - OBJ`
+	* [X] - Exibir a avaliação do motorista `colocar na página gestão motorista.`
 
 - [X] - rotas para user:
 	* [X] - de distancia percorrida a cada semana - `views/api/routas.py -> distancia_semanal`  
@@ -34,7 +35,3 @@
 	* [X] - Fazer a verificação.
 
 - [ ] - gerar apk webview
-
-
-
-
