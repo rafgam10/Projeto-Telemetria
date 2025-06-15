@@ -34,6 +34,8 @@
 	* [X] - Deletar o arquivo excel na pasta uploads.
 	* [X] - Fazer a verificação.
 
+- ADMIN ROUTES ESTÁ A ROTA DE ALTERAR O BANCO DE METAS
+
 - [ ] - gerar apk webview
 
 `Task Final:`

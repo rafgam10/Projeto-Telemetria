@@ -70,20 +70,26 @@ def veiculo_dados_unicos(id_empresa):
 
     cursor.execute("""
         SELECT 
+            V.id AS id_veiculo,
+            V.placa,
             V.frota,
             V.marca,
             V.modelo,
-            V.id AS id_veiculo,
-            V.placa,
-            DATE_FORMAT(MAX(V.data_final), '%%d/%%m/%%Y') AS ultima_manutencao,
-            V.litros_consumidos,
-            V.data_final,
-            V.data_inicial,
-            V.distancia_viagem,
-            E.nome AS empresa
+            E.nome AS empresa,
+
+            -- Dados mais recentes de uso do veículo (último registro do motorista)
+            DATE_FORMAT(MAX(M.data_final), '%%d/%%m/%%Y') AS ultima_manutencao,
+            MAX(M.data_final) AS data_final,
+            MAX(M.data_inicial) AS data_inicial,
+            SUM(M.distancia_total) AS distancia_total,
+            SUM(M.consumo_total) AS litros_consumidos
+
         FROM Veiculos V
         JOIN Empresas E ON V.empresa_id = E.id
+        LEFT JOIN Motoristas M ON M.veiculo_id = V.id
+
         WHERE V.empresa_id = %s
+
         GROUP BY V.id
         ORDER BY V.placa
     """, (id_empresa,))
@@ -91,6 +97,7 @@ def veiculo_dados_unicos(id_empresa):
     resultados = cursor.fetchall()
     conn.close()
     return resultados
+
 
 
 
