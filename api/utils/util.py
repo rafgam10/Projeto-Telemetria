@@ -34,3 +34,18 @@ def atualizar_notas_motoristas_por_marca_modelo(conn, empresa_id, marca, modelo)
             """, (nota, veiculo_id, empresa_id))
         
         print(f"✅ Notas atualizadas para veículos {marca} {modelo}.")
+
+
+def top_motoristas(empresa_id, limite=5):
+    conn = conectar()
+    with conn.cursor(dictionary=True) as cursor:
+        cursor.execute("""
+            SELECT m.nome, m.avaliacao, v.placa, v.marca, v.modelo
+            FROM Motoristas m
+            JOIN Veiculos v ON m.veiculo_id = v.id
+            WHERE m.empresa_id = %s
+            ORDER BY m.avaliacao DESC
+            LIMIT %s
+        """, (empresa_id, limite))
+        
+        return cursor.fetchall()

@@ -47,10 +47,13 @@ def pagina_admin():
     cursor.close()
     conn.close()
 
+    melhores_motoristas = top_motoristas(id_empresa)
+
     return render_template("HomeAdmin.html",
         id_empresa=id_empresa,
         media_km_motorista=round(media_km_motorista, 2),
-        consumo_diesel_mes=round(consumo_diesel_mes, 2)
+        consumo_diesel_mes=round(consumo_diesel_mes, 2),
+        melhores_motoristas=melhores_motoristas
     )
 
 # ========== Gestão de Motoristas ==========

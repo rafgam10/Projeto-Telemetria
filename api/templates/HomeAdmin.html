@@ -98,63 +98,39 @@
                         </div>
 
                         <!-- parte de ranking -->
-    
-                        <div class="bg-[#0d121e] w-full lg:w-1/3 rounded-lg p-4 text-gray-300
-                            border-t-4 border-[#ecc149]">
-                            <div class="p-2 flex flex-col">
-                                <div class="flex flex-row gap-2 items-center mb-4">
-                                    <i class="ph-duotone ph-trophy text-3xl text-[#ecc149] px-1 rounded-2xl"></i>
-                                    <p class="text-white text-lg sm:text-xl font-bold">
-                                        Ranking de Motoristas
-                                    </p>
+                        <div class="bg-[#0d121e] w-full lg:w-1/3 rounded-lg p-4 text-gray-300 border-t-4 border-[#ecc149]">
+                        <div class="p-2 flex flex-col">
+                            <div class="flex flex-row gap-2 items-center mb-4">
+                                <i class="ph-duotone ph-trophy text-3xl text-[#ecc149] px-1 rounded-2xl"></i>
+                                <p class="text-white text-lg sm:text-xl font-bold">
+                                    Ranking de Motoristas
+                                </p>
+                            </div>
+
+                            <div class="space-y-3">
+                                {% set cores = ['#ecc149', '#c0c0c0', '#cd7f32'] %}
+
+                                {% for motorista in melhores_motoristas %}
+                                <div class="flex items-center justify-between bg-[#1a2236] p-3 rounded">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="font-bold {% if loop.index <= 3 %}text-[{{ cores[loop.index0] }}]{% endif %}">
+                                            {{ loop.index }}º
+                                        </span>
+                                        <span>{{ motorista.nome }}</span>
+                                    </div>
+                                    <span class="font-bold">
+                                        {{ motorista.avaliacao }}
+                                        {% if loop.index == 1 %}
+                                            <i class="ph-fill ph-sparkle"></i>
+                                        {% else %}
+                                            <i class="ph-fill ph-star text-sm"></i>
+                                        {% endif %}
+                                    </span>
                                 </div>
-
-                                <div class="space-y-3">
-                                    
-                                    <!-- cada um desse é um caboclo -->
-                                    <div class="flex items-center justify-between bg-[#1a2236] p-3 rounded">
-                                        <div class="flex items-center space-x-3">
-                                            <span class="font-bold text-[#ecc149]">1º</span>
-                                            <span>João Motorista da silva</span>
-                                        </div>
-                                        <span class="font-bold">4.8 <i class="ph-fill ph-sparkle"></i></span>
-                                    </div>
-
-                                    <div class="flex items-center justify-between bg-[#1a2236] p-3 rounded">
-                                        <div class="flex items-center space-x-3">
-                                            <span class="font-bold text-[#c0c0c0]">2º</span>
-                                            <span>Maria Oliveira</span>
-                                        </div>
-                                        <span class="font-bold">4.7 <i class="ph-fill ph-star text-sm"></i></span>
-                                    </div>
-
-                                    <div class="flex items-center justify-between bg-[#1a2236] p-3 rounded">
-                                        <div class="flex items-center space-x-3">
-                                            <span class="font-bold text-[#cd7f32]">3º</span>
-                                            <span>Carlos Souza</span>
-                                        </div>
-                                        <span class="font-bold">4.6 <i class="ph-fill ph-star text-sm"></i></span>
-                                    </div>
-
-                                    <div class="flex items-center justify-between bg-[#1a2236] p-3 rounded">
-                                        <div class="flex items-center space-x-3">
-                                            <span class="font-bold">4º</span>
-                                            <span>Ana Costa</span>
-                                        </div>
-                                        <span class="font-bold">4.5 <i class="ph-fill ph-star text-sm"></i></span>
-                                    </div>
-
-                                    <div class="flex items-center justify-between bg-[#1a2236] p-3 rounded">
-                                        <div class="flex items-center space-x-3">
-                                            <span class="font-bold">5º</span>
-                                            <span>Pedro Santos</span>
-                                        </div>
-                                        <span class="font-bold">4.4 <i class="ph-fill ph-star text-sm"></i></span>
-                                    </div>
-
-                                </div>
+                                {% endfor %}
                             </div>
                         </div>
+                    </div>
 
                     </div>
                 </div>
