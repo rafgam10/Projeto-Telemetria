@@ -4,23 +4,19 @@ import os
 from database.database_config import conectar
 from datetime import datetime
 
-# Função para medir a nota do motorista:
-def avaliar_motorista(km, litros, media):
-    if litros == 0:
-        return 0
-    eficiencia = km / litros
-    diferenca = eficiencia - media
 
-    nota_base = 5.0
-    nota = nota_base - abs(diferenca)  # Penaliza maior diferença entre real e média
-    nota = max(1.0, min(5.0, nota))  # Garante nota entre 1 e 5
-    return round(nota, 2)
+# Função para medir a nota do motorista baseada na meta
+def calcular_nota_por_meta(consumo_real, meta):
+    if not consumo_real or not meta or meta == 0:
+        return 1.0
+    nota = (consumo_real / meta) * 5
+    return round(max(0.0, min(5.0, nota)), 2)
 
 
-# Função para importar os dados:
+# Função principal de importação
 def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
     df = pd.read_excel(caminho_arquivo, engine="openpyxl", skiprows=2)
-    df = df.dropna(how='all')  # Remove linhas totalmente vazias
+    df = df.dropna(how='all')
 
     df.columns = [
         "motorista_uf", "marca", "modelo", "frota_placa",
@@ -28,13 +24,13 @@ def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
     ]
 
     registros_inseridos = 0
+    veiculos_afetados = set()
 
     conn = conectar()
 
     try:
         with conn.cursor(dictionary=True) as cursor:
             for _, row in df.iterrows():
-                # Garantir valores válidos
                 PlacaEFrota = str(row["frota_placa"]).split(' - ')
                 frota = str(PlacaEFrota[0])
                 placa = str(PlacaEFrota[1])
@@ -46,11 +42,10 @@ def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
                 litros = float(row["ltrs"]) if not pd.isna(row["ltrs"]) else 0
                 media = float(row["media_geral"]) if not pd.isna(row["media_geral"]) else 0
                 nome_motorista = str(row["motorista_uf"]).strip()
-                nota = avaliar_motorista(km, litros, media)
 
                 print(f"Processando: {nome_motorista} | Frota: {frota} | Placa: {placa}")
 
-                # 1️⃣ Verificar se o veículo já existe
+                # 1️⃣ Verifica/insere veículo
                 sql_veiculo = "SELECT id FROM Veiculos WHERE placa = %s AND empresa_id = %s"
                 cursor.execute(sql_veiculo, (placa, empresa_id))
                 veiculo = cursor.fetchone()
@@ -67,9 +62,13 @@ def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
                         litros, media, empresa_id
                     ))
                     veiculo_id = cursor.lastrowid
-                    print("Veiculos foi!")
+                    print("Veículo inserido.")
+                
+                veiculos_afetados.add(veiculo_id)
 
-                # 2️⃣ Inserir motorista vinculado ao veículo
+                # 2️⃣ Insere motorista
+                nota = calcular_nota_por_meta(media, media)  # Temporária, será recalculada abaixo
+
                 sql_insert_motorista = """
                     INSERT INTO Motoristas (
                         nome, data_inicial, data_final, veiculo_id, empresa_id,
@@ -83,7 +82,7 @@ def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
                     veiculo_id,
                     empresa_id,
                     km,
-                    "00:00:00",  # marcha lenta placeholder
+                    "00:00:00",
                     litros,
                     media,
                     nota
@@ -91,29 +90,50 @@ def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
 
                 registros_inseridos += 1
 
-                # 3️⃣ Verificar e inserir meta de consumo se não existir
-                sql_check_meta = """
-                    SELECT id FROM MetasConsumo
-                    WHERE empresa_id = %s AND marca = %s AND modelo = %s
-                """
-                cursor.execute(sql_check_meta, (empresa_id, marca, modelo))
+                # 3️⃣ Garante meta existente
+                cursor.execute("""
+                    SELECT id FROM MetasConsumo WHERE empresa_id = %s AND marca = %s AND modelo = %s
+                """, (empresa_id, marca, modelo))
                 meta_existente = cursor.fetchone()
 
                 if not meta_existente:
-                    sql_insert_meta = """
+                    cursor.execute("""
                         INSERT INTO MetasConsumo (empresa_id, marca, modelo, meta_km_por_litro)
                         VALUES (%s, %s, %s, %s)
-                    """
-                    cursor.execute(sql_insert_meta, (empresa_id, marca, modelo, 1))
-                    print(f"Meta registrada para {marca} {modelo} - {media} km/L")
+                    """, (empresa_id, marca, modelo, 1))
+                    print(f"Meta registrada para {marca} {modelo} (padrão: 1 km/L)")
+
+            # 4️⃣ Recalcular notas com base nas metas reais
+            for veiculo_id in veiculos_afetados:
+                cursor.execute("""
+                    SELECT v.id, v.consumo_medio AS consumo_real, v.marca, v.modelo
+                    FROM Veiculos v
+                    WHERE v.id = %s AND v.empresa_id = %s
+                """, (veiculo_id, empresa_id))
+                v = cursor.fetchone()
+
+                cursor.execute("""
+                    SELECT meta_km_por_litro FROM MetasConsumo
+                    WHERE empresa_id = %s AND marca = %s AND modelo = %s
+                """, (empresa_id, v["marca"], v["modelo"]))
+                meta = cursor.fetchone()
+
+                if meta:
+                    nota = calcular_nota_por_meta(v["consumo_real"], meta["meta_km_por_litro"])
+
+                    cursor.execute("""
+                        UPDATE Motoristas
+                        SET avaliacao = %s
+                        WHERE veiculo_id = %s AND empresa_id = %s
+                    """, (nota, veiculo_id, empresa_id))
 
         conn.commit()
-        print("Finalizando com Sucesso", 200)
-    
+        print(f"Importação concluída com {registros_inseridos} registros inseridos e avaliações atualizadas.")
+
     except Exception as e:
-        print("Erro ao importar:", e, 404)
+        print("Erro ao importar:", e)
         conn.rollback()
-    
+
     finally:
         conn.close()
         # if os.path.exists(caminho_arquivo):

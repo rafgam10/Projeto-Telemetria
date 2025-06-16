@@ -3,6 +3,7 @@ from database.admin_database.admin import (
     conectar, motorista_dados_unicos, veiculo_dados_unicos, motoristas_unicos_por_empresa, dados_relatorios, dados_por_id_motorista
 )
 from excel_importer.excel_json import importar_dados_excel_mysql
+from utils.util import *
 from datetime import datetime
 import os
 
@@ -117,10 +118,10 @@ def pagina_metas():
     conn = conectar()
     cursor = conn.cursor(dictionary=True)
 
+    # Dentro do if request.method == "POST":
     if request.method == "POST":
         print("🟡 POST recebido em /admin/metas")
         for key, value in request.form.items():
-            print(f"🔹 Campo recebido: {key} = {value}")
             if key.startswith("meta_"):
                 try:
                     marca_modelo = key.replace("meta_", "")
@@ -129,21 +130,28 @@ def pagina_metas():
                     modelo = "_".join(partes[1:])
                     nova_meta = float(value)
 
-                    print(f"🛠️ Atualizando meta: marca='{marca}', modelo='{modelo}', nova_meta={nova_meta}")
+                    marca_sql = marca.replace("_", " ")
+                    modelo_sql = modelo.replace("_", " ")
+
+                    print(f"🛠️ Atualizando meta: marca='{marca_sql}', modelo='{modelo_sql}', nova_meta={nova_meta}")
 
                     cursor.execute("""
                         UPDATE MetasConsumo
                         SET meta_km_por_litro = %s
                         WHERE empresa_id = %s AND marca = %s AND modelo = %s
-                    """, (nova_meta, id_empresa, marca.replace("_", " "), modelo.replace("_", " ")))
+                    """, (nova_meta, id_empresa, marca_sql, modelo_sql))
 
-                    print("✅ SQL executado com sucesso.")
+                    # ⬇️ Recalcula notas dos motoristas desse modelo
+                    atualizar_notas_motoristas_por_marca_modelo(conn, id_empresa, marca_sql, modelo_sql)
+
                 except Exception as e:
                     print(f"❌ Erro ao atualizar meta para {key}: {e}")
+                    flash("Erro ao atualizar metas!", "danger")
 
         conn.commit()
         flash("Metas atualizadas com sucesso!", "success")
         return redirect(url_for("admin.pagina_metas"))
+
 
 
     # Busca inicial para exibir metas
