@@ -1,58 +1,99 @@
-# Projeto-Telemetria
 
+# 🚛 Projeto de Análise de Telemetria Veicular
 
-### 📁 Estrutura Geral do Projeto
+Este projeto foi desenvolvido para uma empresa focada em **análise de dados de telemetria**, com o objetivo de automatizar a coleta, estruturação e visualização de informações sobre motoristas e veículos. O sistema possibilita controle detalhado sobre consumo, desempenho, metas operacionais e rankings.
+
+---
+
+## 🧠 Tecnologias Utilizadas
+
+- **Python** (backend)
+- **Flask** (framework web)
+- **MySQL** (banco de dados relacional)
+- **Pandas & Openpyxl** (leitura e processamento de planilhas)
+- **HTML/CSS + Tailwind** (interface de administração)
+- **JavaScript** (interações dinâmicas)
+- **Jinja2** (templates Flask)
+- **Bootstrap Icons / Phosphor Icons** (ícones da UI)
+
+---
+
+## 📁 Estrutura Geral do Projeto
 
 ```
 projeto-telemetria/
-├── api/                      # Backend (API REST)
-│   ├── app.py               # Arquivo principal Flask
-│   ├── requirements.txt     # Dependências da API
-│   ├── models/              # Modelos de dados (Ex: Motorista, Desempenho)
-│   ├── resources/           # Rotas e lógica dos endpoints da API
-│   ├── database/            # Configuração do banco de dados (SQLite ou PostgreSQL)
-│   └── excel_importer/      # Scripts para leitura automática da planilha Excel
-
-├── mobile_app/              # Aplicativo Mobile feito com KivyMD
-│   ├── main.py              # App principal
-│   ├── screens/             # Telas (login, dashboard, histórico, etc.)
-│   ├── services/            # Comunicação com a API (requisições HTTP)
-│   └── assets/              # Ícones, fontes, imagens
-
-├── docs/                    # Documentação do projeto
-│   ├── wireframes/          # Rascunhos e fluxos das telas
-│   └── README.md            # Explicação do projeto
-
-└── .gitignore               # Ignorar arquivos sensíveis (como banco, tokens)
+├── api/
+│   ├── app.py                  # Arquivo principal Flask
+│   ├── requirements.txt        # Dependências
+│   ├── views/                  # Rotas (admin e usuário)
+│   ├── database/               # Conexão e scripts SQL
+│   └── excel_importer/         # Importação de dados via planilha Excel
+├── templates/                  # Páginas HTML com Jinja2
+├── static/                     # Estilos, imagens e scripts JS
+└── uploads/                    # Planilhas temporárias importadas
 ```
 
 ---
 
-### ✅ Etapas do Projeto
+## 🔧 Funcionalidades Implementadas
 
-1. **📊 Coleta de Dados (Excel)**
-   - Automatizar leitura do Excel (pandas ou openpyxl).
-   - Converter para dados estruturados (JSON ou banco de dados).
-   - Rodar esse processo automaticamente (por exemplo, toda vez que o Excel for atualizado).
+### 📥 Importação de Planilhas
+- Leitura automática de arquivos `.xlsx` com dados de veículos e motoristas.
+- Extração e normalização dos dados.
+- Inserção segura no banco de dados.
+- Cálculo automático de notas de desempenho.
 
-2. **🔌 API com Flask**
-   - Endpoints REST:
-     - `/login`
-     - `/motorista/<id>`
-     - `/motorista/<id>/desempenho`
-     - `/api/placas` - O Caminho para os dados das placas.
-   - Banco de dados relacional (SQLite para testes, PostgreSQL na produção).
-   - Proteção com JWT para login e acesso seguro.
+### 🔎 Gestão de Dados (Admin)
+- Cadastro e visualização de empresas.
+- Controle de motoristas e veículos por empresa.
+- Registro de auditoria e segurança via sessão Flask.
+- Ranking com os 5 melhores motoristas (baseado em metas de consumo e eficiência).
 
-3. **📱 App com KivyMD**
-   - Tela de login.
-   - Dashboard com desempenho (gráficos e notas).
-   - Tela de histórico com últimos dados.
-   - Conexão com API via `requests`.
+### 🎯 Metas de Consumo
+- Criação de metas por modelo de veículo.
+- Comparação automática entre o consumo real e a meta.
+- Reavaliação das notas dos motoristas com base na performance.
 
-4. **🚀 Hospedagem**
-   - API hospedada em Render, Fly.io ou outro serviço.
-   - Se quiser evitar custos, pode hospedar localmente ou usar plano gratuito.
+---
 
+## 🏁 Como Rodar Localmente
 
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/projeto-telemetria.git
+   cd projeto-telemetria/api
+   ```
 
+2. Instale as dependências:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Configure o banco de dados MySQL:
+   - Execute os scripts SQL em `database/` para criar as tabelas.
+   - Altere as configurações de conexão em `database_config.py`.
+
+4. Execute o servidor:
+   ```bash
+   python app.py
+   ```
+
+---
+
+## ✅ Status do Projeto
+
+✔️ Finalizado para entrega em ambiente corporativo.  
+📦 Extensível para dashboard com gráficos e notificações futuras.
+
+---
+
+## 📌 Observações
+
+Este projeto é ideal para empresas que desejam otimizar a análise de dados operacionais de frota, associando métricas de desempenho com avaliação de condutores e veículos.
+
+---
+
+## 🧾 Licença
+
+Distribuído sob licença MIT. Consulte `LICENSE` para mais informações.
+```
