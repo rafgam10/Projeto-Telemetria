@@ -12,6 +12,35 @@
     <!-- O LANCE DO CHARTJS PROS GRAFICOS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <script>
+        // Função para carregar o JSON e escolher uma dica aleatória
+        async function carregarDicaAleatoria() {
+            try {
+                const response = await fetch('../static/dicas.json'); // caminho para o JSON
+                if (!response.ok) throw new Error('Erro ao carregar o arquivo de dicas.');
+
+                const dicas = await response.json();
+                if (!Array.isArray(dicas) || dicas.length === 0) return;
+
+                // Escolher índice aleatório
+                const indice = Math.floor(Math.random() * dicas.length);
+                const dicaAleatoria = dicas[indice];
+
+                // Inserir a dica no elemento com id "dicas"
+                const elementoDicas = document.getElementById('dicas');
+                if (elementoDicas) {
+                    elementoDicas.textContent = dicaAleatoria;
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        // Executar a função quando a página carregar
+        window.addEventListener('DOMContentLoaded', carregarDicaAleatoria);
+    </script>
+
+
 </head>
 
 <body class="bg-[#0e0e14]">
@@ -93,9 +122,9 @@
                 <div class="mt-6 bg-[#1a2235] rounded-lg p-4">
                     <div class="flex items-center mb-2">
                         <i class="ph-duotone ph-lightbulb text-2xl text-[#5dafff] mr-2"></i>
-                        <h3 class="text-white text-md font-semibold">Dica do Dia</h3>
+                        <h3 class="text-white text-md font-semibold">Fique de olho</h3>
                     </div>
-                    <p class="text-gray-300 text-sm leading-snug">
+                    <p id="dicas" class="text-gray-300 text-sm leading-snug">
                         Para economizar combustível, evite acelerações e frenagens bruscas. Mantenha uma velocidade
                         constante sempre que possível!
                     </p>

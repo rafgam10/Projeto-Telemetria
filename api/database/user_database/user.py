@@ -49,6 +49,39 @@ def user_dados(placa):
         else:
             return None
 
+def historico_motorista(placa):
+    with conectar() as conn:
+        cursor = conn.cursor(dictionary=True)
+
+        # Buscar o nome do motorista mais recente (baseado na maior data_final) que usou o veículo com essa placa
+        cursor.execute("""
+            SELECT M.nome
+            FROM Motoristas M
+            JOIN Veiculos V ON M.veiculo_id = V.id
+            WHERE V.placa LIKE %s
+            ORDER BY M.data_final DESC
+            LIMIT 1
+        """, (f"%{placa.upper()}%",))
+        
+        resultado = cursor.fetchone()
+        if not resultado:
+            return []
+
+        nome_motorista = resultado["nome"]
+
+        # Agora buscar todo o histórico desse motorista
+        cursor.execute("""
+            SELECT 
+                M.data_inicial,
+                M.data_final,
+                M.consumo_medio,
+                M.avaliacao
+            FROM Motoristas M
+            WHERE M.nome = %s
+            ORDER BY M.data_final DESC
+        """, (nome_motorista,))
+
+        return cursor.fetchall()
 
 
 def perfil_user(placa_ou_frota):

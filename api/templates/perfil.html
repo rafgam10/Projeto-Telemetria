@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,33 +13,37 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
+
 <body class="bg-[#0e0e14]">
-    
+
     <!-- navbar legal -->
     <header class="fixed top-0 left-0 right-0 z-50 w-full flex
     flex-col sm:flex-row items-center justify-between bg-[#0d121e]
     border-b border-[#0e1424] px-4 sm:px-8 lg:px-60 py-4 shadow-sm">
-        
+
         <!-- logo -->
         <div class="flex items-center space-x-2">
             <img src="../static/assets/logo.png" alt="logo" class="h-8 sm:h-11 w-auto" />
             <span class="text-xl sm:text-2xl font-semibold text-white">Motorista</span>
             <span class="text-xl sm:text-2xl font-semibold text-[#a8ba44]">Legal</span>
         </div>
-    
+
         <!-- botoes da navbar -->
         <div class="flex space-x-2 sm:space-x-4 pb-1 pt-2">
-            
-            <button onclick="window.location.href='/user';" id="home" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
+
+            <button onclick="window.location.href='/user';" id="home"
+                class="text-gray-600 hover:text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-house text-2xl sm:text-3xl"></i>
             </button>
             <button onclick="window.location.href='/user/perfil';" id="perfil" class="text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-identification-card text-2xl sm:text-3xl bg-[#2c3326] p-1 rounded-lg"></i>
             </button>
-            <button onclick="window.location.href='/user/suporte';" id="suporte" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
+            <button onclick="window.location.href='/user/suporte';" id="suporte"
+                class="text-gray-600 hover:text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-question text-2xl sm:text-3xl"></i>
             </button>
-            <button onclick="window.location.href='/login';" id="voltar" class="text-gray-600 hover:text-[#a8ba44] transition-colors">
+            <button onclick="window.location.href='/login';" id="voltar"
+                class="text-gray-600 hover:text-[#a8ba44] transition-colors">
                 <i class="ph-duotone ph-sign-out text-2xl sm:text-3xl"></i>
             </button>
         </div>
@@ -46,69 +51,140 @@
 
 
     <!-- conteudo da página -->
-<main class="pt-28 sm:pt-24">
-    <!-- Titulo legal -->
-    <div class="flex items-center p-6 justify-center">
-        <i class="ph-duotone ph-identification-card text-3xl text-[#a8ba44] mr-3"></i>
-        <h1 class="text-2xl font-bold text-white">Registros do usuário</h1>
-    </div>
+    <main class="pt-25 sm:pt-22">
+        <!-- Titulo legal -->
+        <div class="flex items-center p-6 ">
+            <i class="ph-duotone ph-identification-card text-3xl text-[#a8ba44] mr-3"></i>
+            <h1 class="text-2xl font-bold text-white">Registros do usuario</h1>
+        </div>
 
-    <!-- Centralizando tudo -->
-    <div class="flex justify-center">
-        <div class="flex flex-col md:flex-row p-4 gap-4 md:gap-8 max-w-6xl w-full justify-center">
+        <div class="flex flex-col md:flex-row p-4 gap-4 md:gap-8">
             <!-- parte de info do motorista -->
-            <div class="w-full md:w-2/3 lg:w-1/2 xl:w-[900px] bg-[#0d121e] rounded-lg p-6 shadow-lg">
-
-                <!-- título do card -->
-                <div class="flex items-center mb-4">
-                    <i class="ph-duotone ph-steering-wheel text-2xl text-white mr-2"></i>
-                    <h2 class="text-white text-lg font-semibold">Informações do Motorista</h2>
+            <div class="w-full md:w-2/4 lg:w-1/3 bg-[#0d121e] rounded-lg p-6 shadow-lg">
+                <!-- titulo do card de info-->
+                <div class="flex row-auto">
+                    <i class="ph-duotone ph-steering-wheel text-2xl px-2 self-center text-white font-semibold mb-4"></i>
+                    <h2 class="text-white text-lg font-semibold mb-4">Informações do Motorista</h2>
                 </div>
-                
-                <div class="grid grid-cols-1 gap-4">
 
-                    <!-- cards de info -->
-                    <div class="group hover:ml-1 bg-[#1a2235] rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
-                        <i class="ph-duotone ph-user-circle text-3xl self-center text-[#a8ba44] pl-3"></i>
-                        <div class="p-5">
-                            <p class="text-gray-400 text-sm">Nome:</p>
-                            <p class="text-white text-lg font-bold mt-1">{{dados.motorista}}</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
+
+                    <!-- cada um desse é um cardzinho de info daquele da esquerda -->
+                    <div
+                        class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
+                        <i class="ph-duotone ph-user-circle text-3xl self-center text-[#a8ba44] pl-3  "></i>
+                        <div class="p-5 flex flex-col">
+                            <p class="text-gray-400 text-sm flex items-center gap-2">
+                                Nome:
+                            </p>
+                            <p class="text-white text-lg font-bold mt-1">
+                                {{dados.motorista}}
+                            </p>
                         </div>
                     </div>
 
-                    <div class="group hover:ml-1 bg-[#1a2235] rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
-                        <i class="ph-duotone ph-truck text-3xl self-center text-[#a8ba44] pl-3"></i>
-                        <div class="p-5">
-                            <p class="text-gray-400 text-sm">Caminhão</p>
-                            <p class="text-white text-lg font-bold mt-1">{{dados.caminhao}}</p>
+                    <div
+                        class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
+                        <i class="ph-duotone ph-truck text-3xl self-center text-[#a8ba44] pl-3  "></i>
+                        <div class="p-5 flex flex-col">
+                            <p class="text-gray-400 text-sm flex items-center gap-2">
+                                Caminhão
+                            </p>
+                            <p class="text-white text-lg font-bold mt-1">
+                                {{dados.caminhao}}
+                            </p>
                         </div>
                     </div>
 
-                    <div class="group hover:ml-1 bg-[#1a2235] rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
-                        <i class="ph-duotone ph-barcode text-3xl self-center text-[#a8ba44] pl-3"></i>
-                        <div class="p-5">
-                            <p class="text-gray-400 text-sm">Placa:</p>
-                            <p class="text-white text-lg font-bold mt-1">{{dados.placa}}</p>
+                    <div
+                        class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
+                        <i class="ph-duotone ph-barcode text-3xl self-center text-[#a8ba44] pl-3  "></i>
+                        <div class="p-5 flex flex-col">
+                            <p class="text-gray-400 text-sm flex items-center gap-2">
+                                Placa:
+                            </p>
+                            <p class="text-white text-lg font-bold mt-1">
+                                {{dados.placa}}
+                            </p>
                         </div>
                     </div>
 
-                    <div class="group hover:ml-1 bg-[#1a2235] rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
-                        <i class="ph-duotone ph-traffic-sign text-3xl self-center text-[#a8ba44] pl-3"></i>
-                        <div class="p-5">
-                            <p class="text-gray-400 text-sm">Frota:</p>
-                            <p class="text-white text-lg font-bold mt-1">{{dados.frota}}</p>
+                    <div
+                        class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
+                        <i
+                            class="ph-duotone ph-traffic-sign text-3xl self-center text-[#a8ba44] pl-3 group-hover:text-[#a8ba44]"></i>
+                        <div class="p-5 flex flex-col">
+                            <p class="text-gray-400 text-sm flex items-center gap-2">
+                                Frota:
+                            </p>
+                            <p class="text-white text-lg font-bold mt-1">
+                                {{dados.frota}}
+                            </p>
                         </div>
                     </div>
 
                 </div>
             </div>
+
+            <!-- cards de histórico -->
+            <div class="w-full md:w-2/4 lg:w-2/3 flex flex-col gap-5">
+                {% for item in historico %}
+                <div
+                    class="card-veiculo text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236] hover:border-[#2d3748] transition-colors">
+                    <!-- Cabeçalho -->
+                    <div class="p-4 border-b border-[#1a2236] flex justify-between items-center">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-[#374039] p-2 rounded-full">
+                                <i class="ph-duotone ph-truck text-lg text-[#a8ba44]"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">Consumo semanal</h3>
+                                <p class="text-sm text-gray-400">{{ item.data_inicial }} - {{ item.data_final }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informações -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 p-4">
+                        <div>
+                            <p class="text-xs text-[#a8ba44]"><i class="ph-duotone ph-gas-pump mr-1"></i>Consumo médio
+                            </p>
+                            <p class="text-sm font-medium">
+                                {% if item.consumo_medio %}
+                                {{ item.consumo_medio }} km/L
+                                {% else %}
+                                — km/L
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="text-xs text-[#a8ba44]"><i class="ph-fill ph-star mr-1"></i>Avaliação</p>
+                            <p class="text-sm font-medium">
+                                {% if item.avaliacao %}
+                                {{ item.avaliacao }}
+                                {% else %}
+                                —
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Rodapé -->
+
+                </div>
+                {% endfor %}
+            </div>
+
+
+
         </div>
-    </div>
-</main>
+    </main>
 
 
     <script>
         // Seu código JavaScript aqui
     </script>
 </body>
+
 </html>

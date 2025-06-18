@@ -25,7 +25,13 @@
             animation: slide-in-right 0.3s ease-out;
         }
     </style>
-
+    <script>
+        // Mostrar/esconder sidebar no mobile
+        document.getElementById('sidebarToggle').addEventListener('click', function () {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        });
+    </script>
 </head>
 
 <body class="bg-[#0e0e14]">
@@ -78,8 +84,7 @@
                         </button>
                     </li>
                     <li>
-                        <button onclick="window.location.href='/admin/logs';" id="adm-logs"
-                            class="flex w-full items-center p-2 rounded bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                        <button onclick="window.location.href='/admin/metas';" id="adm-metas" class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
                             <i class="ph ph-chart-line-up mr-3"></i>
                             Metas de Consumo
                         </button>
@@ -156,13 +161,7 @@
             </main>
 
 
-            <script>
-                // Mostrar/esconder sidebar no mobile
-                document.getElementById('sidebarToggle').addEventListener('click', function () {
-                    const sidebar = document.getElementById('sidebar');
-                    sidebar.classList.toggle('hidden');
-                });
-            </script>
+
 
             <script>
                 // Mostrar/esconder sidebar no mobile
@@ -179,6 +178,7 @@
                     }
                 }, 4000);
             </script>
+
 
 </body>
 

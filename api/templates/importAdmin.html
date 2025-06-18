@@ -186,7 +186,13 @@
         </div>
         </form>
 
-
+    <script>
+        // Script para mostrar/esconder sidebar no mobile
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        });
+    </script>   
     <script>
     // Configurações
     const MAX_PREVIEW_ROWS = 1000; // Mostrar as últimas 1000 linhas
