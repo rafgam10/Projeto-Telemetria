@@ -26,7 +26,7 @@
 - [X] - FAZER NOVO GRAFICO DE COSUMO SEMANAL (GRAFICO HOME ADMIN)
 - [ ] - Revisar as Rotas de API e do Projeto todo, para verificação.
 
-- [ ] - sistema de rankeamento
+- [X] - sistema de rankeamento
 
 - [X] - aceitar importações de dois arquivos exel separados (motorista e vículo):
 	* [X] - Mandar o arquivo excel primeiro na pasta uploads.
@@ -40,3 +40,4 @@
 
 `Task Final:`
 # - [ ] - Limpar o repo do GitHub.
+# - [ ] - Escrever uma documentação do Projeto.

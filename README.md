@@ -25,7 +25,7 @@ projeto-telemetria/
 ├── api/
 │   ├── app.py                  # Arquivo principal Flask
 │   ├── requirements.txt        # Dependências
-│   ├── views/                  # Rotas (admin e usuário)
+│   ├── views/                  # Rotas (admin, usuário e api)
 │   ├── database/               # Conexão e scripts SQL
 │   └── excel_importer/         # Importação de dados via planilha Excel
 ├── templates/                  # Páginas HTML com Jinja2
@@ -96,4 +96,4 @@ Este projeto é ideal para empresas que desejam otimizar a análise de dados ope
 ## 🧾 Licença
 
 Distribuído sob licença MIT. Consulte `LICENSE` para mais informações.
-```
+

@@ -70,6 +70,9 @@ def logout():
 @app.before_request
 def verificar_autenticacao_global():
     caminhos_livres = [
+        #Bem vindos
+        'bem_vindo',
+        
         #Login
         'exibir_login',
         
