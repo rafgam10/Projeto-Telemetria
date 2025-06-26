@@ -5,9 +5,13 @@ from views.api.routes import api_bp
 from views.admin.routes import admin_bp
 from views.user.routes import user_bp
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'motoristaLegal'
+app.secret_key = os.getenv("SECRET_KEY")
+#'motoristaLegal'
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'xlsx', 'csv'}
