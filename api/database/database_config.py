@@ -1,16 +1,28 @@
 import mysql.connector
-from datetime import datetime
-from datetime import timedelta
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Carrega variáveis do .env
 
 # Função para conectar ao banco
 def conectar():
     return mysql.connector.connect(
-        host="127.0.0.1",
-        port=3306,
-        user="root",
-        password="root",
-        database="DBTelemetria"
+        host=os.getenv("DB_HOST"),
+        port=int(os.getenv("DB_PORT")),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME")
     )
+
+
+# def conectar():
+#     return mysql.connector.connect(
+#         host="127.0.0.1",
+#         port=3306,
+#         user="root",
+#         password="root",
+#         database="DBTelemetria"
+#     )
 
 # Obter todos os dados da tabela DadosTelemetria
 def obter_dados():
