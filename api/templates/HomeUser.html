@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Home - LindëxGo</title>
     <link rel="icon" href="../static/assets/logo.png">
     <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script><!-- pros icones -->
     <link href="../static/output.css" rel="stylesheet"><!-- css do tailwind -->
@@ -86,11 +86,108 @@
 
         <div class="flex flex-col md:flex-row p-4 gap-4 md:gap-8">
             <!-- cards de resumo -->
-            <div class="w-full md:w-1/3 bg-[#0d121e] rounded-lg p-4">
+            <div class="w-full md:w-1/2 lg:w-1/3 bg-[#0d121e] rounded-lg p-4">
+                <span class="text-xl font-bold text-[#a8ba44] mb-2 flex items-center gap-2">
+                    <i class="ph ph-chart-pie-slice"></i> Média de Consumo
+                </span>
+
+                <div class="bg-[#1a2235] p-9 rounded-lg ">
+                    <div class="flex flex-col lg:flex-row items-center gap-8">
+                        <!-- Valor da Média (Grande) -->
+                        <div class="text-center md:text-left">
+                            <div class="text-gray-400 text-lg">Sua média</div>
+                            <div class="text-4xl font-bold text-white">{{dados.consumo_medio}}<span
+                                    class="text-[#a8ba44] text-2xl">km/l</span></div>
+                        </div>
+
+                        <!-- Barra de Progresso e Meta -->
+                        {% set meta = dados.meta_consumo | float %}
+                        {% set atual = dados.consumo_medio | float %}
+                        {% set percentual_bruto = (atual / meta * 100) if meta > 0 else 0 %}
+                        {% set percentual = percentual_bruto if percentual_bruto < 100 else 100 %} <div
+                            class="flex-1 w-full">
+                            <div class="flex justify-between text-lg mb-2">
+                                <span class="text-gray-400">Meta: {{ meta }} km/l</span>
+                                <span class="text-[#a8ba44]">{{ percentual_bruto | round(0) }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-3">
+                                <div class="bg-[#a8ba44] h-3 rounded-full" style="width: {{ percentual | round(0) }}%">
+                                </div>
+                            </div>
+                            <div class="flex justify-between mt-1 text-xs text-gray-500">
+                                <span>0</span>
+                                <span>{{ meta }}</span>
+                            </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+            <div class="mt-6 bg-[#1a2235] rounded-lg p-4">
+                <div class="flex items-center mb-2">
+                    <i class="ph-duotone ph-lightbulb text-2xl text-[#5dafff] mr-2"></i>
+                    <h3 class="text-white text-md font-semibold">Fique de olho</h3>
+                </div>
+                <p id="dicas" class="text-gray-300 text-sm leading-snug">
+                    Para economizar combustível, evite acelerações e frenagens bruscas. Mantenha uma velocidade
+                    constante sempre que possível!
+                </p>
+            </div>
+
+
+            <div class="mt-6 bg-[#1a2235] rounded-lg p-4">
+                <div class="w-full">
+                    <!-- Título -->
+                    <span class="text-sm text-[#a8ba44] mb-3 flex items-center gap-2">
+                        <i class="ph ph-star"></i> Nota de Desempenho
+                    </span>
+
+                    <!-- Barra de Progresso -->
+                    <div class="space-y-2">
+                        <!-- Valor da Nota -->
+                        <div class="flex justify-between items-center">
+                            <span class="text-3xl font-bold text-white">
+                                {{ (dados.avaliacao|float * 20)|round(0) }}<span class="text-[#a8ba44] text-xl">%</span>
+                            </span>
+                            <span class="text-sm text-gray-400">de 100</span>
+                        </div>
+
+                        <!-- Barra -->
+                        <div class="w-full bg-[#2c3326] rounded-full h-3">
+                            <div class="bg-[#a8ba44] h-3 rounded-full"
+                                style="width: {{ (dados.avaliacao|float * 20)|round(0) }}%"></div>
+                        </div>
+
+                        <!-- Escala -->
+                        <div class="flex justify-between text-xs text-gray-500 px-1">
+                            <span>0</span>
+                            <span>100</span>
+                        </div>
+
+                        <!-- Label inferior -->
+                        <div class="text-center text-xs text-gray-400 mt-1">
+                            Sua performance atual
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- parte da direita dos indicadores visuais -->
+
+        <div class="w-full md:w-2/3 bg-[#0d121e] rounded-lg p-4">
+            <div class="flex flex-col">
 
                 <!-- as coisa q tem dentro -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
-
+                <div class="flex flex-col gap-4 mb-4">
 
                     <div
                         class="group hover:ml-1 bg-[#1a2235]  rounded-lg flex flex-row space-x-2 border-l-4 border-[#a8ba44]">
@@ -119,124 +216,31 @@
                     </div>
                 </div>
 
-                <div class="mt-6 bg-[#1a2235] rounded-lg p-4">
-                    <div class="flex items-center mb-2">
-                        <i class="ph-duotone ph-lightbulb text-2xl text-[#5dafff] mr-2"></i>
-                        <h3 class="text-white text-md font-semibold">Fique de olho</h3>
-                    </div>
-                    <p id="dicas" class="text-gray-300 text-sm leading-snug">
-                        Para economizar combustível, evite acelerações e frenagens bruscas. Mantenha uma velocidade
-                        constante sempre que possível!
-                    </p>
-                </div>
-
-
-                <div class="mt-6 bg-[#1a2235] rounded-lg p-4">
-                    <div class="w-full">
-                        <!-- Título -->
-                        <span class="text-sm text-[#a8ba44] mb-3 flex items-center gap-2">
-                            <i class="ph ph-star"></i> Nota de Desempenho
-                        </span>
-
-                        <!-- Barra de Progresso -->
-                        <div class="space-y-2">
-                            <!-- Valor da Nota -->
-                            <div class="flex justify-between items-center">
-                                <span class="text-3xl font-bold text-white">
-                                    {{ (dados.avaliacao|float * 20)|round(0) }}<span
-                                        class="text-[#a8ba44] text-xl">%</span>
-                                </span>
-                                <span class="text-sm text-gray-400">de 100</span>
-                            </div>
-
-                            <!-- Barra -->
-                            <div class="w-full bg-[#2c3326] rounded-full h-3">
-                                <div class="bg-[#a8ba44] h-3 rounded-full"
-                                    style="width: {{ (dados.avaliacao|float * 20)|round(0) }}%"></div>
-                            </div>
-
-                            <!-- Escala -->
-                            <div class="flex justify-between text-xs text-gray-500 px-1">
-                                <span>0</span>
-                                <span>100</span>
-                            </div>
-
-                            <!-- Label inferior -->
-                            <div class="text-center text-xs text-gray-400 mt-1">
-                                Sua performance atual
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
+            <div class="flex flex-col lg:flex-row gap-4 mb-4">
 
-            <!-- parte da direita dos indicadores visuais -->
 
-            <div class="w-full md:w-2/3 bg-[#0d121e] rounded-lg p-4">
-                <div class="flex flex-col">
-                    <div class="flex flex-col md:flex-row gap-4 mb-4">
-                        <!-- Média de Consumo -->
-                        <div class="w-full">
-                            <span class="text-xl font-bold text-[#a8ba44] mb-2 flex items-center gap-2">
-                                <i class="ph ph-chart-pie-slice"></i> Média de Consumo
-                            </span>
-                            <div class="bg-[#1a2235] p-9 rounded-lg ">
-                                <div class="flex flex-col md:flex-row items-center gap-8">
-                                    <!-- Valor da Média (Grande) -->
-                                    <div class="text-center md:text-left">
-                                        <div class="text-gray-400 text-lg">Sua média</div>
-                                        <div class="text-4xl font-bold text-white">{{dados.consumo_medio}}<span
-                                                class="text-[#a8ba44] text-2xl">km/l</span></div>
-                                    </div>
-
-                                    <!-- Barra de Progresso e Meta -->
-                                    {% set meta = dados.meta_consumo | float %}
-                                    {% set atual = dados.consumo_medio | float %}
-                                    {% set percentual_bruto = (atual / meta * 100) if meta > 0 else 0 %}
-                                    {% set percentual = percentual_bruto if percentual_bruto < 100 else 100 %} <div
-                                        class="flex-1 w-full">
-                                        <div class="flex justify-between text-lg mb-2">
-                                            <span class="text-gray-400">Meta: {{ meta }} km/l</span>
-                                            <span class="text-[#a8ba44]">{{ percentual_bruto | round(0) }}%</span>
-                                        </div>
-                                        <div class="w-full bg-gray-700 rounded-full h-3">
-                                            <div class="bg-[#a8ba44] h-3 rounded-full"
-                                                style="width: {{ percentual | round(0) }}%"></div>
-                                        </div>
-                                        <div class="flex justify-between mt-1 text-xs text-gray-500">
-                                            <span>0</span>
-                                            <span>{{ meta }}</span>
-                                        </div>
-                                </div>
-
-                            </div>
-                        </div>
+                <!-- Histórico de Viagens -->
+                <div class="w-full lg:w-1/2">
+                    <span class="text-xl font-bold text-[#a8ba44] mb-2 flex items-center gap-2">
+                        <i class="ph ph-tire"></i> Km rodado de cada semana
+                    </span>
+                    <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
+                        <canvas id="viagensChart"></canvas> <!-- parte q puxa o grafico de viagens -->
                     </div>
                 </div>
-                <div class="flex flex-col lg:flex-row gap-4 mb-4">
-
-
-                    <!-- Histórico de Viagens -->
-                    <div class="w-full lg:w-1/2">
-                        <span class="text-xl font-bold text-[#a8ba44] mb-2 flex items-center gap-2">
-                            <i class="ph ph-tire"></i> Km rodado de cada semana
-                        </span>
-                        <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
-                            <canvas id="viagensChart"></canvas> <!-- parte q puxa o grafico de viagens -->
-                        </div>
+                <div class="w-full lg:w-1/2">
+                    <span class="text-xl font-bold text-[#a8ba44] mb-2 flex items-center gap-2">
+                        <i class="ph-duotone ph-chart-bar-horizontal"></i>
+                        Comparativo com a Média da Frota</span>
+                    </span>
+                    <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
+                        <canvas id="comparativoChart"></canvas> <!-- parte q puxa o grafico comparativo -->
                     </div>
-                    <div class="w-full lg:w-1/2">
-                        <span class="text-xl font-bold text-[#a8ba44] mb-2 flex items-center gap-2">
-                            <i class="ph-duotone ph-chart-bar-horizontal"></i>
-                            Comparativo com a Média da Frota</span>
-                        </span>
-                        <div class="bg-[#1a2235] p-3 h-60 rounded-lg flex items-center justify-center">
-                            <canvas id="comparativoChart"></canvas> <!-- parte q puxa o grafico comparativo -->
-                        </div>
-                    </div>
-
                 </div>
+
             </div>
+        </div>
         </div>
         </div>
 
