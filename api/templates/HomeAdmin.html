@@ -117,14 +117,14 @@
                                 {% set cores = ['#ecc149', '#c0c0c0', '#cd7f32'] %}
 
                                 {% for motorista in melhores_motoristas %}
-                                <div class="flex items-center justify-between bg-[#1a2236] p-3 rounded">
-                                    <div class="flex items-center space-x-3">
-                                        <span class="font-bold {% if loop.index <= 3 %}text-[{{ cores[loop.index0] }}]{% endif %}">
+                                <div class="flex items-center justify-between bg-[#1a2236] p-2 rounded">
+                                    <div class="items-center space-x-1">
+                                        <span class="text-sm font-bold {% if loop.index <= 3 %}text-[{{ cores[loop.index0] }}]{% endif %}">
                                             {{ loop.index }}º
                                         </span>
-                                        <span>{{ motorista.nome }}</span>
+                                        <span class="text-xs">{{ motorista.nome }}</span>
                                     </div>
-                                    <span class="font-bold">
+                                    <span class="text-xs font-bold">
                                         {{ motorista.avaliacao }}
                                         {% if loop.index == 1 %}
                                             <i class="ph-fill ph-sparkle"></i>

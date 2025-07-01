@@ -120,10 +120,11 @@ def calcular_notas_motoristas(conn, empresa_id):
                 continue
 
         return True
-def top_motoristas(empresa_id, limite=100):
+def top_motoristas(empresa_id, limite=None):
+    """Retorna os motoristas da última data, com média para múltiplos registros e nomes limpos"""
     conn = conectar()
     with conn.cursor(dictionary=True) as cursor:
-        # Obter a data_final mais recente
+        # 1. Obter a data_final mais recente
         cursor.execute("""
             SELECT MAX(data_final) AS data_mais_recente
             FROM Motoristas
@@ -135,14 +136,66 @@ def top_motoristas(empresa_id, limite=100):
         if not data_mais_recente:
             return []
 
-        # Buscar top motoristas da semana mais recente
+        # 2. Buscar todos os registros
         cursor.execute("""
-            SELECT m.nome, m.avaliacao, v.placa, v.marca, v.modelo
+            SELECT 
+                m.id,
+                m.nome,
+                m.avaliacao,
+                v.placa,
+                v.marca, 
+                v.modelo,
+                COUNT(*) OVER (PARTITION BY m.nome) AS qtd_registros
             FROM Motoristas m
             JOIN Veiculos v ON m.veiculo_id = v.id
             WHERE m.empresa_id = %s AND m.data_final = %s
             ORDER BY m.avaliacao DESC
-            LIMIT %s
-        """, (empresa_id, data_mais_recente, limite))
+        """, (empresa_id, data_mais_recente))
         
-        return cursor.fetchall()
+        registros = cursor.fetchall()
+        
+        # 3. Processar resultados para agrupar os com múltiplos registros
+        resultados = []
+        motoristas_processados = set()
+        
+        for reg in registros:
+            # Processar nome para remover código e estado
+            nome_original = reg['nome']
+            nome_limpo = nome_original.split('[')[0].split(']')[-1].strip()  # Remove estado
+            nome_limpo = nome_limpo.split('-')[-1].strip()  # Remove código
+            
+            if nome_limpo in motoristas_processados:
+                continue
+                
+            if reg['qtd_registros'] > 1:
+                # Calcular média para motoristas com múltiplos registros
+                cursor.execute("""
+                    SELECT AVG(avaliacao) AS media_avaliacao
+                    FROM Motoristas
+                    WHERE nome = %s AND data_final = %s AND empresa_id = %s
+                """, (nome_original, data_mais_recente, empresa_id))
+                media = cursor.fetchone()['media_avaliacao']
+                
+                resultados.append({
+                    'nome': nome_limpo,  # Usa o nome limpo
+                    'avaliacao': float(round(media, 2)),
+                    'placa': 'Vários veículos',
+                    'marca': reg['marca'],
+                    'modelo': reg['modelo']
+                })
+            else:
+                # Manter avaliação individual
+                resultados.append({
+                    'nome': nome_limpo,  # Usa o nome limpo
+                    'avaliacao': reg['avaliacao'],
+                    'placa': reg['placa'],
+                    'marca': reg['marca'],
+                    'modelo': reg['modelo']
+                })
+                
+            motoristas_processados.add(nome_limpo)
+        
+        # 4. Aplicar limite se especificado
+        if limite:
+            return resultados[:limite]
+        return resultados
