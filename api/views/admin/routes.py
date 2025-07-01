@@ -145,7 +145,7 @@ def pagina_metas():
                     """, (nova_meta, id_empresa, marca_sql, modelo_sql))
 
                     # ⬇️ Recalcula notas dos motoristas desse modelo
-                    atualizar_notas_motoristas_por_marca_modelo(conn, id_empresa, marca_sql, modelo_sql)
+                    calcular_notas_motoristas(conn, id_empresa)
 
                 except Exception as e:
                     print(f"❌ Erro ao atualizar meta para {key}: {e}")
