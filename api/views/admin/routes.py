@@ -114,6 +114,14 @@ def pagina_relatorios():
     return render_template("relatorioAdmin.html", motoristas=motoristas)
 
 
+# ========== listaimportação]==========
+@admin_bp.route("/listaImportacoes", methods=["GET", "POST"])
+def lista_importacoes():
+    id_empresa = session.get("id_empresa")
+    motoristas = motoristas_unicos_por_empresa(id_empresa)
+    return render_template("listaImportacoes.html", motoristas=motoristas)
+
+
 # ========== Metas ==========
 @admin_bp.route("/metas", methods=["GET", "POST"])
 def pagina_metas():

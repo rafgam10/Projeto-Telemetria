@@ -83,6 +83,7 @@ def verificar_autenticacao_global():
         #Template e Static
         'static',
         'cadastra_empresa',
+        'lista_empresas',
         
         #API
         'api.listar_placas',
@@ -126,6 +127,13 @@ def cadastra_empresa():
             return render_template("AddEmpresas.html", erro=erro)
     
     return render_template("AddEmpresas.html")
+
+
+#ROTA DE LISTA EMPRESAS
+@app.route("/Listaempresas", methods=["GET", "POST"])
+def lista_empresas():
+    
+    return render_template("listaEmpresas.html")
 
 # Cria a pasta de uploads se não existir
 if not os.path.exists('uploads'):

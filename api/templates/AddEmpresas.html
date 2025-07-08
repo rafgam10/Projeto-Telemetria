@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <link rel="icon" href="{{ url_for('static', filename='assets/logo.png') }}">
     <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
     <link href="{{ url_for('static', filename='output.css') }}" rel="stylesheet">
-    
+
     <style>
         .alert {
             padding: 12px;
@@ -30,54 +31,55 @@
     </style>
 
 </head>
-<body class=" min-h-screen bg-[#0e0e14] flex flex-col items-center justify-center p-4">
 
-    <div class="px-10 py-10 shadow rounded-lg border border-[#1a2236] bg-[#0d121e]">
-        <h2 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-7 text-center">Cadastro de Empresa</h2>
+<body class="bg-[#0e0e14] min-h-screen flex items-center justify-center p-6">
+
+    <div
+        class="w-full max-w-md sm:max-w-lg bg-[#0d121e] text-white border border-[#1a2236] rounded-lg shadow-lg p-6 sm:p-10">
+        <div class="flex flex-col items-center mb-6">
+            <i class="ph-duotone ph-buildings text-3xl sm:text-4xl text-[#a8ba44] mb-2"></i>
+            <h2 class="text-xl sm:text-2xl font-bold text-center">Cadastro de Empresa</h2>
+        </div>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="alert {{ category }}">{{ message }}</div>
-            {% endfor %}
-          {% endif %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
         {% endwith %}
 
-        <form class="items-center text-gray-400" method="post">
+        <form method="post" class="space-y-4 text-gray-300">
 
             <div class="flex flex-col gap-4">
 
                 <div>
-                    <label for="nome_empresa">Nome da Empresa:</label>
-                    <input class="w-full m-1 text-base sm:text-lg pl-4 sm:pl-5 pr-10 sm:pr-12 py-2 sm:py-3 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]"
-                    type="text" id="nome_empresa" name="nome_empresa" required
-                    placeholder="Digite o Nome da Empresa"
-                    >
+                    <label for="nome_empresa" class="block text-sm mb-1">Nome da Empresa:</label>
+                    <input type="text" id="nome_empresa" name="nome_empresa" placeholder="Digite o nome da empresa"
+                        required
+                        class="w-full bg-[#1a2236] border border-[#2d3748] rounded-md px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]" />
                 </div>
-    
+
                 <div>
-                    <label for="cnpj">CNPJ:</label>
-                    <input class="w-full m-1 text-base sm:text-lg pl-4 sm:pl-5 pr-10 sm:pr-12 py-2 sm:py-3 bg-[#1a2236] border border-[#2d3748] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]"
-                    type="text" id="cnpj" name="cnpj" required
-                    placeholder="Digite o CNPJ"
-                    >
+                    <label for="cnpj" class="block text-sm mb-1">CNPJ:</label>
+                    <input type="text" id="cnpj" name="cnpj" placeholder="Digite o CNPJ" required
+                        class="w-full bg-[#1a2236] border border-[#2d3748] rounded-md px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-[#a8ba44]" />
                 </div>
-    
-                <button class="w-full mt-6 bg-[#a8ba44] hover:bg-[#8fa038] text-white font-medium py-2 sm:py-3 px-4 rounded-md transition-colors flex items-center justify-center gap-2 text-base sm:text-lg"
-                type="submit">
-                <i class="ph-duotone ph-buildings sm:text-xl"></i>
-                Cadastrar Empresa
+
+                <button type="submit"
+                    class="w-full bg-[#a8ba44] hover:bg-[#8fa038] text-white font-medium py-2 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
+                    <i class="ph ph-check-circle text-lg"></i>
+                    Cadastrar Empresa
                 </button>
 
-                <button onclick="window.location.href='/login';"
-                    class="w-full mt-2 bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 sm:py-3 px-4 rounded-md transition-colors flex items-center justify-center gap-2 text-base sm:text-lg border border-green-500"
-                    type="submit">
-                    <i class="ph-duotone ph-arrow-left sm:text-xl"></i>
+                <button type="button" onclick="window.location.href='/login';"
+                    class="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
+                    <i class="ph ph-arrow-left text-lg"></i>
                     Voltar
                 </button>
             </div>
-
         </form>
     </div>
 </body>
+
 </html>

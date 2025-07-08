@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerenciar Importações | Admin - LindëxGo</title>
+    <link rel="icon" href="../static/assets/logo.png">
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+    <link href="{{ url_for('static', filename='output.css') }}" rel="stylesheet">
+</head>
+
+<body class="bg-[#0e0e14]">
+    <div class="flex flex-col md:flex-row h-screen">
+        <!-- Sidebar -->
+        <div class="border-r border-[#1a2236] w-full md:w-64 bg-[#0d121e] text-white flex-shrink-0 hidden md:block"
+            id="sidebar">
+            <div class="p-3">
+                <div class="flex items-center justify-center">
+                    <img src="../static/assets/logo.png" alt="logo" class="h-8 sm:h-11 w-auto" />
+                    <span class="text-xl sm:text-2xl font-semibold text-white">Lindëx</span>
+                    <span class="text-xl sm:text-2xl font-semibold text-[#a8ba44]">Go</span>
+                </div>
+            </div>
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <button onclick="window.location.href='/admin';" id="adm-dashboard"
+                            class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-gauge mr-3"></i>
+                            Dashboard
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="window.location.href='/admin/gestaoMotoristas';" id="adm-motoristas"
+                            class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-users mr-3"></i>
+                            Gestão de Motoristas
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="window.location.href='/admin/gestaoVeiculos';" id="adm-veiculos"
+                            class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-truck mr-3"></i>
+                            Gestão de Veículos
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="window.location.href='/admin/inserirDados';" id="adm-importar"
+                            class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-upload mr-3"></i>
+                            Importação de Dados
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="window.location.href='/admin/relatorios';" id="adm-relatorios"
+                            class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-chart-bar mr-3"></i>
+                            Relatórios e Estatísticas
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="window.location.href='/admin/metas';" id="adm-metas"
+                            class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-chart-line-up mr-3"></i>
+                            Metas de Consumo
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="window.location.href='/admin/listaImportacoes';" id="adm-importacoes"
+                            class="flex w-full items-center p-2 rounded bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-folder-notch-open mr-3"></i>
+                            Gerenciar Importações
+                        </button>
+                    </li>
+                    <li>
+                        <button onclick="window.location.href='/login';" id="voltar"
+                            class="flex w-full items-center p-2 rounded hover:bg-[#1a2236] text-gray-300 hover:text-white transition-colors">
+                            <i class="ph ph-sign-out mr-3"></i>
+                            Sair
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Cabeçalho -->
+            <header class="flex items-center justify-between bg-[#0d121e] shadow-sm p-4">
+                <div class="flex items-center">
+                    <button class="md:hidden mr-4 text-gray-300 hover:text-white" id="sidebarToggle">
+                        <i class="ph ph-list"></i>
+                    </button>
+                    <h1 class="text-xl font-bold text-white">Gerenciar Importações</h1>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-4 space-y-4">
+
+                <div
+                    class="card-importacao text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236] hover:border-[#2d3748] transition-colors">
+                    <div
+                        class="p-4 border-b border-[#1a2236] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Importação 1</h3>
+                            <p class="text-sm text-gray-400">Data Inicial: <span class="text-white">10/07/2025</span>
+                            </p>
+                            <p class="text-sm text-gray-400">Data Final: <span class="text-white">17/07/2025</span></p>
+                            <p class="text-sm text-gray-400">Itens: <span class="text-white">238</span></p>
+                        </div>
+                        <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
+                            onclick="confirmarExclusao(2)">
+                            <i class="ph ph-trash"></i> Apagar
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="modal-confirmacao"
+        class="fixed inset-0 flex items-center justify-center bg-[#0000008d] bg-opacity-60 hidden z-50">
+        <div class="bg-[#1a2236] text-white p-6 rounded-lg max-w-sm w-full shadow-lg border border-[#2d3748]">
+            <h2 class="text-lg font-semibold mb-4">Tem certeza?</h2>
+            <p class="text-sm text-gray-300 mb-4">Essa ação não poderá ser desfeita.</p>
+            <div class="flex justify-end gap-3">
+                <button onclick="fecharModal()"
+                    class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700">Cancelar</button>
+                <form method="POST" action="" id="form-excluir">
+                    <input type="hidden" name="id" id="importacao-id">
+                    <button type="submit" class="px-4 py-2 rounded bg-red-600 hover:bg-red-700">Apagar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar mobile toggle
+        document.getElementById('sidebarToggle').addEventListener('click', function () {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        });
+
+        function confirmarExclusao(id) {
+            document.getElementById('importacao-id').value = id;
+            document.getElementById('modal-confirmacao').classList.remove('hidden');
+        }
+
+        function fecharModal() {
+            document.getElementById('modal-confirmacao').classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>
