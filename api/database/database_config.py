@@ -113,10 +113,6 @@ def add_empresa(nome, cnpj):
 
 # Coletada dados distancia_semanal:
 
-
-from datetime import timedelta
-from mysql.connector import connect
-
 def distancia_semanal_func(motorista_id):
     with conectar() as conn:
         cursor = conn.cursor(dictionary=True)
