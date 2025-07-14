@@ -38,6 +38,12 @@
 
 - [-] - gerar apk webview
 
+- Modificações/Tarefas Futuras dia 13/julho
+	* [ ] - Criação da rota de painel de empresas.
+	* [ ] - Criar a lógica de GET, DELETE e PUT/POST de cada empresa.
+	* [ ] - Criar a rota para exibir datas de importação.
+	* [ ] - Criar os logs de cada registros dos dados de importação feito.
+
 `Task Final:`
 # - [X] - Limpar o repo do GitHub.
 # - [ ] - Escrever uma documentação do Projeto.
