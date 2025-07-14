@@ -36,11 +36,11 @@ def exibir_login():
         dados = obter_placas()
         adminDados = obter_empresas()
 
-        if senha == "admin":
-            session['logado'] = True
-            return redirect(url_for('admin.pagina_admin'))
+        # if senha == "admin":
+        #     session['logado'] = True
+        #     return redirect(url_for('admin.pagina_admin'))
 
-        elif senha.upper() in dados:
+        if senha.upper() in dados:
             session['logado'] = True
             session['placa'] = senha.upper()
             return redirect(url_for('user.pagina_user'))
