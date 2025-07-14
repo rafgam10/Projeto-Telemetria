@@ -36,8 +36,8 @@
 
 - ADMIN ROUTES ESTÁ A ROTA DE ALTERAR O BANCO DE METAS
 
-- [ ] - gerar apk webview
+- [-] - gerar apk webview
 
 `Task Final:`
-# - [ ] - Limpar o repo do GitHub.
+# - [X] - Limpar o repo do GitHub.
 # - [ ] - Escrever uma documentação do Projeto.
