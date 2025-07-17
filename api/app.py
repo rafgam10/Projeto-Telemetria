@@ -1,6 +1,7 @@
 from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session, make_response
 from database.database_config import *
 from database.database_config import add_empresa
+from database.empresa_database.empresa import lista_empresas_db
 from views.api.routes import api_bp
 from views.admin.routes import admin_bp
 from views.user.routes import user_bp
@@ -60,6 +61,10 @@ def exibir_login():
 
         elif senha.lower() == "empresa":
             return redirect(url_for("cadastra_empresa"))
+        
+        elif senha.lower() == "acessoempresas":
+            
+            return redirect(url_for('lista_empresas'))
 
         else:
             erro = "Senha/Placa incorreta. Tente novamente."
@@ -132,8 +137,8 @@ def cadastra_empresa():
 #ROTA DE LISTA EMPRESAS
 @app.route("/Listaempresas", methods=["GET", "POST"])
 def lista_empresas():
-    
-    return render_template("listaEmpresas.html")
+    empresas = lista_empresas_db()
+    return render_template("listaEmpresas.html", empresas=empresas)
 
 # Cria a pasta de uploads se não existir
 if not os.path.exists('uploads'):
