@@ -44,6 +44,12 @@
 	* [ ] - Criar a rota para exibir datas de importação.
 	* [ ] - Criar os logs de cada registros dos dados de importação feito.
 
+- Melhorias Futuras:
+	* [ ] - Separação dos logins, tanto por users e por admins.
+	* [ ] - Fazer tratamento de erros, para buscar bugs mais rápido.
+	* [ ] - Melhorar a filtagens dos dados na importação.
+	* [ ] - Fazer validações em alguns trechos de códigos.
+
 `Task Final:`
 # - [X] - Limpar o repo do GitHub.
 # - [ ] - Escrever uma documentação do Projeto.
