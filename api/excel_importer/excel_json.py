@@ -1,9 +1,7 @@
 # utils/importacao_excel.py
 import pandas as pd
-import os
+import traceback
 from database.database_config import conectar
-from datetime import datetime
-
 
 # Função para medir a nota do motorista baseada na meta
 def calcular_nota_por_meta(consumo_real, meta):
@@ -15,8 +13,21 @@ def calcular_nota_por_meta(consumo_real, meta):
 
 # Função principal de importação
 def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
-    df = pd.read_excel(caminho_arquivo, engine="openpyxl", skiprows=2)
+    
+    df = pd.read_excel(caminho_arquivo.strip(), engine="openpyxl", skiprows=2)
+    
+    
+    # # Se a leitura com skiprows não trouxe dados válidos, tenta novamente sem skip
+    # if df.empty or df.shape[1] < 10:  # espera-se ao menos 10 colunas úteis
+    #     print("Tentando ler sem skiprows...")
+    #     df = pd.read_excel(caminho_arquivo.strip(), engine="openpyxl")
+    # # Se ainda estiver vazio, aborta
+    # if df.empty:
+    #     print("⚠️ A planilha está vazia ou com formato incorreto.")
+    #     return 0
+    
     df = df.dropna(how='all')
+
 
     df.columns = [
         "motorista_uf", "marca", "modelo", "frota_placa",
@@ -30,21 +41,43 @@ def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
 
     try:
         with conn.cursor(dictionary=True) as cursor:
+            print("🚀 Iniciando importação...")
             for _, row in df.iterrows():
-                PlacaEFrota = str(row["frota_placa"]).split(' - ')
-                frota = str(PlacaEFrota[0])
-                placa = str(PlacaEFrota[1])
+
+                print(f"🔍 Linha {_}: {row.tolist()}")
+                
+                PlacaEFrota = str(row["frota_placa"]).replace("–", "-").split(" - ")
+                if len(PlacaEFrota) < 2:
+                    print(f"⚠️ Formato inválido para frota_placa: {row['frota_placa']}")
+                    continue
+
+                frota = PlacaEFrota[0].strip()
+                placa = PlacaEFrota[1].strip()
+                
                 marca = str(row["marca"]).strip()
                 modelo = str(row["modelo"]).strip()
+                
                 data_inicio = pd.to_datetime(row["data_inicio"], errors='coerce').date() if not pd.isna(row["data_inicio"]) else None
                 data_final = pd.to_datetime(row["data_final"], errors='coerce').date() if not pd.isna(row["data_final"]) else None
-                km = float(row["km"]) if not pd.isna(row["km"]) else 0
-                litros = float(row["ltrs"]) if not pd.isna(row["ltrs"]) else 0
-                media = float(row["media_geral"]) if not pd.isna(row["media_geral"]) else 0
+                
+                # km = float(row["km"]) if not pd.isna(row["km"]) else 0
+                # litros = float(row["ltrs"]) if not pd.isna(row["ltrs"]) else 0
+                # media = float(row["media_geral"]) if not pd.isna(row["media_geral"]) else 0
+                
+                km = float(str(row["km"]).replace(',', '.')) if not pd.isna(row["km"]) else 0
+                litros = float(str(row["ltrs"]).replace(',', '.')) if not pd.isna(row["ltrs"]) else 0
+                media = float(str(row["media_geral"]).replace(',', '.')) if not pd.isna(row["media_geral"]) else 0
+                
                 nome_motorista = str(row["motorista_uf"]).strip()
-
+                
+                
                 print(f"Processando: {nome_motorista} | Frota: {frota} | Placa: {placa}")
+                print("Data Início Antes da Convertida:", row["data_inicio"])
+                print("Data Final Antes da Convertida:", row['data_final'])
+                print("Data Início Convertida:", data_inicio)
+                print("Data Final Convertida:", data_final)
 
+                
                 # 1️⃣ Verifica/insere veículo
                 sql_veiculo = "SELECT id FROM Veiculos WHERE placa = %s AND empresa_id = %s"
                 cursor.execute(sql_veiculo, (placa, empresa_id))
@@ -68,7 +101,7 @@ def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
 
                 # 2️⃣ Insere motorista
                 nota = calcular_nota_por_meta(media, media)  # Temporária, será recalculada abaixo
-
+                print("INSERT MOTORISTA:", nome_motorista, data_inicio, data_final, veiculo_id, empresa_id, km, litros, media)
                 sql_insert_motorista = """
                     INSERT INTO Motoristas (
                         nome, data_inicial, data_final, veiculo_id, empresa_id,
@@ -129,9 +162,10 @@ def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
 
         conn.commit()
         print(f"Importação concluída com {registros_inseridos} registros inseridos e avaliações atualizadas.")
-
+        print(f"✅ Finalizado. Total inserido: {registros_inseridos}")
     except Exception as e:
         print("Erro ao importar:", e)
+        traceback.print_exc()
         conn.rollback()
 
     finally:
