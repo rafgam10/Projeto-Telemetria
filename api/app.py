@@ -1,7 +1,7 @@
 from flask import Flask, flash, jsonify, request, render_template, redirect, url_for, session, make_response
 from database.database_config import *
 from database.database_config import add_empresa
-from database.empresa_database.empresa import lista_empresas_db
+from database.empresa_database.empresa import lista_empresas_db, deletar_empresa_id
 from views.api.routes import api_bp
 from views.admin.routes import admin_bp
 from views.user.routes import user_bp
@@ -89,6 +89,7 @@ def verificar_autenticacao_global():
         'static',
         'cadastra_empresa',
         'lista_empresas',
+        'deletar_empresa', 
         
         #API
         'api.listar_placas',
@@ -106,7 +107,7 @@ def verificar_autenticacao_global():
     endpoint = request.endpoint or (request.url_rule and request.url_rule.endpoint)
 
     print("🔍 Endpoint acessado:", endpoint)
-
+    print("🔐 Sessão atual:", session)
     if (
         endpoint in caminhos_livres
         or request.path.startswith("/static")
@@ -139,6 +140,12 @@ def cadastra_empresa():
 def lista_empresas():
     empresas = lista_empresas_db()
     return render_template("listaEmpresas.html", empresas=empresas)
+
+@app.route('/Listaempresas/<int:id_empresa>/delete', methods=["DELETE"])
+def deletar_empresa(id_empresa):
+    deletar_empresa_id(id_empresa)
+    return jsonify({"mensagem": "Empresa deletada com sucesso"}), 200
+
 
 # Cria a pasta de uploads se não existir
 if not os.path.exists('uploads'):
