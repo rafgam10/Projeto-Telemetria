@@ -2,6 +2,9 @@ from flask import Blueprint, request, render_template, redirect, url_for, flash,
 from database.admin_database.admin import (
     conectar, motorista_dados_unicos, veiculo_dados_unicos, motoristas_unicos_por_empresa, dados_relatorios, dados_por_id_motorista
 )
+from database.importações_database.importacoes import (
+    listar_importacoes_db
+)
 from excel_importer.excel_json import importar_dados_excel_mysql
 from utils.util import *
 from datetime import datetime
@@ -118,8 +121,8 @@ def pagina_relatorios():
 @admin_bp.route("/listaImportacoes", methods=["GET", "POST"])
 def lista_importacoes():
     id_empresa = session.get("id_empresa")
-    motoristas = motoristas_unicos_por_empresa(id_empresa)
-    return render_template("listaImportacoes.html", motoristas=motoristas)
+    importacoes = listar_importacoes_db(id_empresa)
+    return render_template("listaImportacoes.html", importacoes=importacoes)
 
 
 # ========== Metas ==========

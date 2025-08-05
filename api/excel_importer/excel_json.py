@@ -1,5 +1,6 @@
 # utils/importacao_excel.py
 import pandas as pd
+import datetime
 import traceback
 from database.database_config import conectar
 
@@ -160,8 +161,25 @@ def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
                         WHERE veiculo_id = %s AND empresa_id = %s
                     """, (nota, veiculo_id, empresa_id))
 
+        
+        importo_data_inicio = data_inicio
+        importo_data_final = data_final
+        
+
         conn.commit()
         print(f"Importação concluída com {registros_inseridos} registros inseridos e avaliações atualizadas.")
+        
+        
+        # Add o registro da importação no DB:
+        cursor = conn.cursor()
+        cursor.execute("""
+                INSERT INTO Importacoes (data_inicial, data_final, qtd_itens, empresa_id)
+                    VALUES (%s, %s, %s, %s)
+        
+        """, (importo_data_inicio, importo_data_final, registros_inseridos, empresa_id))
+        conn.commit()
+        print("Registro de Importação Salvar no Historico.")
+        
         print(f"✅ Finalizado. Total inserido: {registros_inseridos}")
     except Exception as e:
         print("Erro ao importar:", e)

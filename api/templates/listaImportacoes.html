@@ -98,23 +98,26 @@
 
             <main class="flex-1 overflow-y-auto p-4 space-y-4">
 
-                <div
-                    class="card-importacao text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236] hover:border-[#2d3748] transition-colors">
-                    <div
-                        class="p-4 border-b border-[#1a2236] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                        <div>
-                            <h3 class="text-lg font-bold text-white">Importação 1</h3>
-                            <p class="text-sm text-gray-400">Data Inicial: <span class="text-white">10/07/2025</span>
-                            </p>
-                            <p class="text-sm text-gray-400">Data Final: <span class="text-white">17/07/2025</span></p>
-                            <p class="text-sm text-gray-400">Itens: <span class="text-white">238</span></p>
+                {% for importacao in importacoes %}
+                        <div
+                            class="card-importacao text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236] hover:border-[#2d3748] transition-colors">
+                            <div
+                                class="p-4 border-b border-[#1a2236] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                                <div>
+                                    <h3 class="text-lg font-bold text-white">Importação {{importacao.id}}</h3>
+                                    <p class="text-sm text-gray-400">Data Inicial: <span class="text-white">{{importacao.data_inicial}}</span>
+                                    </p>
+                                    <p class="text-sm text-gray-400">Data Final: <span class="text-white">{{importacao.data_final}}</span></p>
+                                    <p class="text-sm text-gray-400">Itens: <span class="text-white">{{importacao.qtd_itens}}</span></p>
+                                </div>
+                                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
+                                    onclick="confirmarExclusao(2)">
+                                    <i class="ph ph-trash"></i> Apagar
+                                </button>
+                            </div>
                         </div>
-                        <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
-                            onclick="confirmarExclusao(2)">
-                            <i class="ph ph-trash"></i> Apagar
-                        </button>
-                    </div>
-                </div>
+                {% endfor %}
+                    
             </main>
         </div>
     </div>
