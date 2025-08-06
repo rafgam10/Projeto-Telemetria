@@ -18,3 +18,10 @@ def listar_importacoes_db(id_empresa):
                 })
     return resultados
 
+def deletar_importacao_e_dados_relacionado_db(id_importacao) -> None:
+    with conectar() as conn:
+        with conn.cursor(dictionary=True) as cursor:
+            
+            cursor.execute("DELETE FROM Importacoes WHERE id = %s", (id_importacao,))
+            conn.commit()
+    
