@@ -1,9 +1,23 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash, session, jsonify
+from flask import ( 
+    Blueprint, 
+    request, 
+    render_template, 
+    redirect, 
+    url_for, 
+    flash, 
+    session, 
+    jsonify)
 from database.admin_database.admin import (
-    conectar, motorista_dados_unicos, veiculo_dados_unicos, motoristas_unicos_por_empresa, dados_relatorios, dados_por_id_motorista
+    conectar, 
+    motorista_dados_unicos, 
+    veiculo_dados_unicos, 
+    motoristas_unicos_por_empresa, 
+    dados_relatorios, 
+    dados_por_id_motorista
 )
 from database.importações_database.importacoes import (
-    listar_importacoes_db
+    listar_importacoes_db,
+    deletar_importacao_e_dados_relacionado_db
 )
 from excel_importer.excel_json import importar_dados_excel_mysql
 from utils.util import *
@@ -124,6 +138,17 @@ def lista_importacoes():
     importacoes = listar_importacoes_db(id_empresa)
     return render_template("listaImportacoes.html", importacoes=importacoes)
 
+@admin_bp.route("/deletar-importacao", methods=["POST"])
+def deletar_importacao():
+    id_importacao = request.form.get("id")
+
+    if not id_importacao:
+        flash("ID da importação não fornecido", "error")
+        return redirect(url_for("admin.lista_importacoes"))
+
+    deletar_importacao_e_dados_relacionado_db(int(id_importacao))
+    flash("Importação e dados relacionados apagados com sucesso!", "success")
+    return redirect(url_for("admin.lista_importacoes"))
 
 # ========== Metas ==========
 @admin_bp.route("/metas", methods=["GET", "POST"])
