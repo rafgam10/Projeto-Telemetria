@@ -98,6 +98,28 @@
 
             <main class="flex-1 overflow-y-auto p-4 space-y-4">
 
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="space-y-2">
+                            {% for category, message in messages %}
+                                <div class="p-3 rounded text-sm font-medium 
+                                    {% if category == 'success' %}
+                                        bg-green-600 text-white
+                                    {% elif category == 'error' %}
+                                        bg-red-600 text-white
+                                    {% else %}
+                                        bg-gray-700 text-white
+                                    {% endif %}
+                                ">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+
                 {% for importacao in importacoes %}
                         <div
                             class="card-importacao text-gray-300 bg-[#0d121e] rounded-lg border border-[#1a2236] hover:border-[#2d3748] transition-colors">
@@ -111,7 +133,7 @@
                                     <p class="text-sm text-gray-400">Itens: <span class="text-white">{{importacao.qtd_itens}}</span></p>
                                 </div>
                                 <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm"
-                                    onclick="confirmarExclusao(2)">
+                                    onclick="confirmarExclusao({{ importacao.id }})">
                                     <i class="ph ph-trash"></i> Apagar
                                 </button>
                             </div>
@@ -131,7 +153,7 @@
             <div class="flex justify-end gap-3">
                 <button onclick="fecharModal()"
                     class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700">Cancelar</button>
-                <form method="POST" action="" id="form-excluir">
+                <form method="POST" action="{{ url_for('admin.deletar_importacao') }}" id="form-excluir">
                     <input type="hidden" name="id" id="importacao-id">
                     <button type="submit" class="px-4 py-2 rounded bg-red-600 hover:bg-red-700">Apagar</button>
                 </form>
