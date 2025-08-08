@@ -41,10 +41,10 @@
 - Modificações/Tarefas Futuras dia 13/julho
 	* [X] - Criação da rota de painel de empresas.
 	* [X] - Criar a lógica de GET, DELETE e PUT/POST de cada empresa.
-	* [ ] - Criar Tabela para informar datas e itens de cada importação.
+	* [X] - Criar Tabela para informar datas e itens de cada importação.
 	* [X] - Criar a rota para exibir datas de importação.
 	* [X] - Criar os logs de cada registros dos dados de importação feito.
-	* [ ] - Deletar registro de importações
+	* [X] - Deletar registro de importações e todos os dados relacionados.
 
 - Melhorias Futuras:
 	* [ ] - Separação dos logins, tanto por users e por admins.
