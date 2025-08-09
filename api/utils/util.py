@@ -1,125 +1,164 @@
 from database.database_config import conectar
 from collections import defaultdict
-from collections import defaultdict
 from decimal import Decimal, getcontext
 
-def calcular_notas_motoristas(conn, empresa_id):
-    getcontext().prec = 8
-    
-    with conn.cursor(dictionary=True) as cursor:
-        # 1. Obter data mais recente
-        cursor.execute("SELECT MAX(data_final) FROM Motoristas WHERE empresa_id = %s", (empresa_id,))
-        data_avaliacao = cursor.fetchone()["MAX(data_final)"]
-        if not data_avaliacao:
-            print("⚠️ Nenhum dado encontrado")
-            return False
+from collections import defaultdict
+from decimal import Decimal, getcontext
+from typing import Any, Dict
 
-        # 2. Buscar todos os registros
+def calcular_notas_motoristas(conn, empresa_id) -> Dict[str, Any]:
+    """
+    Calcula e atualiza avaliacao apenas para os registros correspondentes à
+    ÚLTIMA importação de CADA motorista (baseado em nome + data_final máxima por nome).
+    Regras de nota:
+      - Se pelo menos um motorista tiver valor >= meta, normaliza pelo melhor ratio.
+      - Se nenhum motorista bater a meta, cada nota = (valor/meta) * 5 (nenhum recebe 5 automaticamente).
+    Retorna dicionário com resultado e contagem de atualizações.
+    """
+    getcontext().prec = 8
+    warnings = []
+
+    with conn.cursor(dictionary=True) as cursor:
+        # 1) pegar lista (nome, max(data_final)) por motorista para a empresa
         cursor.execute("""
-            SELECT 
-                m.id,
+            SELECT nome, MAX(data_final) AS ultima_data
+            FROM Motoristas
+            WHERE empresa_id = %s
+            GROUP BY nome
+        """, (empresa_id,))
+        latest_per_name = cursor.fetchall()
+        if not latest_per_name:
+            return {"success": False, "reason": "Nenhum registro de motorista encontrado para a empresa", "updated": 0}
+
+        # 2) construir subconsulta JOIN para obter apenas os registros que são a última importação de cada nome
+        #    (se houver múltiplos registros com mesma nome+data_final, todos serão retornados — depois agrupamos)
+        # Usamos JOIN com a subquery para compatibilidade ampla.
+        cursor.execute("""
+            SELECT
                 m.nome,
                 m.consumo_medio,
                 v.marca,
                 v.modelo,
-                COALESCE(mc.meta_km_por_litro, 1.0) AS meta_veiculo
+                COALESCE(mc.meta_km_por_litro, NULL) AS meta_veiculo,
+                m.data_final
             FROM Motoristas m
-            JOIN Veiculos v ON m.veiculo_id = v.id
-            LEFT JOIN MetasConsumo mc ON 
-                v.marca = mc.marca AND 
-                v.modelo = mc.modelo AND 
-                mc.empresa_id = m.empresa_id
-            WHERE m.empresa_id = %s AND m.data_final = %s
-        """, (empresa_id, data_avaliacao))
-        
+            JOIN (
+                SELECT nome, MAX(data_final) AS ultima_data
+                FROM Motoristas
+                WHERE empresa_id = %s
+                GROUP BY nome
+            ) ult ON m.nome = ult.nome AND m.data_final = ult.ultima_data
+            LEFT JOIN Veiculos v ON m.veiculo_id = v.id
+            LEFT JOIN MetasConsumo mc
+                ON v.marca = mc.marca
+                AND v.modelo = mc.modelo
+                AND mc.empresa_id = m.empresa_id
+            WHERE m.empresa_id = %s
+        """, (empresa_id, empresa_id))
+
         registros = cursor.fetchall()
         if not registros:
-            
-            return False
+            return {"success": False, "reason": "Nenhum registro encontrado nas últimas importações por nome", "updated": 0}
 
-        # 3. Processar motoristas
-        motoristas = defaultdict(list)
-        desempenhos = []
-        
-        for reg in registros:
-            nome = reg['nome']
-            consumo = Decimal(str(reg['consumo_medio'])) if reg['consumo_medio'] is not None else Decimal('0')
-            meta = Decimal(str(reg['meta_veiculo']))
-            
-            motoristas[nome].append({
+        # 3) agrupar por nome -> lista de registros (pode haver mais de 1 se houver múltiplos veículos/linhas na mesma última data)
+        agrupado = defaultdict(list)
+        for r in registros:
+            nome = r['nome']
+            consumo = Decimal(str(r['consumo_medio'])) if r['consumo_medio'] is not None else Decimal('0')
+            meta_raw = r.get('meta_veiculo')
+            meta = Decimal(str(meta_raw)) if meta_raw is not None else None
+            agrupado[nome].append({
                 'consumo': consumo,
                 'meta': meta,
-                'dados': reg
+                'data_final': r['data_final']
             })
 
-        # 4. Calcular médias e desempenhos
-        for nome, registros in motoristas.items():
-            qtd = len(registros)
-            
-            if qtd > 1:
-                # Caso especial (como Gildásio) - usa média de consumo e média de meta
-                total_consumo = sum(r['consumo'] for r in registros)
-                total_meta = sum(r['meta'] for r in registros)
-                media_consumo = total_consumo / qtd
-                media_meta = total_meta / qtd
-                
-                desempenhos.append({
-                    'nome': nome,
-                    'valor': media_consumo,
-                    'meta': media_meta,
-                    'tipo': 'multi'
-                })
-                
+        # 4) construir lista de desempenhos por nome (média quando múltiplos registros na mesma última data)
+        desempenhos = []
+        for nome, items in agrupado.items():
+            qtd = len(items)
+            total_consumo = sum(i['consumo'] for i in items)
+            metas_validas = [i['meta'] for i in items if i['meta'] is not None and i['meta'] > 0]
+
+            valor = total_consumo / qtd
+
+            if metas_validas:
+                media_meta = sum(metas_validas) / Decimal(len(metas_validas))
             else:
+                # fallback seguro: evita divisão por zero; avisamos para que você possa corrigir os dados
+                warnings.append(f"motorista '{nome}' não tem meta válida; usando meta=1 como fallback")
+                media_meta = Decimal('1')
 
-                consumo = registros[0]['consumo']
-                meta = registros[0]['meta']
-                
-                desempenhos.append({
-                    'nome': nome,
-                    'valor': consumo,
-                    'meta': meta,
-                    'tipo': 'single'
-                })
+            # guardamos a data_final (todas as entradas em items têm a mesma data_final, pois foi selecionado assim)
+            data_final = items[0]['data_final']
 
-        # 5. Determinar base para nota 5 (melhor razão consumo/meta)
-        try:
-            # Encontra a melhor razão entre consumo e meta
-            melhor_razao = max(
-                (d['valor']/d['meta'] for d in desempenhos if d['valor'] > 0),
-                default=1.0
-            )
-            
+            desempenhos.append({
+                'nome': nome,
+                'valor': valor,
+                'meta': media_meta,
+                'data_final': data_final
+            })
 
-        except Exception as e:
-            melhor_razao = Decimal('1.0')
+        # 5) decidir estratégia: alguém bateu a meta?
+        alguem_bateu_meta = any(d['valor'] >= d['meta'] for d in desempenhos if d['meta'] and d['meta'] > 0)
 
-        # 6. Calcular e atualizar notas
+        # 6) calcular melhor_razao se necessário
+        if alguem_bateu_meta:
+            ratios = [ (d['valor'] / d['meta']) for d in desempenhos if d['meta'] and d['valor'] > 0 ]
+            melhor_razao = max(ratios) if ratios else Decimal('1')
+        else:
+            melhor_razao = None
+
+        # 7) calcular notas e atualizar apenas os registros correspondentes àquele nome+data_final
         atualizados = 0
         for d in desempenhos:
             try:
-                if d['tipo'] == 'multi':
-                    # Casos como Gildásio - nota baseada na própria média
-                    nota = (d['valor'] / d['meta']) * 5
+                ratio = (d['valor'] / d['meta']) if d['meta'] and d['meta'] > 0 else Decimal('0')
+
+                if ratio <= 0:
+                    nota = Decimal('0')
                 else:
-                    # Casos normais - nota proporcional ao melhor desempenho
-                    razao = d['valor'] / d['meta']
-                    nota = (razao / melhor_razao) * 5
-                
-                nota = min(5.0, max(0.0, float(round(nota, 2))))
-                
-                
+                    if alguem_bateu_meta:
+                        nota = (ratio / melhor_razao) * Decimal('5')
+                    else:
+                        nota = ratio * Decimal('5')
+
+                # arredondar para 2 casas e limitar entre 0 e 5
+                nota = max(Decimal('0'), min(Decimal('5'), nota.quantize(Decimal('0.01'))))
+                nota_float = float(nota)
+
+                # UPDATE usando nome + empresa_id + data_final (conforme sua regra)
                 cursor.execute("""
                     UPDATE Motoristas
                     SET avaliacao = %s
                     WHERE nome = %s AND empresa_id = %s AND data_final = %s
-                """, (nota, d['nome'], empresa_id, data_avaliacao))
-                atualizados += 1
-                
+                """, (nota_float, d['nome'], empresa_id, d['data_final']))
+
+                # rowcount pode não existir em alguns adaptadores; usamos fallback
+                atualizados += cursor.rowcount if hasattr(cursor, 'rowcount') and cursor.rowcount is not None else 1
             except Exception as e:
+                warnings.append(f"erro ao atualizar '{d['nome']}' (data {d['data_final']}): {e}")
                 continue
 
-        return True
+        # 8) commit se possível
+        try:
+            if hasattr(conn, "commit"):
+                conn.commit()
+        except Exception as e:
+            warnings.append(f"commit falhou: {e}")
+
+        return {
+            "success": True,
+            "updated": atualizados,
+            "n_motoristas": len(desempenhos),
+            "alguem_bateu_meta": bool(alguem_bateu_meta),
+            "warnings": warnings
+        }
+
+
+
+
+
 def top_motoristas(empresa_id, limite=None):
     """Retorna os motoristas da última data, com média para múltiplos registros e nomes limpos"""
     conn = conectar()
