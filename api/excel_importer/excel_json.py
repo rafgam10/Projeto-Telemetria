@@ -1,6 +1,7 @@
 import pandas as pd
 import traceback
 from database.database_config import conectar
+from api.utils.util import calcular_notas_motoristas
 
 def calcular_nota_por_meta(consumo_real, meta):
     if not consumo_real or not meta or meta == 0:
