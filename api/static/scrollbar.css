@@ -1,0 +1,35 @@
+/* Chrome, Edge, Safari, Opera */
+*::-webkit-scrollbar {
+  width: 6px; /* largura vertical */
+  height: 6px; /* altura horizontal */
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent; /* sem fundo */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #1a2236;
+  border-radius: 10px;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin; /* fina */
+  scrollbar-color: #1a2236 transparent; /* cor do thumb e fundo */
+}
+
+
+/* Chrome, Edge, Safari, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  background: transparent; /* sem fundo */
+  -webkit-appearance: none;
+  filter: invert(20%) sepia(20%) saturate(400%) hue-rotate(190deg) brightness(90%);
+  cursor: pointer;
+}
+
+/* Firefox — não permite trocar cor, só remover ou manter padrão */
+input[type="number"] {
+  -moz-appearance: textfield;
+}

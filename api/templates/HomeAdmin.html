@@ -7,8 +7,14 @@
     <link rel="icon" href="../static/assets/logo.png">
     <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
     <link href="{{ url_for('static', filename='output.css') }}"  rel="stylesheet">
+    <link href="{{ url_for('static', filename='scrollbar.css') }}" rel="stylesheet">
     <!-- href="../static/output.css" -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .horizontal{
+            overflow-x: hidden;
+        }
+    </style>
 </head>
 <body class="bg-[#0e0e14]">
 
@@ -118,7 +124,7 @@
                                 </p>
                             </div>
 
-                            <div class="space-y-3 overflow-scroll">
+                            <div class="space-y-3 overflow-y-scroll">
                                 {% set cores = ['#ecc149', '#c0c0c0', '#cd7f32'] %}
 
                                 {% for motorista in melhores_motoristas %}
