@@ -33,3 +33,18 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+/* Remove olhinho padrão do Edge/Chrome/Opera */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none !important;
+}
+
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none !important;
+}
+
+/* Safari geralmente não tem, mas não custa prevenir */
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
