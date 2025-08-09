@@ -77,6 +77,26 @@ CREATE TABLE IF NOT EXISTS Empresas (
     nome VARCHAR(100) NOT NULL
 );
 
+-- Tabela de Importações.
+CREATE TABLE IF NOT EXISTS Importacoes(
+	
+	-- ID(PK) da Importações
+	id INT auto_increment primary key,
+	
+	-- Datas da importação
+	data_inicial DATE,
+	data_final DATE,
+	
+	-- Itens inseridos
+	qtd_itens INT,
+	
+	-- ID da empresa de importação
+	empresa_id INT,
+
+	-- Deleta os registros com relação ao id da empresa
+	FOREIGN KEY (empresa_id) references Empresas(id) ON DELETE CASCADE
+);
+
 -- Veículos
 CREATE TABLE IF NOT EXISTS Veiculos (
     id INT AUTO_INCREMENT PRIMARY KEY,
