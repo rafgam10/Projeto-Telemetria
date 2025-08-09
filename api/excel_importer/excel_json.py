@@ -1,7 +1,7 @@
 import pandas as pd
 import traceback
 from database.database_config import conectar
-from api.utils.util import calcular_notas_motoristas
+from utils.util import calcular_notas_motoristas
 
 def calcular_nota_por_meta(consumo_real, meta):
     if not consumo_real or not meta or meta == 0:
@@ -100,33 +100,34 @@ def importar_dados_excel_mysql(caminho_arquivo, empresa_id):
                 cursor.execute("""
                     SELECT id FROM MetasConsumo WHERE empresa_id = %s AND marca = %s AND modelo = %s
                 """, (empresa_id, marca, modelo))
-                meta_existente = cursor.fetchone()
+                meta_existente = cursor.fetchone() # Registro UNICO;
                 if not meta_existente:
                     cursor.execute("""
                         INSERT INTO MetasConsumo (empresa_id, marca, modelo, meta_km_por_litro)
                         VALUES (%s, %s, %s, %s)
                     """, (empresa_id, marca, modelo, 1))
 
-            # Recalcula notas
-            for veiculo_id in veiculos_afetados:
-                cursor.execute("""
-                    SELECT v.id, v.consumo_medio AS consumo_real, v.marca, v.modelo
-                    FROM Veiculos v
-                    WHERE v.id = %s AND v.empresa_id = %s
-                """, (veiculo_id, empresa_id))
-                v = cursor.fetchone()
-                cursor.execute("""
-                    SELECT meta_km_por_litro FROM MetasConsumo
-                    WHERE empresa_id = %s AND marca = %s AND modelo = %s
-                """, (empresa_id, v["marca"], v["modelo"]))
-                meta = cursor.fetchone()
-                if meta:
-                    nota = calcular_nota_por_meta(v["consumo_real"], meta["meta_km_por_litro"])
-                    cursor.execute("""
-                        UPDATE Motoristas
-                        SET avaliacao = %s
-                        WHERE veiculo_id = %s AND empresa_id = %s
-                    """, (nota, veiculo_id, empresa_id))
+                calcular_notas_motoristas(conn, empresa_id)
+            # # Recalcula notas
+            # for veiculo_id in veiculos_afetados:
+            #     cursor.execute("""
+            #         SELECT v.id, v.consumo_medio AS consumo_real, v.marca, v.modelo
+            #         FROM Veiculos v
+            #         WHERE v.id = %s AND v.empresa_id = %s
+            #     """, (veiculo_id, empresa_id))
+            #     v = cursor.fetchone()
+            #     cursor.execute("""
+            #         SELECT meta_km_por_litro FROM MetasConsumo
+            #         WHERE empresa_id = %s AND marca = %s AND modelo = %s
+            #     """, (empresa_id, v["marca"], v["modelo"]))
+            #     meta = cursor.fetchone()
+            #     if meta:
+            #         nota = calcular_nota_por_meta(v["consumo_real"], meta["meta_km_por_litro"])
+            #         cursor.execute("""
+            #             UPDATE Motoristas
+            #             SET avaliacao = %s
+            #             WHERE veiculo_id = %s AND empresa_id = %s
+            #         """, (nota, veiculo_id, empresa_id))
 
             # Atualiza a quantidade de itens importados
             cursor.execute("UPDATE Importacoes SET qtd_itens = %s WHERE id = %s", (registros_inseridos, importacao_id))
